@@ -1,0 +1,74 @@
+[tool.poetry]
+name = "valiant"
+version = "0.1.0"
+description = "Audit tool to help investigate Python dependencies"
+authors = ["Duncan Dickinson <dedickinson@users.noreply.github.com>"]
+maintainers = ["Duncan Dickinson <dedickinson@users.noreply.github.com>"]
+license = "MIT"
+
+readme = "README.md"
+
+homepage = "https://github.com/pomes/valiant"
+repository = "https://github.com/pomes/valiant"
+documentation = "https://github.com/pomes/valiant"
+
+keywords = ["audit", "dependency", "bom"]
+
+classifiers = [
+    "Development Status :: 1 - Planning",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Software Development :: Libraries :: Python Modules"
+]
+
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/pomes/valiant/issues"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+cleo = "^0.7.6"
+safety = "^1.8.7"
+gql = "^0.3.0"
+appdirs = "^1.4.3"
+desert = "^2020.1.6"
+marshmallow = "^3.5.1"
+
+[tool.poetry.dev-dependencies]
+pytest = "^4.6"
+black = "^19.10b0"
+pre-commit = "^2.1.1"
+nox = "^2019.11.9"
+isort = "^4.3.21"
+coverage = {extras = ["toml"], version = "^5.0.3"}
+flake8 = "^3.7.9"
+flake8-black = "^0.1.1"
+flake8-bugbear = "^20.1.4"
+flake8-bandit = "^2.1.2"
+flake8-docstrings = "^1.5.0"
+flake8-annotations = "^2.0.1"
+flake8-isort = "^2.8.0"
+pytest-cov = "^2.8.1"
+mypy = "^0.770"
+pytype = {version = "^2020.2.20", python = "3.7"}
+typeguard = "^2.7.1"
+darglint = "^1.2.0"
+xdoctest = "^0.11.0"
+autoflake = "^1.3.1"
+rope = "^0.16.0"
+
+[tool.poetry.scripts]
+poetry = "valiant.console:main"
+
+[tool.coverage.paths]
+source = ["src", "*/site-packages"]
+
+[tool.coverage.run]
+branch = true
+source = ["valiant"]
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 100
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
