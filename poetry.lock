@@ -319,25 +319,6 @@ pydocstyle = ">=2.1"
 
 [[package]]
 category = "dev"
-description = "flake8 plugin that integrates isort ."
-name = "flake8-isort"
-optional = false
-python-versions = "*"
-version = "2.9.0"
-
-[package.dependencies]
-flake8 = ">=3.2.1"
-testfixtures = "*"
-
-[package.dependencies.isort]
-extras = ["pyproject"]
-version = ">=4.3.5"
-
-[package.extras]
-test = ["pytest"]
-
-[[package]]
-category = "dev"
 description = "Polyfill package for Flake8 plugins"
 name = "flake8-polyfill"
 optional = false
@@ -806,19 +787,6 @@ six = ">=1.10.0"
 
 [[package]]
 category = "dev"
-description = "A collection of helpers and mock objects for unit tests and doc tests."
-name = "testfixtures"
-optional = false
-python-versions = "*"
-version = "6.14.0"
-
-[package.extras]
-build = ["setuptools-git", "wheel", "twine"]
-docs = ["sphinx", "zope.component", "sybil", "twisted", "mock", "django (<2)", "django"]
-test = ["pytest (>=3.6)", "pytest-cov", "pytest-django", "zope.component", "sybil", "twisted", "mock", "django (<2)", "django"]
-
-[[package]]
-category = "dev"
 description = "Python Library for Tom's Obvious, Minimal Language"
 name = "toml"
 optional = false
@@ -937,7 +905,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 version = "0.12.0"
 
 [metadata]
-content-hash = "40cb313b61bc676326111ceb14b6cb89aa4a374049894c48ff541f2d4cf8d88d"
+content-hash = "6372ea705c734cfa889671b98456e80cf61c4156cc3d26fb5421563249f6f1a3"
 python-versions = "^3.8"
 
 [metadata.files]
@@ -1077,10 +1045,6 @@ flake8-bugbear = [
 flake8-docstrings = [
     {file = "flake8-docstrings-1.5.0.tar.gz", hash = "sha256:3d5a31c7ec6b7367ea6506a87ec293b94a0a46c0bce2bb4975b7f1d09b6f3717"},
     {file = "flake8_docstrings-1.5.0-py2.py3-none-any.whl", hash = "sha256:a256ba91bc52307bef1de59e2a009c3cf61c3d0952dbe035d6ff7208940c2edc"},
-]
-flake8-isort = [
-    {file = "flake8-isort-2.9.0.tar.gz", hash = "sha256:81e8c2ff17e8cf267b82bf46e3f404433017bf25f24d3f3554d67586d6af95da"},
-    {file = "flake8_isort-2.9.0-py2.py3-none-any.whl", hash = "sha256:e1184919b07930506b109cec8bf405f9a95bf2c0c6223362760216c8a1cf2930"},
 ]
 flake8-polyfill = [
     {file = "flake8-polyfill-1.0.2.tar.gz", hash = "sha256:e44b087597f6da52ec6393a709e7108b2905317d0c0b744cdca6208e670d8eda"},
@@ -1286,10 +1250,6 @@ spdx-tools = [
 stevedore = [
     {file = "stevedore-1.32.0-py2.py3-none-any.whl", hash = "sha256:a4e7dc759fb0f2e3e2f7d8ffe2358c19d45b9b8297f393ef1256858d82f69c9b"},
     {file = "stevedore-1.32.0.tar.gz", hash = "sha256:18afaf1d623af5950cc0f7e75e70f917784c73b652a34a12d90b309451b5500b"},
-]
-testfixtures = [
-    {file = "testfixtures-6.14.0-py2.py3-none-any.whl", hash = "sha256:799144b3cbef7b072452d9c36cbd024fef415ab42924b96aad49dfd9c763de66"},
-    {file = "testfixtures-6.14.0.tar.gz", hash = "sha256:cdfc3d73cb6d3d4dc3c67af84d912e86bf117d30ae25f02fe823382ef99383d2"},
 ]
 toml = [
     {file = "toml-0.10.0-py2.7.egg", hash = "sha256:f1db651f9657708513243e61e6cc67d101a39bad662eaa9b5546f789338e07a3"},
