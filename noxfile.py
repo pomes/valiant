@@ -28,6 +28,8 @@ def install_with_constraints(session: Session, *args: str, **kwargs: Any) -> Non
     versions specified in poetry.lock. This allows you to manage the
     packages as Poetry development dependencies.
 
+    See: https://github.com/cjolowicz/hypermodern-python/blob/master/noxfile.py
+
     Arguments:
         session: The Session object.
         args: Command-line arguments for pip.
@@ -46,15 +48,7 @@ def install_with_constraints(session: Session, *args: str, **kwargs: Any) -> Non
         session.install(f"--constraint={requirements.name}", *args, **kwargs)
 
 
-@nox.session(python="3.8")
-def black(session: Session) -> None:
-    """Run black code formatter."""
-    args = session.posargs or locations
-    install_with_constraints(session, "black")
-    session.run("black", *args)
-
-
-@nox.session(python=["3.8"])
+@nox.session(python=["3.8", "3.7"])
 def lint(session: Session) -> None:
     """Lint using flake8."""
     args = session.posargs or locations
@@ -72,9 +66,24 @@ def lint(session: Session) -> None:
     session.run("flake8", *args)
 
 
-@nox.session(python=["3.8"])
+@nox.session(python="3.8")
+def tidy(session: Session) -> None:
+    """Run all tidy up actions."""
+    tidy_imports(session)
+    black(session)
+
+
+@nox.session(python="3.8")
+def black(session: Session) -> None:
+    """Run black code formatter."""
+    args = session.posargs or locations
+    install_with_constraints(session, "black")
+    session.run("black", *args)
+
+
+@nox.session(python="3.8")
 def tidy_imports(session: Session) -> None:
-    """Lint using flake8-isort."""
+    """Lint inplace using flake8-isort."""
     args = session.posargs or locations
     install_with_constraints(session, "isort", "autoflake")
     session.run(
@@ -90,14 +99,30 @@ def tidy_imports(session: Session) -> None:
 
 @nox.session(python="3.8")
 def safety(session: Session) -> None:
-    """Scan dependencies for insecure packages."""
+    """Scan PROD dependencies for insecure packages."""
     with tempfile.NamedTemporaryFile() as requirements:
         session.run(
             "poetry",
             "export",
-            "--dev",
             "--format=requirements.txt",
             "--without-hashes",
+            f"--output={requirements.name}",
+            external=True,
+        )
+        install_with_constraints(session, "safety")
+        session.run("safety", "check", f"--file={requirements.name}", "--full-report")
+
+
+@nox.session(python="3.8")
+def safety_dev(session: Session) -> None:
+    """Scan PROD+DEV dependencies for insecure packages."""
+    with tempfile.NamedTemporaryFile() as requirements:
+        session.run(
+            "poetry",
+            "export",
+            "--format=requirements.txt",
+            "--without-hashes",
+            "--dev",
             f"--output={requirements.name}",
             external=True,
         )
@@ -124,7 +149,7 @@ def pytype(session: Session) -> None:
 @nox.session(python=["3.8", "3.7"])
 def tests(session: Session) -> None:
     """Run the test suite."""
-    args = session.posargs or ["--cov", "-m", "not e2e"]
+    args = session.posargs or ["--cov"]
     session.run("poetry", "install", "--no-dev", external=True)
     install_with_constraints(
         session, "coverage[toml]", "pytest", "pytest-cov", "pytest-mock"
@@ -137,7 +162,9 @@ def typeguard(session: Session) -> None:
     """Runtime type checking using Typeguard."""
     args = session.posargs or ["-m", "not e2e"]
     session.run("poetry", "install", "--no-dev", external=True)
-    install_with_constraints(session, "pytest", "pytest-mock", "typeguard")
+    install_with_constraints(
+        session, "pytest", "pytest-mock", "pytest-datafiles", "typeguard"
+    )
     session.run("pytest", f"--typeguard-packages={package}", *args)
 
 
@@ -153,9 +180,8 @@ def xdoctest(session: Session) -> None:
 @nox.session(python="3.8")
 def coverage(session: Session) -> None:
     """Upload coverage data."""
-    install_with_constraints(session, "coverage[toml]", "codecov")
+    install_with_constraints(session, "coverage[toml]")
     session.run("coverage", "xml", "--fail-under=0")
-    session.run("codecov", *session.posargs)
 
 
 @nox.session(python="3.8")

@@ -26,11 +26,13 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.7"
 cleo = "^0.7.6"
-safety = "^1.8.7"
 gql = "^0.3.0"
 appdirs = "^1.4.3"
 desert = "^2020.1.6"
 marshmallow = "^3.5.1"
+requests = "^2.23.0"
+setuptools = "^46.0.0"
+pybraries = "^0.2.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^4.6"
@@ -54,6 +56,11 @@ darglint = "^1.2.0"
 xdoctest = "^0.11.0"
 autoflake = "^1.3.1"
 rope = "^0.16.0"
+pytest-datafiles = "^2.0"
+pytest-mock = "^2.0.0"
+requests-mock = "^1.7.0"
+spdx-tools = "^0.6.1"
+safety = "^1.8.7"
 
 [tool.poetry.scripts]
 poetry = "valiant.console:main"
@@ -67,7 +74,39 @@ source = ["valiant"]
 
 [tool.coverage.report]
 show_missing = true
-fail_under = 100
+fail_under = 90
+
+# Be explicit in your omissions:
+omit = [
+    "src/valiant/__init__.py",
+    "src/valiant/__version__.py",
+    "src/valiant/__main__.py",
+    "src/valiant/console/__init__.py",
+    "src/valiant/console/commands/__init__.py",
+    "src/valiant/console/config/__init__.py",
+    "src/valiant/config/__init__.py",
+    "src/valiant/repositories/__init__.py",
+    "src/valiant/repositories/pypi/__init__.py",
+    "src/valiant/util/__init__.py",
+    "src/valiant/util/spdx/__init__.py",
+    "src/valiant/util/spdx/__main__.py"
+]
+
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:"
+]
+#known_first_party="valiant"
+#known_third_party=[]
+
+[tool.black]
+line-length = 88
 
 [build-system]
 requires = ["poetry>=0.12"]
