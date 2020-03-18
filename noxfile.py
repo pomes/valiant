@@ -187,17 +187,19 @@ def coverage(session: Session) -> None:
 @nox.session(python="3.8")
 def docs(session: Session) -> None:
     """Build the documentation with mkdocs."""
-    output_dir = "build/site"
     session.install("mkdocs~=1.1")
-    session.run(
-        "mkdocs",
-        "build",
-        "--clean",
-        "--theme",
-        "readthedocs",
-        "--site-dir",
-        output_dir,
-    )
-    print(
-        f"Check out the generated site: python -m http.server --directory {output_dir}"
-    )
+    session.run("mkdocs", "build", "--clean")
+
+
+@nox.session(python="3.8")
+def docs_serve(session: Session) -> None:
+    """Start server to view docs."""
+    session.install("mkdocs~=1.1")
+    session.run("mkdocs", "serve")
+
+
+@nox.session(python="3.8")
+def docs_publish(session: Session) -> None:
+    """Publish the documentation with mkdocs."""
+    session.install("mkdocs~=1.1")
+    session.run("mkdocs", "gh-deploy", "--clean")

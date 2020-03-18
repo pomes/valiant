@@ -1,11 +1,20 @@
 site_name: Valiant documentation
 
+site_url: https://pomes.github.io/valiant/
+repo_url: https://github.com/pomes/valiant
+
+copyright: |
+  &copy; 2020 Duncan Dickinson.
+  Licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC-BY 4.0</a>
+
+site_dir: build/site
+
 theme:
   name: readthedocs
   highlightjs: true
 
 extra:
-  version: 2.0
+  version: 0.1.0
 
 nav:
   - Introduction: index.md
