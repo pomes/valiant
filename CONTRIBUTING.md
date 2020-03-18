@@ -59,6 +59,23 @@ To lint (against all Python envs):
 
     nox -rs lint
 
+### Documentation
+
+The site documentation uses [`mkdocs`](https://www.mkdocs.org/).
+The configuration is located in [`mkdocs.yml`](mkdocs.yml).
+
+When working on the docs it can be handy to check your work as
+you go:
+
+    mkdocs serve
+
+To [deploy the documentation to GitHub](https://www.mkdocs.org/user-guide/deploying-your-docs/):
+
+    mkdocs gh-deploy
+
+This will prepare the site and push it to the `gh-pages` branch. Make sure the site's
+looking good and ready to go (`mkdocs serve`) first!
+
 ### Before checking in
 
 To check that you'll pass the pre-commit hooks, stage your files and then run:

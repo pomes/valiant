@@ -187,6 +187,7 @@ def coverage(session: Session) -> None:
 @nox.session(python="3.8")
 def docs(session: Session) -> None:
     """Build the documentation with mkdocs."""
+    output_dir = "build/site"
     session.install("mkdocs~=1.1")
     session.run(
         "mkdocs",
@@ -195,5 +196,8 @@ def docs(session: Session) -> None:
         "--theme",
         "readthedocs",
         "--site-dir",
-        "build/site",
+        output_dir,
+    )
+    print(
+        f"Check out the generated site: python -m http.server --directory {output_dir}"
     )
