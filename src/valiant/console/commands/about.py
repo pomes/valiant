@@ -12,10 +12,10 @@ class AboutCommand(Command):
 
         self.line(
             f"""
-<info>{self.valiant.application_title()} - {self.valiant.application_tagline()}</info>
+<info>{self.valiant.application_title} - {self.valiant.application_tagline}</info>
 
-<comment>Licence: {self.valiant.application_licence()}</comment>
-<comment>{self.valiant.application_description()}.
-See <fg=blue>{self.valiant.application_homepage()}</> for more information.</comment>
+<comment>Licence: {self.valiant.application_licence}</comment>
+<comment>{self.valiant.application_description}.
+See <fg=blue>{self.valiant.application_homepage}</> for more information.</comment>
 """
         )

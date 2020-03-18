@@ -3,6 +3,7 @@
 import sys
 
 from pathlib import Path
+from typing import Any, Dict
 
 import requests
 
@@ -30,7 +31,7 @@ class PyPiRepository(BaseRepository):
     def base_url(self) -> str:  # noqa: D102
         return self._base_url
 
-    def _load_package_manifest(self, name: str, version: str) -> str:
+    def _load_package_manifest(self, name: str, version: str) -> Dict[Any, Any]:
         """Downloads the JSON metadata from the repository.
 
         Args:
@@ -50,12 +51,12 @@ class PyPiRepository(BaseRepository):
         if r.status_code != requests.codes.ok:
             raise PackageNotFoundException(f"No result for {url}")
 
-        json = r.json()
+        data = r.json()
 
-        if json is None:
+        if data is None:
             raise RepositoryException("The JSON response was empty.")
 
-        return json
+        return data
 
     def show(self, name: str, version: str) -> PyPiPackageMetadata:
         """Provides details for a specific package version.
@@ -72,11 +73,11 @@ class PyPiRepository(BaseRepository):
             ValidationError: The package metadata could not be parsed. # noqa: DAR402
         """
         try:
-            json = self._load_package_manifest(name, version)
+            data = self._load_package_manifest(name, version)
         except (PackageNotFoundException, RepositoryException) as e:
             raise PackageNotFoundException(f"Failed to access package metadata: {e}")
 
-        return PyPiPackageMetadata(json)
+        return PyPiPackageMetadata(data)
 
     def download(self, name: str, version: str) -> Path:
         """Provides details for a specific package version.

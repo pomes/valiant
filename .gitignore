@@ -44,6 +44,12 @@ pip-wheel-metadata
 .pytype
 
 # Mkdoc
-site
+site/
 
 *.egg-info/
+
+# Coverage
+coverage.xml
+htmlcov/
+
+out/

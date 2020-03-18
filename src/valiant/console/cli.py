@@ -1,6 +1,5 @@
 """Valiant CLI client."""
 from cleo import Application as BaseApplication
-
 from valiant import Valiant, factory
 
 from .commands.about import AboutCommand

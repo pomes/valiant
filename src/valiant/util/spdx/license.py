@@ -9,7 +9,7 @@ appears to use "Apache License 2.0"
 from dataclasses import dataclass
 from dataclasses import field as dc_field
 from datetime import date
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 import requests
 
@@ -95,11 +95,11 @@ class SpdxLicenses:
         return self._licenses  # noqa: DAR201
 
     @classmethod
-    def loader(cls, json_s: str) -> "SpdxLicenses":
+    def loader(cls, data: Dict[str, Any]) -> "SpdxLicenses":
         """Loads the SPDX license data from a JSON string.
 
         Args:
-            json_s: A JSON string in the expected SPDX format.
+            data: A dictionary structure in the expected SPDX format.
 
         Returns:
             An instance of SpdxLicenses if the json_s data could be loaded
@@ -110,13 +110,13 @@ class SpdxLicenses:
         schema = desert.schema(_SpdxLicenseListing, meta={"partial": True})
 
         try:
-            license_data: _SpdxLicenseListing = schema.load(json_s)
+            license_data: _SpdxLicenseListing = schema.load(data)
         except (MarshmallowValidationError, TypeError) as e:
             """
             TypeErrors seem to occur in Desert when fields such as
             `licenseId` (mapped to `id`) are missing.
             """
-            raise ValueError(f"Could not parse the JSON data: {e}")
+            raise ValueError(f"Could not parse the JSON data: {e}", e)
 
         return SpdxLicenses(license_data)
 

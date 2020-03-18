@@ -8,10 +8,10 @@ from valiant.repositories import ArtifactMetadata, PackageMetadata
 def test_artifact_metadata() -> None:
     """Ensures the ABC can't be instantiated."""
     with pytest.raises(TypeError):
-        ArtifactMetadata()
+        ArtifactMetadata()  # type: ignore
 
 
 def test_package_metadata() -> None:
     """Ensures the ABC can't be instantiated."""
     with pytest.raises(TypeError):
-        PackageMetadata()
+        PackageMetadata()  # type: ignore

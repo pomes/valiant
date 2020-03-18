@@ -23,11 +23,11 @@ FIXTURE_DIR = os.path.join(
 def licenses() -> SpdxLicenses:
     """Load the SPDX licenses from the included pickle file.
 
-    Yields:
+    Returns:
         The licences
     """
     licenses = SpdxLicenses.builtin_loader()
-    yield licenses
+    return licenses
 
 
 def test_builtin_loader_release_attributes(licenses: SpdxLicenses,) -> None:
@@ -53,7 +53,9 @@ def test_json_load(datafiles: py.path) -> None:
             assert isinstance(v, SpdxLicense)
             assert k == v.id
 
-        mit: SpdxLicense = lic.get_license("MIT")
+        mit = lic.get_license("MIT")
+
+        assert mit is not None
 
         assert mit.id == "MIT"
         assert mit.is_osi_approved

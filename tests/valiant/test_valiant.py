@@ -1,9 +1,4 @@
 """Basic test suite."""
-from pathlib import Path
-from typing import Dict, Optional
-
-import pytest
-
 from valiant import factory
 from valiant.config import Config
 
@@ -23,9 +18,8 @@ def test_application_details() -> None:
     assert v.application_copyright_holder == "Duncan Dickinson"
 
 
-@pytest.mark.parametrize(("test_input,expected"), [({}, None)])
-def test_config_dir(test_input: Dict, expected: Optional[Path]) -> None:
+def test_config_empty() -> None:
     """Testing valiant configuration."""
-    conf = Config(test_input)
+    conf = Config()
     v = factory(conf)
     assert v.cache_dir is None

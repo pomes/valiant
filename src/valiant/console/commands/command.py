@@ -1,6 +1,5 @@
 """Base command for use by actual commands."""
 from cleo import Command as BaseCommand
-
 from valiant import Valiant
 
 

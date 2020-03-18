@@ -8,4 +8,4 @@ from valiant.repositories import BaseRepository
 def test_base_repository() -> None:
     """Ensure that instantiating the class raises TypeError."""
     with pytest.raises(TypeError):
-        BaseRepository()
+        BaseRepository()  # type: ignore

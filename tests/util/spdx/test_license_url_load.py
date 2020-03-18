@@ -15,7 +15,7 @@ from valiant.util.spdx import SpdxLicenses
 
 MonkeyPatch = Any
 
-BASIC_JSON_PAYLOAD = {
+BASIC_PAYLOAD = {
     "licenseListVersion": "test-01",
     "releaseDate": "1901-01-01",
     "licenses": [
@@ -46,7 +46,7 @@ class MockResponse:
 
 def test_loader(monkeypatch: MonkeyPatch) -> None:
     """Load a basic dataset."""
-    licenses = SpdxLicenses.loader(json_s=BASIC_JSON_PAYLOAD)
+    licenses = SpdxLicenses.loader(data=BASIC_PAYLOAD)
 
     assert licenses.version == "test-01"
     assert licenses.release_date == datetime.date(1901, 1, 1)
@@ -56,7 +56,7 @@ def test_url_loader_basic(monkeypatch: MonkeyPatch) -> None:
     """Load a basic dataset from a URL."""
 
     def mock_get(*args, **kwargs):  # noqa: ANN
-        return MockResponse(status_code=200, json_data=BASIC_JSON_PAYLOAD,)
+        return MockResponse(status_code=200, json_data=BASIC_PAYLOAD,)
 
     # apply the monkeypatch for requests.get to mock_get
     monkeypatch.setattr(requests, "get", mock_get)
@@ -104,7 +104,7 @@ def test_url_loader_missing_data_version(monkeypatch: MonkeyPatch) -> None:
     """Test a JSON payload with no version."""
 
     def mock_get(*args, **kwargs):  # noqa: ANN
-        payload = dict(BASIC_JSON_PAYLOAD)
+        payload = dict(BASIC_PAYLOAD)
         payload["version"] = None
         return MockResponse(status_code=200, json_data=payload)
 
@@ -119,7 +119,7 @@ def test_url_loader_missing_data_release_date(monkeypatch: MonkeyPatch) -> None:
     """Test a JSON payload with no version."""
 
     def mock_get(*args, **kwargs):  # noqa: ANN
-        payload = dict(BASIC_JSON_PAYLOAD)
+        payload = dict(BASIC_PAYLOAD)
         payload["releaseDate"] = None
         return MockResponse(status_code=200, json_data=payload)
 
@@ -138,7 +138,7 @@ def test_url_loader_missing_data_licenses(monkeypatch: MonkeyPatch) -> None:
     """
 
     def mock_get(*args, **kwargs):  # noqa: ANN
-        payload = dict(BASIC_JSON_PAYLOAD)
+        payload = dict(BASIC_PAYLOAD)
         payload["licenses"] = []
         return MockResponse(status_code=200, json_data=payload)
 
@@ -154,7 +154,7 @@ def test_url_loader_missing_data_single_license(monkeypatch: MonkeyPatch) -> Non
     """Test a JSON payload with missing license data."""
 
     def mock_get(*args, **kwargs):  # noqa: ANN
-        payload = dict(BASIC_JSON_PAYLOAD)
+        payload = dict(BASIC_PAYLOAD)
         # Note: No name for the license
         payload["licenses"] = [
             {
@@ -180,7 +180,7 @@ def test_url_loader_missing_data_single_license_noid(monkeypatch: MonkeyPatch) -
     """Test a JSON payload with missing license data - no licenseId."""
 
     def mock_get(*args, **kwargs):  # noqa: ANN
-        payload = dict(BASIC_JSON_PAYLOAD)
+        payload = dict(BASIC_PAYLOAD)
         # Note: No name for the license
         payload["licenses"] = [
             {
