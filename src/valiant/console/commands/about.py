@@ -1,14 +1,14 @@
+"""CLI Command: about."""
 from .command import Command
 
 
 class AboutCommand(Command):
-    """
-    Shows information about Valiant.
+    """Shows information about Valiant.
 
     about
     """
 
-    def handle(self):
+    def handle(self) -> None:  # noqa: D102
 
         self.line(
             f"""

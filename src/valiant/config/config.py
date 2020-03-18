@@ -1,18 +1,31 @@
-from copy import deepcopy
+"""Configuration for Valiant."""
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Optional
 
 
 class Config:
-    def __init__(self, default_config: Optional[Dict[str, Any]] = None, **kwargs):
-        if default_config:
-            self._config = deepcopy(default_config)
+    """Configuration object."""
 
-        if "cache-dir" in self._config:
-            self._cache_dir = Path(self._config["cache-dir"])
-        else:
-            self._cache_dir = None
+    def __init__(self, cache_dir: str = None):
+        """Constructor.
+
+        Args:
+            cache_dir: Used by Valiant to cache assets
+        """
+        self._cache_dir: Optional[Path] = None
+        if cache_dir:
+            self._cache_dir = Path(cache_dir)
 
     @property
     def cache_dir(self) -> Optional[Path]:
-        return self._cache_dir
+        """Path to the cache."""
+        return self._cache_dir  # noqa: DAR201
+
+    @classmethod
+    def load_default_config(cls) -> "Config":
+        """Returns an instance with the defaults.
+
+        Returns:
+            A default Config instance.
+        """
+        return Config()

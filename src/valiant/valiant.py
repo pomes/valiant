@@ -1,5 +1,6 @@
 """Handles the valiant context."""
 from pathlib import Path
+from typing import Optional
 
 from .__about__ import (
     application_copyright_holder,
@@ -12,7 +13,6 @@ from .__about__ import (
     application_title,
     application_vendor,
     application_version,
-    default_config,
 )
 from .config import Config
 
@@ -28,48 +28,48 @@ class Valiant:
         """
         self._config: Config = config
 
-    @classmethod
-    def application_version(cls) -> str:  # noqa
+    @property
+    def application_version(self) -> str:  # noqa: D102
         return application_version
 
-    @classmethod
-    def application_name(cls) -> str:  # noqa
+    @property
+    def application_name(self) -> str:  # noqa: D102
         return application_name
 
-    @classmethod
-    def application_vendor(cls) -> str:  # noqa
+    @property
+    def application_vendor(self) -> str:  # noqa: D102
         return application_vendor
 
-    @classmethod
-    def application_title(cls) -> str:  # noqa
+    @property
+    def application_title(self) -> str:  # noqa: D102
         return application_title
 
-    @classmethod
-    def application_description(cls) -> str:  # noqa
+    @property
+    def application_description(self) -> str:  # noqa: D102
         return application_description
 
-    @classmethod
-    def application_tagline(cls) -> str:  # noqa
+    @property
+    def application_tagline(self) -> str:  # noqa: D102
         return application_tagline
 
-    @classmethod
-    def application_licence(cls) -> str:  # noqa
+    @property
+    def application_licence(self) -> str:  # noqa: D102
         return application_licence
 
-    @classmethod
-    def application_homepage(cls) -> str:  # noqa
+    @property
+    def application_homepage(self) -> str:  # noqa: D102
         return application_homepage
 
-    @classmethod
-    def application_copyright_year(cls) -> str:  # noqa
+    @property
+    def application_copyright_year(self) -> int:  # noqa: D102
         return application_copyright_year
 
-    @classmethod
-    def application_copyright_holder(cls) -> str:  # noqa
+    @property
+    def application_copyright_holder(self) -> str:  # noqa: D102
         return application_copyright_holder
 
     @property
-    def cache_dir(self) -> Path:
+    def cache_dir(self) -> Optional[Path]:
         """Gets the current instance's cache dir.
 
         Returns:
@@ -78,10 +78,20 @@ class Valiant:
         return self._config.cache_dir
 
 
-def factory() -> Valiant:
+def factory(config: Config = None) -> Valiant:
     """Generates a valiant instance.
+
+    TBD - this factory is rather underdone atm.
+
+    Args:
+        config: A Valiant configuration instance.
 
     Returns:
         A freshly built valiant
     """
-    return Valiant(config=Config(default_config))
+    if not config:
+        conf = Config()
+    else:
+        conf = config
+
+    return Valiant(config=conf)

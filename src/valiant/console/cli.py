@@ -1,4 +1,6 @@
+"""Valiant CLI client."""
 from cleo import Application as BaseApplication
+
 from valiant import Valiant, factory
 
 from .commands.about import AboutCommand
@@ -9,12 +11,15 @@ from .config import ApplicationConfig
 
 
 class Cli(BaseApplication):
+    """The CLI client app."""
+
     def __init__(self):
+        """Constructor."""
         super(Cli, self).__init__(
-            Valiant.application_name(),
-            Valiant.application_version(),
+            Valiant.application_name,
+            Valiant.application_version,
             config=ApplicationConfig(
-                Valiant.application_name(), Valiant.application_version()
+                Valiant.application_name, Valiant.application_version
             ),
         )
         self._valiant: Valiant = factory()
@@ -24,7 +29,8 @@ class Cli(BaseApplication):
 
     @property
     def valiant(self) -> Valiant:
-        return self._valiant
+        """Access the Valiant instance."""
+        return self._valiant  # noqa: DAR201
 
 
 if __name__ == "__main__":

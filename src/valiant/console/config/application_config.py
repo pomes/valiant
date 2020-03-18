@@ -1,8 +1,11 @@
-from cleo.config import ApplicationConfig as BaseApplicationConfig
-from clikit.api.formatter import Style
+"""CLI Application config."""
+from cleo.config import ApplicationConfig as BaseApplicationConfig  # pragma: no cover
+from clikit.api.formatter import Style  # pragma: no cover
 
 
-class ApplicationConfig(BaseApplicationConfig):
+class ApplicationConfig(BaseApplicationConfig):  # pragma: no cover
+    """Configures the CLI application."""
+
     _STYLES = [
         Style("c1").fg("cyan"),
         Style("info").fg("blue"),
@@ -12,7 +15,7 @@ class ApplicationConfig(BaseApplicationConfig):
         Style("debug").fg("black").bold(),
     ]
 
-    def configure(self):
+    def configure(self) -> None:  # noqa: D102
         super(ApplicationConfig, self).configure()
 
         for style in ApplicationConfig._STYLES:

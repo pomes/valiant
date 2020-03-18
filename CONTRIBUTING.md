@@ -59,6 +59,12 @@ To lint (against all Python envs):
 
     nox -rs lint
 
+### Before checking in
+
+To check that you'll pass the pre-commit hooks, stage your files and then run:
+
+    pre-commit run
+
 ### Useful references
 
 | Tool | Description |
