@@ -7,7 +7,12 @@ class ShowCommand(Command):
 
     show
         {package : The package name}
+        {version : The package version}
     """
 
     def handle(self) -> None:  # noqa: D102
-        pass
+        self.line(
+            f"""\
+<info>{self.argument("package")}:{self.argument("version")}</info>
+"""
+        )

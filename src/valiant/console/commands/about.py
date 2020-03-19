@@ -11,11 +11,10 @@ class AboutCommand(Command):
     def handle(self) -> None:  # noqa: D102
 
         self.line(
-            f"""
+            f"""\
 <info>{self.valiant.application_title} - {self.valiant.application_tagline}</info>
 
 <comment>Licence: {self.valiant.application_licence}</comment>
 <comment>{self.valiant.application_description}.
-See <fg=blue>{self.valiant.application_homepage}</> for more information.</comment>
-"""
+See <fg=blue>{self.valiant.application_homepage}</> for more information.</comment>"""
         )
