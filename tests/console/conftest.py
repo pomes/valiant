@@ -1,6 +1,7 @@
 """Pytest config."""
-from _pytest.config import Config
 import pytest
+
+from _pytest.config import Config
 from cleo import ApplicationTester
 from valiant.console import Cli
 

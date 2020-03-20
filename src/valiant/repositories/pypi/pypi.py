@@ -3,12 +3,17 @@
 import sys
 
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 import requests
 
-from .. import BaseRepository, PackageNotFoundException, RepositoryException
-from . import PyPiPackageMetadata
+from valiant.repositories import (
+    BaseRepository,
+    PackageNotFoundException,
+    RepositoryConfiguration,
+    RepositoryException,
+)
+from .model import PyPiPackageMetadata
 
 
 class PyPiRepository(BaseRepository):
@@ -19,17 +24,10 @@ class PyPiRepository(BaseRepository):
     See: https://warehouse.readthedocs.io/api-reference/json/
     """
 
-    def __init__(self, base_url: str = "https://pypi.org/pypi"):
-        """New instance.
-
-        Args:
-            base_url: The base API url for the repository
-        """
-        self._base_url: str = base_url
-
-    @property
-    def base_url(self) -> str:  # noqa: D102
-        return self._base_url
+    @classmethod
+    def list_supported_repository_types(cls) -> List[str]:
+        """Lists the repository types support by this implementation."""
+        return ["warehouse", "pypi"]  # noqa: DAR201
 
     def _load_package_manifest(self, name: str, version: str) -> Dict[Any, Any]:
         """Downloads the JSON metadata from the repository.
@@ -45,7 +43,7 @@ class PyPiRepository(BaseRepository):
             PackageNotFoundException: When the URL doesn't work.
             RepositoryException: If the JSON data is empty(None)
         """
-        url = f"{self._base_url}/{name}/{version}/json"
+        url = f"{self.repository_configuration.get_access_url()}/{name}/{version}/json"
 
         r = requests.get(url)
         if r.status_code != requests.codes.ok:
@@ -95,6 +93,17 @@ class PyPiRepository(BaseRepository):
         """
         raise NotImplementedError
 
+    @staticmethod
+    def get_pypi_config() -> RepositoryConfiguration:
+        """Helper for the central repo.
+
+        Returns:
+            A config for the PyPi repo
+        """
+        return RepositoryConfiguration(
+            name="pypi", base_url="https://pypi.org/pypi", repository_type="warehouse"
+        )
+
 
 if __name__ == "__main__":
     """Just a small cli.
@@ -104,7 +113,7 @@ if __name__ == "__main__":
     """
 
     if len(sys.argv) == 3:
-        repo = PyPiRepository()
+        repo = PyPiRepository(PyPiRepository.get_pypi_config())
         pkg = repo.show(name=sys.argv[1], version=sys.argv[2])
 
         print(f"{pkg}")

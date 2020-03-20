@@ -32,7 +32,7 @@ def test_cli_show_not_found(app: Cli) -> None:
     command_tester = CommandTester(command)
 
     result = command_tester.execute("flask 99999")
-    assert result == 0
+    assert result == 1
 
 
 def test_cli_show_package_found(app: Cli) -> None:

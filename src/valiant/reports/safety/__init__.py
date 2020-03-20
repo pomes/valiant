@@ -2,7 +2,4 @@
 
 See: https://github.com/pyupio/safety
 """
-
-# class Safety:
-#    def check():
-#        pass
+from .safety import SafetyReportProvider

@@ -1,11 +1,16 @@
 """Basic test suite."""
-from valiant import factory
+from pathlib import Path
+
+import pytest
+
+from valiant import Factory, Valiant
 from valiant.config import Config
+from valiant.repositories.pypi import PyPiRepository
 
 
 def test_application_details() -> None:
     """Validate the general app info."""
-    v = factory()
+    v = Factory().create_valiant()
     assert v.application_version == "0.1.0"
     assert v.application_name == "valiant"
     assert v.application_title == "Valiant"
@@ -20,6 +25,34 @@ def test_application_details() -> None:
 
 def test_config_empty() -> None:
     """Testing valiant configuration."""
-    conf = Config()
-    v = factory(conf)
-    assert v.cache_dir is None
+    with pytest.raises(TypeError):
+        Valiant()
+
+
+def test_config_missing_repo_config() -> None:
+    """Testing valiant configuration custom settings."""
+    with pytest.raises(ValueError):
+        Config(
+            cache_dir="/var/cache",
+            config_dir="/etc/valiant",
+            repository_configurations=[],
+        )
+
+
+def test_config_default() -> None:
+    """Tests the factory defaults."""
+    v = Factory().create_valiant()
+    assert v.cache_dir is not None
+    assert v.config_dir is not None
+
+
+def test_config_custom() -> None:
+    """Testing valiant configuration custom settings."""
+    c = Config(
+        cache_dir="/var/cache",
+        config_dir="/etc/valiant",
+        repository_configurations=[PyPiRepository.get_pypi_config()],
+    )
+    v = Factory().create_valiant(c)
+    assert v.cache_dir == Path("/var/cache")
+    assert v.config_dir == Path("/etc/valiant")

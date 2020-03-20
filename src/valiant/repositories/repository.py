@@ -2,12 +2,61 @@
 
 from abc import ABC, abstractmethod
 from pathlib import Path
+from typing import List
 
-from . import PackageMetadata
+from ..package import PackageMetadata
+from .config import RepositoryConfiguration
 
 
 class BaseRepository(ABC):
     """Interface definition for repo functionality."""
+
+    def __init__(
+        self, repository_configuration: RepositoryConfiguration,
+    ):
+        """New instance.
+
+        The repository_config argument trumps the base_url argument.
+
+        Args:
+            repository_configuration: A RepositoryConfiguration instance
+
+        Raises:
+            ValueError: If no configuration is provided or
+                        no handler is available for the repo type.
+        """
+        if not repository_configuration:
+            raise ValueError("No repository configuration provided.")
+
+        if (
+            repository_configuration.repository_type
+            not in self.__class__.list_supported_repository_types()
+        ):
+            raise ValueError(
+                f"Unable to handle repositories of type "
+                "repository_configuration.repository_type}."
+            )
+
+        self._config = repository_configuration
+
+    @property
+    def repository_configuration(self) -> RepositoryConfiguration:
+        """Get the config."""
+        return self._config  # noqa: DAR201
+
+    @property
+    def repository_type(self) -> str:
+        """Identifies the underlying software supported by the repo.
+
+        Returns:
+            The repo type.
+        """
+        return self._config.repository_type
+
+    @classmethod
+    def list_supported_repository_types(cls) -> List[str]:
+        """Lists the repository types support by this implementation."""
+        return []  # noqa: DAR201
 
     @abstractmethod
     def show(self, name: str, version: str) -> PackageMetadata:

@@ -13,6 +13,7 @@ class ApplicationConfig(BaseApplicationConfig):  # pragma: no cover
         Style("error").fg("red").bold(),
         Style("warning").fg("yellow"),
         Style("debug").fg("black").bold(),
+        Style("link").fg("blue").underlined(),
     ]
 
     def configure(self) -> None:  # noqa: D102

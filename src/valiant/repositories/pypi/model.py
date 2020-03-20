@@ -14,8 +14,9 @@ from typing import Dict, List, Optional
 
 from desert import desert, marshmallow
 from packaging.requirements import Requirement
+from valiant.package import ArtifactMetadata, PackageMetadata
 
-from .. import ArtifactMetadata, PackageMetadata, ValidationError
+from .. import ValidationError
 
 
 @dataclass

@@ -2,7 +2,7 @@
 
 import pytest
 
-from valiant.repositories import ArtifactMetadata, PackageMetadata
+from valiant.package import ArtifactMetadata, PackageMetadata
 
 
 def test_artifact_metadata() -> None:

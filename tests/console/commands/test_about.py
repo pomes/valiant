@@ -9,10 +9,11 @@ def test_cli_about(app: Cli) -> None:
     command_tester = CommandTester(command)
     result = command_tester.execute()
     expected = """\
-Valiant - Dependency Investigations Unit
+Valiant 0.1.0 - Dependency Investigations Unit
+
+Valiant helps you investigate dependencies
 
 Licence: MIT
-Valiant helps you investigate dependencies.
 See https://github.com/pomes/valiant for more information.
 """
     assert result == 0

@@ -94,8 +94,8 @@ class SpdxLicenses:
         """Returns the full set of licences."""
         return self._licenses  # noqa: DAR201
 
-    @classmethod
-    def loader(cls, data: Dict[str, Any]) -> "SpdxLicenses":
+    @staticmethod
+    def loader(data: Dict[str, Any]) -> "SpdxLicenses":
         """Loads the SPDX license data from a JSON string.
 
         Args:
@@ -120,8 +120,8 @@ class SpdxLicenses:
 
         return SpdxLicenses(license_data)
 
-    @classmethod
-    def url_loader(cls, url: str = SPDX_LICENSE_DATA_FILE_URL) -> "SpdxLicenses":
+    @staticmethod
+    def url_loader(url: str = SPDX_LICENSE_DATA_FILE_URL) -> "SpdxLicenses":
         """Loads license data from a URL.
 
         Args:
@@ -139,8 +139,8 @@ class SpdxLicenses:
 
         return SpdxLicenses.loader(r.json())
 
-    @classmethod
-    def builtin_loader(cls) -> "SpdxLicenses":
+    @staticmethod
+    def builtin_loader() -> "SpdxLicenses":
         """Loads the license data provided by SPDX.
 
         A pre-built pickle file is loaded from this package. The file is

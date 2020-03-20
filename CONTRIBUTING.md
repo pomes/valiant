@@ -42,22 +42,14 @@ Get a list of sessions/tasks:
 
     nox --list
 
-To quickly run tests:
+To run tests:
 
-    poetry run pytest
-
-Tests with coverage:
-
-    poetry run pytest --cov
-
+    nox -s tests
 
 To lint (against Python 3.8):
 
     nox -rs lint-3.8
 
-To lint (against all Python envs):
-
-    nox -rs lint
 
 ### Documentation
 

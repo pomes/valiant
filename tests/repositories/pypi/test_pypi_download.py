@@ -3,8 +3,10 @@ import pytest
 
 from valiant.repositories.pypi import PyPiRepository
 
+PYPI_CONFIG = PyPiRepository.get_pypi_config()
+
 
 def test_basic() -> None:
     """Not implemented."""
     with pytest.raises(NotImplementedError):
-        PyPiRepository().download("flask", "1.1.1")
+        PyPiRepository(PYPI_CONFIG).download("flask", "1.1.1")
