@@ -2,7 +2,13 @@
 from cleo import Application as BaseApplication
 from valiant import Factory, Valiant
 
-from .commands import AboutCommand, AuditCommand, ReportCommand, ShowCommand
+from .commands import (
+    AboutCommand,
+    AuditCommand,
+    ConfigCommand,
+    ReportCommand,
+    ShowCommand,
+)
 from .config import ApplicationConfig
 
 
@@ -20,7 +26,11 @@ class Cli(BaseApplication):
             ),
         )
         self.add_commands(
-            AboutCommand(), AuditCommand(), ReportCommand(), ShowCommand()
+            AboutCommand(),
+            ConfigCommand(),
+            AuditCommand(),
+            ReportCommand(),
+            ShowCommand(),
         )
 
     @property

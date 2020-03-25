@@ -1,11 +1,13 @@
 """Configuration for describing Python repositories."""
-from dataclasses import dataclass
-from typing import Optional
+from dataclasses import asdict, dataclass
+from typing import Dict, Optional
 from urllib.parse import ParseResult, urlparse, urlunparse
+
+from valiant.util import Dictionizer
 
 
 @dataclass(frozen=True)
-class RepositoryConfiguration:
+class RepositoryConfiguration(Dictionizer):
     """A Python package repository.
 
     Working from https://pip.pypa.io/en/stable/user_guide/#basic-authentication-credentials
@@ -26,6 +28,9 @@ class RepositoryConfiguration:
     password: Optional[str] = None
     token: Optional[str] = None
     repository_type: str = "unknown"
+
+    def to_dict(self) -> Dict:  # noqa:D102
+        return asdict(self)
 
     def get_access_url(self) -> str:
         """Provides the full url with credentials.

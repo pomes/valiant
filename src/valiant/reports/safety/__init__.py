@@ -93,11 +93,16 @@ class SafetyReportProvider(BaseReportProvider):
         if self.configuration:
             key: Optional[str] = self.configuration.get("key", None)
             db: Optional[str] = self.configuration.get("db", None)
-            ignore_ids: List[str] = self.configuration.get("ignore_ids", None)
+            ignore_ids: Optional[str] = self.configuration.get("ignore_ids", None)
         else:
             key = None
             db = None
-            ignore_ids = []
+            ignore_ids = None
+
+        if ignore_ids:
+            ignore_id_list = [id.strip() for id in ignore_ids.split(",")]
+        else:
+            ignore_id_list = []
 
         packages = [
             SafetyPackage(key=package_metadata.name, version=package_metadata.version)
@@ -108,7 +113,7 @@ class SafetyReportProvider(BaseReportProvider):
             key=key,
             db_mirror=db,
             cached=False,
-            ignore_ids=ignore_ids,
+            ignore_ids=ignore_id_list,
             proxy=None,
         )
 

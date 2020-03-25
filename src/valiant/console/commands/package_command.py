@@ -1,4 +1,4 @@
-"""Base command for use by actual commands."""
+"""Base command for use by commands that use a basic payload."""
 from abc import abstractmethod
 from dataclasses import dataclass
 from typing import Dict, Optional
@@ -26,7 +26,7 @@ class Payload(Dictionizer):
         }
 
 
-class Command(BaseCommand):
+class PackageCommand(BaseCommand):
     """Handy general command base for use by actual commands."""
 
     def handle(self) -> Optional[int]:  # noqa: D102

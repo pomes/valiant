@@ -98,6 +98,15 @@ class Config:
         return self.get_repository_configuration(self.default_repository_name)
 
     @property
+    def repository_configuration(self) -> Dict[str, RepositoryConfiguration]:
+        """All the repos.
+
+        Returns:
+            The job lot of repo configurations.
+        """
+        return self._repositories
+
+    @property
     def repository_names(self) -> List[str]:
         """Returns a list of the known repositories.
 

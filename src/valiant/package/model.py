@@ -1,6 +1,6 @@
 """Base classes for describing a package."""
 from abc import abstractmethod
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from datetime import datetime
 from typing import Dict, List
 
@@ -227,8 +227,6 @@ class PackageCoordinates(Dictionizer):
     repository_url: str
 
     def to_dict(self) -> Dict:  # noqa: D102
-        from dataclasses import asdict
-
         return asdict(self)
 
     def __str__(self) -> str:

@@ -2,7 +2,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, Iterable, List, Optional, Tuple
+from typing import Dict, Iterable, List, Optional, Tuple
 
 from valiant.util import Dictionizer
 from valiant.package import PackageCoordinates
@@ -117,7 +117,7 @@ class ReportProviderDetails(Dictionizer):
 class ReportProviderConfiguration:
     """A very generic class to allow for flexible configuration."""
 
-    items: Optional[Dict[str, Any]] = None
+    items: Optional[Dict[str, str]] = None
 
 
 class Report(Dictionizer):

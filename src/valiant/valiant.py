@@ -20,6 +20,7 @@ from .__about__ import (
 from .config import Config
 from .package import PackageMetadata
 from .reports import ReportFactory, ReportProviderConfiguration, ReportSet
+from valiant.repositories import RepositoryConfiguration
 
 
 @dataclass(frozen=True)
@@ -120,6 +121,31 @@ class Valiant:
             A Path object to the config directory
         """
         return self._config.config_dir
+
+    @property
+    def default_repository_name(self) -> str:
+        """The default repo name."""
+        return self._config.default_repository_name  # noqa: DAR201
+
+    @property
+    def repository_configuration(self) -> Dict[str, RepositoryConfiguration]:
+        """All the repos.
+
+        Returns:
+            The job lot of repo configurations.
+        """
+        return self._config.repository_configuration
+
+    @property
+    def report_configuration(self) -> Dict[str, ReportProviderConfiguration]:
+        """The reporting config.
+
+        Returns:
+            A dict of the config. Can be empty.
+        """
+        if not self._config.report_configuration:
+            return {}
+        return self._config.report_configuration
 
     def get_package_metadata(
         self,

@@ -1,5 +1,5 @@
 """CLI Command: report."""
-from .command import Command, Payload
+from .package_command import PackageCommand, Payload
 from .report_helper import (
     create_short_report,
     create_metadata_report,
@@ -7,7 +7,7 @@ from .report_helper import (
 )
 
 
-class ReportCommand(Command):
+class ReportCommand(PackageCommand):
     """Prepares a report on the package.
 
     report

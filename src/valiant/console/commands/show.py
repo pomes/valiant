@@ -1,10 +1,10 @@
 """CLI Command: show."""
 from valiant.package import PackageMetadata
 
-from .command import Command, Payload
+from .package_command import PackageCommand, Payload
 
 
-class ShowCommand(Command):
+class ShowCommand(PackageCommand):
     """Describes a package.
 
     show

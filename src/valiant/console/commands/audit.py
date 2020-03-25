@@ -5,7 +5,7 @@ from typing import List, NamedTuple, Optional
 from valiant.reports import Finding, ReportSet
 
 from .base_command import BaseCommand
-from .command import Payload
+from .package_command import Payload
 from .report_helper import (
     create_metadata_report,
     create_finding_report,

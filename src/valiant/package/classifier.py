@@ -1,5 +1,5 @@
 """Utility resources for classifiers."""
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from typing import Dict, List
 
 from valiant.util import Dictionizer
@@ -32,9 +32,7 @@ class Classifier(Dictionizer):
     subcategories: List[str]
 
     def to_dict(self) -> Dict:  # noqa:D102
-        import dataclasses
-
-        return dataclasses.asdict(self)
+        return asdict(self)
 
     @staticmethod
     def parse(value: str) -> "Classifier":
