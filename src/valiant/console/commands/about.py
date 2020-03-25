@@ -1,7 +1,5 @@
 """CLI Command: about."""
-from typing import Any, Dict
-
-from .command import Command
+from .command import Command, Payload
 
 
 class AboutCommand(Command):
@@ -11,30 +9,18 @@ class AboutCommand(Command):
         {--o|out= : the desired output type (json)}
     """
 
-    def prepare_data(self, **kwargs: Any) -> Dict[str, Any]:
+    def prepare_data(self) -> Payload:
         """Preps the app data.
 
-        Args:
-            kwargs: Not used.
-
         Returns:
-            App data
+            A payload with the message describing the application.
         """
-        return {
-            "name": self.valiant.application_name,
-            "title": self.valiant.application_title,
-            "version": self.valiant.application_version,
-            "tagline": self.valiant.application_tagline,
-            "licence": self.valiant.application_licence,
-            "description": self.valiant.application_description,
-            "homepage": self.valiant.application_homepage,
-        }
+        msg = f"""\
+<info>{self.valiant.application_title} {self.valiant.application_version}</info>
+<comment>- {self.valiant.application_tagline} - </comment>
 
-    def to_text(self, data: Dict[str, Any]) -> str:  # noqa:DAR102
-        return f"""\
-<info>{data["title"]} {data["version"]} - {data["tagline"]}</info>
+<comment>{self.valiant.application_description}</comment>
 
-<comment>{data["description"]}</comment>
-
-<comment>Licence: {data["licence"]}</comment>
-<comment>See <link>{data["homepage"]}</link> for more information.</comment>"""
+<comment>Licence: {self.valiant.application_licence}</comment>
+<comment>See <link>{self.valiant.application_homepage}</link> for more information.</comment>"""
+        return Payload(message=msg)

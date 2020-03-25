@@ -1,1 +1,1 @@
-"""Tests for utility packages."""
+"""Test utility classes."""

@@ -2,22 +2,62 @@
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Iterable, List, Optional, Tuple
+
+from valiant.util import Dictionizer
+from valiant.package import PackageCoordinates
 
 
-class FindingLevel(Enum):
+class NoValue(Enum):
+    """As per https://docs.python.org/3/library/enum.html#omitting-values."""
+
+    def __repr__(self):  # noqa:D105
+        return "<%s.%s>" % (self.__class__.__name__, self.name)
+
+
+class FindingLevel(NoValue):
     """A priority level."""
 
-    PRIORITY = 0
-    WARNING = 1
-    INFO = 2
+    PRIORITY = "priority"
+    WARNING = "warning"
+    INFO = "info"
+
+
+class FindingCategory(NoValue):
+    """A useful set of finding categories.
+
+    This is just a helper and you should use the value
+    of the member/instance (FindingCategory.SECURITY.value).
+    """
+
+    SECURITY = "security"
+    LICENSE = "license"
+    PROJECT = "project"
 
 
 @dataclass(frozen=True)
-class Finding:
+class Finding(Dictionizer):
     """A single finding note."""
 
+    coordinates: PackageCoordinates
+
+    """ An identifier for the finding.
+
+    Please use the provider name (in uppercase) followed by a 3-digit identifier
+    such as 001 and 078. Examples include:
+        - BASIC001
+        - SPDX021
+        - SAFETY004
+    """
+    id: str
+
+    """An appropriate priority for this finding."""
     level: FindingLevel
+
+    """An open category.
+
+    Where possible, use FindingCategory values (e.g. FindingCategory.SECURITY.value)."""
+    category: str
 
     """A brief (<100 characters) title for the finding."""
     title: Optional[str]
@@ -25,12 +65,32 @@ class Finding:
     """A longer description of the finding."""
     message: str
 
+    """Allows report providers to optionally add further data."""
+    data: Optional[Dictionizer]
+
     """A link for further details."""
     url: Optional[str]
 
+    def to_dict(self) -> Dict:  # noqa:D102
+        data = None
+
+        if self.data:
+            data = self.data.to_dict()
+
+        return {
+            "id": self.id,
+            "coordinates": self.coordinates.to_dict(),
+            "level": self.level.value,
+            "category": self.category,
+            "title": self.title,
+            "message": self.message,
+            "data": data,
+            "url": self.url,
+        }
+
 
 @dataclass(frozen=True)
-class ReportProviderDetails:
+class ReportProviderDetails(Dictionizer):
     """Describes the report provider."""
 
     name: str
@@ -43,15 +103,24 @@ class ReportProviderDetails:
     """A link for further details."""
     url: Optional[str]
 
+    def to_dict(self) -> Dict:  # noqa:D102
+        return {
+            "name": self.name,
+            "vendor": self.vendor,
+            "display_name": self.display_name,
+            "version": self.version,
+            "url": self.url,
+        }
+
 
 @dataclass(frozen=True)
 class ReportProviderConfiguration:
     """A very generic class to allow for flexible configuration."""
 
-    items: Dict[str, Any]
+    items: Optional[Dict[str, Any]] = None
 
 
-class Report:
+class Report(Dictionizer):
     """An individual report from a report provider."""
 
     def __init__(self, provider_details: ReportProviderDetails):
@@ -72,10 +141,82 @@ class Report:
         else:
             self._findings[finding.level].append(finding)
 
+    def add_findings(self, findings: List[Finding]) -> None:
+        """Add a finding to the list."""  # noqa:DAR101
+        for finding in findings:
+            self.add_finding(finding)
 
-class ReportSet:
+    @property
+    def created(self) -> datetime:  # noqa:D102
+        return self._created
+
+    @property
+    def provider_details(self) -> ReportProviderDetails:  # noqa:D102
+        return self._provider
+
+    @property
+    def findings(self) -> Dict[FindingLevel, List[Finding]]:  # noqa:D102
+        return self._findings
+
+    @property
+    def all_findings(self) -> List[Finding]:  # noqa:D102
+        from itertools import chain
+
+        return list(chain.from_iterable(self._findings.values()))
+
+    def to_dict(self) -> Dict:  # noqa:D102
+        return {
+            "created": self.created.isoformat(),
+            "provider": self.provider_details.to_dict(),
+            "findings": [finding.to_dict() for finding in self.all_findings],
+        }
+
+
+class ReportSet(Dictionizer):
     """Manages a set of reports from various providers."""
 
     def __init__(self):
         """Constructor."""
-        self._reports = Dict[str, Report]
+        self._reports: Dict[str, Report] = {}
+
+    def add_report(self, report: Report) -> None:
+        """Add a single report to the set.
+
+        Args:
+            report: The report to add (no, really)
+
+        Raises:
+            ValueError: when the `report.provider_details.name` has
+                        already filed a report
+        """
+        name = report.provider_details.name
+        if name in self._reports:
+            raise ValueError(f"The provider {name} already has a report in the set.")
+
+        self._reports[name] = report
+
+    def items(self) -> Iterable[Tuple[str, Report]]:
+        """Lets you iterate over the reports in the set.
+
+        Returns:
+            As for a dictionary
+        """
+        return self._reports.items()
+
+    @property
+    def all_findings(self) -> List[Finding]:
+        """Get all findings across the reports.
+
+        Returns:
+            A list of all findings from across all reports in the set.
+        """
+        from itertools import chain
+
+        return list(
+            chain.from_iterable(
+                [report.all_findings for report in self._reports.values()]
+            )
+        )
+
+    def to_dict(self) -> Dict:  # noqa:D102
+        return {name: report.to_dict() for name, report in self._reports.items()}

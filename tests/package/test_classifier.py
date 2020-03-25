@@ -2,7 +2,7 @@
 
 import pytest
 
-from valiant.util import Classifier
+from valiant.package import Classifier
 
 
 @pytest.mark.parametrize(
@@ -10,26 +10,47 @@ from valiant.util import Classifier
     [
         (
             "Development Status :: 6 - Mature",
-            Classifier(category="Development Status", value="6 - Mature"),
+            Classifier(
+                original="Development Status :: 6 - Mature",
+                category="Development Status",
+                subcategories=[],
+                value="6 - Mature",
+            ),
         ),
         (
             " License :: Nokia Open Source License (NOKOS) ",
-            Classifier(category="License", value="Nokia Open Source License (NOKOS)"),
+            Classifier(
+                original=" License :: Nokia Open Source License (NOKOS) ",
+                category="License",
+                subcategories=[],
+                value="Nokia Open Source License (NOKOS)",
+            ),
         ),
         (
             "License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)",  # noqa: B950
             Classifier(
+                original="License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)",  # noqa: B950
                 category="License",
-                subcategory="OSI Approved",
+                subcategories=["OSI Approved"],
                 value="GNU Library or Lesser General Public License (LGPL)",
             ),
         ),
         (
             "Topic :: Text Editors :: Integrated Development Environments (IDE)",
             Classifier(
+                original="Topic :: Text Editors :: Integrated Development Environments (IDE)",
                 category="Topic",
-                subcategory="Text Editors",
+                subcategories=["Text Editors"],
                 value="Integrated Development Environments (IDE)",
+            ),
+        ),
+        (
+            "Topic :: Internet :: WWW/HTTP :: Site Management :: Link Checking",
+            Classifier(
+                original="Topic :: Internet :: WWW/HTTP :: Site Management :: Link Checking",
+                category="Topic",
+                subcategories=["Internet", "WWW/HTTP", "Site Management"],
+                value="Link Checking",
             ),
         ),
     ],
@@ -46,13 +67,7 @@ def test_parse_classifier(test_input: str, expected: Classifier) -> None:
 
 
 @pytest.mark.parametrize(
-    "test_input",
-    [
-        "BadString",
-        "NoValue ::",
-        "Bad ;; Delimiter",
-        "Too :: Many :: Classifiers :: Nooo",
-    ],
+    "test_input", ["BadString", "NoValue ::", "Bad ;; Delimiter"],
 )
 def test_parse_classifier_bad_input(test_input: str) -> None:
     """Test handling of bad input.

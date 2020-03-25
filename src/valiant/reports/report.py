@@ -1,5 +1,6 @@
 """Base class for report providers."""
 from abc import ABC, abstractmethod
+from typing import Any, Dict, Optional
 
 from ..package import PackageMetadata
 from .model import Report, ReportProviderConfiguration, ReportProviderDetails
@@ -15,6 +16,11 @@ class BaseReportProvider(ABC):
             configuration: The provider's config
         """
         self._configuration = configuration
+
+    @property
+    def configuration(self) -> Optional[Dict[str, Any]]:
+        """The provider config."""
+        return self._configuration.items  # noqa: DAR201
 
     @classmethod
     @abstractmethod

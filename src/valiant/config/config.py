@@ -5,6 +5,7 @@ from typing import Dict, List, Optional
 
 from valiant.repositories import RepositoryConfiguration
 from valiant.repositories.pypi import PyPiRepository
+from valiant.reports import ReportProviderConfiguration
 
 
 class Config:
@@ -16,6 +17,7 @@ class Config:
         config_dir: str,
         cache_dir: str,
         default_repository: Optional[str] = None,
+        report_configuration: Optional[Dict[str, ReportProviderConfiguration]] = None,
     ):
         """Constructor.
 
@@ -25,6 +27,7 @@ class Config:
             config_dir: Contains the configuration files.
             default_repository: The repository configuration to use by default
                                 Only needed if there are > 1 repositories
+            report_configuration: The report types to run by default
 
         Raises:
             ValueError: When the `repositories` list has items with the same name.
@@ -37,6 +40,12 @@ class Config:
         self._cache_dir = Path(cache_dir)
         self._config_dir = Path(config_dir)
 
+        self._report_configuration: Optional[
+            Dict[str, ReportProviderConfiguration]
+        ] = None
+        if report_configuration:
+            self._report_configuration = deepcopy(report_configuration)
+
         self._repositories: Dict[str, RepositoryConfiguration] = {}
 
         for repo in repository_configurations:
@@ -45,10 +54,12 @@ class Config:
             else:
                 self._repositories[repo.name] = deepcopy(repo)
 
-        if len(self._repositories) == 1:
+        if len(self._repositories) == 1 and not default_repository:
             self._default_repository = next(iter(self._repositories.keys()))
-        elif default_repository is not None:
+        elif default_repository:
             self._default_repository = default_repository
+        else:  # pragma: no cover
+            raise ValueError("Could not reconcile repository configuration.")
 
         if self._default_repository not in self._repositories:
             raise ValueError(
@@ -67,7 +78,12 @@ class Config:
         return self._config_dir  # noqa: DAR201
 
     @property
-    def default_repository_name(self) -> Optional[str]:
+    def report_configuration(self) -> Optional[Dict[str, ReportProviderConfiguration]]:
+        """The reporting config."""
+        return self._report_configuration  # noqa: DAR201
+
+    @property
+    def default_repository_name(self) -> str:
         """The default repo name."""
         return self._default_repository  # noqa: DAR201
 
@@ -135,4 +151,9 @@ def _load_default_config() -> Config:
         repository_configurations=[PyPiRepository.get_pypi_config()],
         config_dir=dirs.user_config_dir,
         cache_dir=dirs.user_cache_dir,
+        report_configuration={
+            "basic": ReportProviderConfiguration(),
+            "spdx": ReportProviderConfiguration(),
+            "safety": ReportProviderConfiguration(),
+        },
     )

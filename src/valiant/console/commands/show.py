@@ -1,7 +1,7 @@
 """CLI Command: show."""
-from typing import Any, Dict
+from valiant.package import PackageMetadata
 
-from .command import Command
+from .command import Command, Payload
 
 
 class ShowCommand(Command):
@@ -14,18 +14,15 @@ class ShowCommand(Command):
         {--o|out= : the desired output type (json)}
     """
 
-    def prepare_data(self, **kwargs: Any) -> Dict[str, Any]:
+    def prepare_data(self) -> Payload:
         """Gets the package metadata.
-
-        Args:
-            kwargs: Not used
 
         Returns:
             Package metadata
 
         Raises:
             ValueError: When the package data can't be loaded
-        """  # noqa:DAR101,DAR201
+        """
         result = self.valiant.get_package_metadata(
             package_name=self.argument("package"),
             package_version=self.argument("version"),
@@ -35,14 +32,25 @@ class ShowCommand(Command):
         if not result:
             raise ValueError("Package details could not be loaded.")
 
-        return {
-            "repo_url": result.repository_base_url,
-            "metadata": result.package_metadata.to_dict(),
-        }
+        return Payload(metadata=result.package_metadata)
 
-    def to_text(self, data: Dict[str, Any]) -> str:
-        """Prepares text representations."""  # noqa:DAR101,DAR201
+    def to_text(self, data: Payload) -> str:
+        """Prepares text representations.
+
+        Args:
+            data: A payload that must have the package metadata.
+
+        Returns:
+            A nice bit of information to enhance your terminal.
+
+        Raises:
+            ValueError: If the payload is missing the package metadata.
+        """
+        if not data.metadata:
+            raise ValueError("No package metadata available.")
+
+        metadata: PackageMetadata = data.metadata
         return f"""\
-<info>{data["metadata"]["name"]}:{data["metadata"]["version"]}</info>
-<comment>Repository: <link>{data["repo_url"]}</link></comment>
-<comment>Summary: {data["metadata"]["summary"]}</comment>"""
+<info>{metadata.name}:{metadata.version}</info>
+<comment>Repository: <link>{metadata.repository_url}</link></comment>
+<comment>Summary: {metadata.summary}</comment>"""

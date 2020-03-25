@@ -56,3 +56,15 @@ def test_config_custom() -> None:
     v = Factory().create_valiant(c)
     assert v.cache_dir == Path("/var/cache")
     assert v.config_dir == Path("/etc/valiant")
+
+
+def test_reports_no_config() -> None:
+    """Fail if no report configuration has been provided."""
+    c = Config(
+        cache_dir="/var/cache",
+        config_dir="/etc/valiant",
+        repository_configurations=[PyPiRepository.get_pypi_config()],
+    )
+    v = Factory().create_valiant(c)
+    with pytest.raises(ValueError):
+        v.get_package_reports()

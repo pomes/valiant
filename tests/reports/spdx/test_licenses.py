@@ -11,7 +11,7 @@ from typing import Dict
 import py  # https://py.readthedocs.io/en/latest/index.html
 import pytest
 
-from valiant.util.spdx import SpdxLicense, SpdxLicenses
+from valiant.reports.spdx import SpdxLicense, SpdxLicenses
 
 
 FIXTURE_DIR = os.path.join(

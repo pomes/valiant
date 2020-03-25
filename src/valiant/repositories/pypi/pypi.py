@@ -75,7 +75,9 @@ class PyPiRepository(BaseRepository):
         except (PackageNotFoundException, RepositoryException) as e:
             raise PackageNotFoundException(f"Failed to access package metadata: {e}")
 
-        return PyPiPackageMetadata(data)
+        return PyPiPackageMetadata(
+            repository_url=self.repository_configuration.base_url, package_data=data
+        )
 
     def download(self, name: str, version: str) -> Path:
         """Provides details for a specific package version.

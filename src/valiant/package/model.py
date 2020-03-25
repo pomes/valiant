@@ -1,14 +1,16 @@
 """Base classes for describing a package."""
-import json
-
-from abc import ABC, abstractmethod
+from abc import abstractmethod
+from dataclasses import dataclass
 from datetime import datetime
 from typing import Dict, List
 
 from packaging.requirements import Requirement
+from valiant.util import Dictionizer
+
+from .classifier import Classifier
 
 
-class ArtifactMetadata(ABC):
+class ArtifactMetadata(Dictionizer):
     """Metadata for a package artifact.
 
     A package version usually has one or more artifacts aligned
@@ -41,7 +43,12 @@ class ArtifactMetadata(ABC):
     @property
     @abstractmethod
     def signed(self) -> bool:  # pragma: no cover
-        """True if the artifact was signed, False otherwise."""
+        """True if the artifact was signed, False otherwise.
+
+        For further info, check out the --sign option in twine.
+
+        See: https://github.com/pypa/twine#why-should-i-use-this
+        """
 
     @property
     @abstractmethod
@@ -105,8 +112,135 @@ class ArtifactMetadata(ABC):
     def url(self) -> str:  # pragma: no cover
         """The download URL for the artifact."""
 
+    def to_dict(self) -> Dict:  # noqa:DAR102
+        return {
+            "comment_text": self.comment_text,
+            "digests": self.digests,
+            "sha256_digest": self.sha256_digest,
+            "signed": self.signed,
+            "signature_url": self.signature_url,
+            "package_type": self.package_type,
+            "python_version": self.python_version,
+            "requires_python": self.requires_python,
+            "size": self.size,
+            "upload_time_iso_8601": self.upload_time_iso_8601.isoformat(),
+            "url": self.url,
+        }
 
-class PackageMetadata(ABC):
+
+class ArtifactMetadataImpl(ArtifactMetadata):
+    """Basic implementation of ArtifactMetadata."""
+
+    def __init__(
+        self,
+        comment_text: str,
+        digests: Dict[str, str],
+        sha256_digest: str,
+        signed: bool,
+        signature_url: str,
+        package_type: str,
+        python_version: str,
+        requires_python: List[str],
+        size: int,
+        upload_time_iso_8601: datetime,
+        url: str,
+    ):  # noqa: D107
+        self._comment_text = comment_text
+        self._digests = digests
+        self._sha256_digest = sha256_digest
+        self._signed = signed
+        self._signature_url = signature_url
+        self._package_type = package_type
+        self._python_version = python_version
+        self._requires_python = requires_python
+        self._size = size
+        self._upload_time_iso_8601 = upload_time_iso_8601
+        self._url = url
+
+    @property
+    def comment_text(self) -> str:  # pragma: no cover
+        """The comment text provided in the artifact."""
+        return self._comment_text  # noqa:DAR201
+
+    @property
+    def digests(self) -> Dict[str, str]:  # pragma: no cover
+        """Provides the hashes (digests) for the artifact."""
+        return self._digests  # noqa:DAR201
+
+    @property
+    def sha256_digest(self) -> str:  # pragma: no cover
+        """Convenience method to access the SHA256 hash."""
+        return self._sha256_digest  # noqa:DAR201
+
+    @property
+    def signed(self) -> bool:  # pragma: no cover
+        """True if the artifact was signed, False otherwise."""
+        return self._signed  # noqa:DAR201
+
+    @property
+    def signature_url(self) -> str:  # pragma: no cover
+        """Returns the url of the signing key for the artifact."""
+        return self._signature_url  # noqa:DAR201
+
+    @property
+    def package_type(self) -> str:  # pragma: no cover
+        """The packaging type of the artifact."""
+        return self._package_type  # noqa:DAR201
+
+    @property
+    def python_version(self) -> str:  # pragma: no cover
+        """The Python version required for the version."""
+        return self._python_version  # noqa:DAR201
+
+    @property
+    def requires_python(self) -> List[str]:  # pragma: no cover
+        """A list of Python versions supported by the artifact."""
+        return self._requires_python  # noqa:DAR201
+
+    @property
+    def size(self) -> int:  # pragma: no cover
+        """The size of the artifact in bytes."""
+        return self._size  # noqa:DAR201
+
+    @property
+    def upload_time_iso_8601(self) -> datetime:  # pragma: no cover
+        """The ISO 8601-compliant timestamp of the upload."""
+        return self._upload_time_iso_8601  # noqa:DAR201
+
+    @property
+    def url(self) -> str:  # pragma: no cover
+        """The download URL for the artifact."""
+        return self._url  # noqa:DAR201
+
+
+@dataclass
+class PackageCoordinates(Dictionizer):
+    """An approach to locating a package based on repo, name and version.
+
+    This is based on the Maven approach. It might be useful.
+
+    See: http://maven.apache.org/pom.html
+    """
+
+    name: str
+    version: str
+    repository_url: str
+
+    def to_dict(self) -> Dict:  # noqa: D102
+        from dataclasses import asdict
+
+        return asdict(self)
+
+    def __str__(self) -> str:
+        """String representation.
+
+        Returns:
+            A coordinator described using the classifier format.
+        """
+        return f"{self.repository_url} :: {self.name} :: {self.version}"
+
+
+class PackageMetadata(Dictionizer):
     """The metadata for a Python package."""
 
     def _requirement_to_dict(self, req: Requirement) -> Dict:
@@ -139,15 +273,20 @@ class PackageMetadata(ABC):
             "version": self.version,
             "summary": self.summary,
             "license": self.license,
+            "classifiers": self.classifiers,
+            "url_project": self.url_project,
+            "url_code": self.url_code,
+            "url_issue_tracker": self.url_issue_tracker,
+            "url_documentation": self.url_documentation,
+            "artifacts": self.artifacts,
         }
 
-    def to_json(self) -> str:
-        """Extract an instance in JSON format.
-
-        Returns:
-            JSON string rendition of the instance.
-        """
-        return json.dumps(self.to_dict())
+    @property
+    def coordinates(self) -> PackageCoordinates:
+        """The package coordinates for this metadata."""
+        return PackageCoordinates(  # noqa:DAR201
+            name=self.name, version=self.version, repository_url=self.repository_url
+        )
 
     @property
     @abstractmethod
@@ -166,19 +305,38 @@ class PackageMetadata(ABC):
 
     @property
     @abstractmethod
+    def repository_url(self) -> str:  # pragma: no cover
+        """The URL from whence this package info came."""
+
+    @property
+    @abstractmethod
     def license(self) -> str:  # pragma: no cover
         """The license assigned to the package.
 
         Ideally, this will match an SPDX identifier.
 
+        See: https://packaging.python.org/specifications/core-metadata/#license
         See: https://spdx.org/licenses/
-        See also: https://github.com/pomes/poetry/blob/master/poetry/spdx/license.py
         """
 
     @property
     @abstractmethod
     def version(self) -> str:  # pragma: no cover
         """The package version."""
+
+    @property
+    @abstractmethod
+    def classifiers(self) -> List[str]:  # pragma: no cover
+        """The classifiers listed against the package.
+
+        You can use the Classifier class in this package to parse
+        classifiers if needed.
+        """
+
+    @property
+    @abstractmethod
+    def classifiers_parsed(self) -> List[Classifier]:  # pragma: no cover
+        """The parsed classifiers listed against the package."""
 
     @property
     @abstractmethod

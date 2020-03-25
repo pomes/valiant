@@ -1,22 +1,15 @@
-"""Helper assets relating to SPDX (https://spdx.org/about) licenses.
+"""Helper assets relating to SPDX (https://spdx.org/about) licenses."""
 
-The spdx-licenses.json file was obtained from the following URL:
-https://raw.githubusercontent.com/spdx/license-list-data/master/json/licenses.json.
-It isn't apparent what the license for the data is but other code in the GitHub Org
-appears to use "Apache License 2.0"
-"""
-
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from dataclasses import field as dc_field
 from datetime import date
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, cast
 
 import requests
-
 from desert import desert
 from marshmallow import fields
 from marshmallow.exceptions import ValidationError as MarshmallowValidationError
-
+from valiant.util import Dictionizer
 
 """The canonical SPDX license data in JSON format."""
 SPDX_LICENSE_DATA_FILE_URL = (
@@ -25,20 +18,31 @@ SPDX_LICENSE_DATA_FILE_URL = (
 
 
 @dataclass
-class SpdxLicense:
+class SpdxLicense(Dictionizer):
     """An individual license descriptor."""
 
     name: str
     reference: str
-    id: str = desert.field(fields.String(data_key="licenseId"))
-    is_deprecated: bool = desert.field(fields.Boolean(data_key="isDeprecatedLicenseId"))
-    details_url: str = desert.field(fields.String(data_key="detailsUrl"))
-    reference_number: str = desert.field(fields.String(data_key="referenceNumber"))
-    see_also: List[str] = desert.field(fields.List(fields.String, data_key="seeAlso"))
-    is_osi_approved: bool = desert.field(fields.Boolean(data_key="isOsiApproved"))
+    id: str = cast(str, desert.field(fields.String(data_key="licenseId")))
+    is_deprecated: bool = cast(
+        bool, desert.field(fields.Boolean(data_key="isDeprecatedLicenseId"))
+    )
+    details_url: str = cast(str, desert.field(fields.String(data_key="detailsUrl")))
+    reference_number: str = cast(
+        str, desert.field(fields.String(data_key="referenceNumber"))
+    )
+    see_also: List[str] = cast(
+        List[str], desert.field(fields.List(fields.String, data_key="seeAlso"))
+    )
+    is_osi_approved: bool = cast(
+        bool, desert.field(fields.Boolean(data_key="isOsiApproved"))
+    )
     is_fsf_libre: Optional[bool] = dc_field(
         default=None, metadata=desert.metadata(fields.Boolean(data_key="isFsfLibre"))
     )
+
+    def to_dict(self) -> Dict:  # noqa:D102
+        return asdict(self)
 
 
 @dataclass
@@ -155,7 +159,7 @@ class SpdxLicenses:
         from importlib import resources as pkg_resources
         import pickle  # noqa: S403
 
-        DATA_PACKAGE = "valiant.util.spdx"
+        DATA_PACKAGE = "valiant.reports.spdx"
         DATA_FILE = "spdx-licenses.pickle"
 
         if not pkg_resources.is_resource(DATA_PACKAGE, DATA_FILE):  # pragma: no cover

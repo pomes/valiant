@@ -1,3 +1,21 @@
 """Base classes for packages and artifacts."""
 
-from .model import ArtifactMetadata, PackageMetadata
+from .classifier import (
+    CLASSIFIER_CATEGORY_DEVELOPMENT_STATUS,
+    CLASSIFIER_CATEGORY_ENVIRONMENT,
+    CLASSIFIER_CATEGORY_FRAMEWORK,
+    CLASSIFIER_CATEGORY_INTENDED_AUDIENCE,
+    CLASSIFIER_CATEGORY_LICENSE,
+    CLASSIFIER_CATEGORY_NATURAL_LANGUAGE,
+    CLASSIFIER_CATEGORY_OPERATING_SYSTEM,
+    CLASSIFIER_CATEGORY_PROGRAMMING_LANGUAGE,
+    CLASSIFIER_CATEGORY_TOPIC,
+    CLASSIFIER_CATEGORY_TYPING,
+    Classifier,
+)
+from .model import (
+    ArtifactMetadata,
+    ArtifactMetadataImpl,
+    PackageCoordinates,
+    PackageMetadata,
+)

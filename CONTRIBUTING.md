@@ -74,6 +74,15 @@ To check that you'll pass the pre-commit hooks, stage your files and then run:
 
     pre-commit run
 
+### Tips
+
+When testing the command line you may wish to see the error/exception trace.
+The `-v` option will generally help here. For commands providing JSON output
+you can utilise the [jq](https://stedolan.github.io/jq/) tool to pretty up the output.
+In the example below I redirect stderr so that errors are also displayed nicely:
+
+    valiant report rdflib 4.2.2 basic -o json -v 2>&1 |  jq -C
+
 ### Useful references
 
 | Tool | Description |

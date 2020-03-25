@@ -10,7 +10,7 @@ from typing import Any, Dict
 import pytest
 import requests
 
-from valiant.util.spdx import SpdxLicenses
+from valiant.reports.spdx import SpdxLicenses
 
 
 MonkeyPatch = Any

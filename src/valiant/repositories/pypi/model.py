@@ -14,14 +14,22 @@ from typing import Dict, List, Optional
 
 from desert import desert, marshmallow
 from packaging.requirements import Requirement
-from valiant.package import ArtifactMetadata, PackageMetadata
+from valiant.package import (
+    ArtifactMetadata,
+    ArtifactMetadataImpl,
+    Classifier,
+    PackageMetadata,
+)
 
 from .. import ValidationError
 
 
 @dataclass
 class Downloads:
-    """The (unused?) download counts for a package."""
+    """The (unused?) download counts for a package.
+
+    See https://packaging.python.org/guides/analyzing-pypi-package-downloads/
+    """
 
     last_day: int
     last_month: int
@@ -40,23 +48,23 @@ class Info:
     bugtrack_url: Optional[str]
     classifiers: List[str]
     description: str
-    description_content_type: str
+    description_content_type: Optional[str]
     docs_url: Optional[str]
     download_url: str
     downloads: Downloads
     home_page: str
-    keywords: str
+    keywords: Optional[str]
     license: str
-    maintainer: str
-    maintainer_email: str
+    maintainer: Optional[str]
+    maintainer_email: Optional[str]
     name: str
     package_url: str
     platform: str
     project_url: str
     project_urls: Dict[str, str]
     release_url: str
-    requires_dist: List[str]
-    requires_python: str
+    requires_dist: Optional[List[str]]
+    requires_python: Optional[str]
     summary: str
     version: str
 
@@ -96,7 +104,7 @@ class ArtifactUrl:
     md5_digest: str
     packagetype: str
     python_version: str
-    requires_python: str
+    requires_python: Optional[str]
     size: int
     upload_time: datetime
     upload_time_iso_8601: datetime
@@ -117,28 +125,52 @@ class PyPiPackage:
 class PyPiPackageMetadata(PackageMetadata):
     """Provides the required PackageMetadata interface for a PyPiPackage."""
 
-    def __init__(self, package_data: Dict):
+    def __init__(self, repository_url: str, package_data: Dict):
         """Constructor.
 
         Args:
+            repository_url: The URL for the repo that provided this metadata.
             package_data: A dictionary based on the JSON structure returned by the PyPi API.
                           See: https://warehouse.readthedocs.io/api-reference/json/
 
         Raises:
             ValidationError: when the data could not be correctly mapped.
         """
+        self._repository_url = repository_url
+        self._parsed_classifiers: Optional[List[Classifier]] = None
+        self._artifacts: List[ArtifactMetadata] = []
+
         try:
             self._pkg = desert.schema(PyPiPackage).load(package_data)
         except marshmallow.exceptions.ValidationError as ve:
             raise ValidationError(f"Could not validate the JSON data: {ve}") from ve
 
         self._requires_dist: Dict[str, List[Requirement]] = {}
-        for item in self._pkg.info.requires_dist:
-            req = Requirement(item)
-            if req.name not in self._requires_dist:
-                self._requires_dist[req.name] = [req]
-            else:
-                self._requires_dist[req.name].append(req)
+        if self._pkg.info.requires_dist:
+            for item in self._pkg.info.requires_dist:
+                req = Requirement(item)
+                if req.name not in self._requires_dist:
+                    self._requires_dist[req.name] = [req]
+                else:
+                    self._requires_dist[req.name].append(req)
+
+        # Process the urls into artifacts
+        for entry in self._pkg.urls:
+            self._artifacts.append(
+                ArtifactMetadataImpl(
+                    comment_text=entry.comment_text,
+                    digests=entry.digests,
+                    sha256_digest=entry.digests.get("sha256", None),
+                    signed=entry.has_sig,
+                    signature_url=f"{entry.url}.asc",
+                    package_type=entry.packagetype,
+                    python_version=entry.python_version,
+                    requires_python=entry.requires_python,
+                    size=entry.size,
+                    upload_time_iso_8601=entry.upload_time_iso_8601,
+                    url=entry.url,
+                )
+            )
 
     @property
     def name(self) -> str:  # noqa: D102
@@ -154,12 +186,38 @@ class PyPiPackageMetadata(PackageMetadata):
 
     @property
     def license(self) -> str:  # noqa: D102
-        # TODO: Consider use of the classifier if needed
         return self._pkg.info.license
+
+    @property
+    def classifiers(self) -> List[str]:  # noqa: D102
+        """The classifiers listed against the package.
+
+        Returns:
+            A list of classifier strings.
+        """
+        return self._pkg.info.classifiers
+
+    @property
+    def classifiers_parsed(self) -> List[Classifier]:  # noqa: D102
+        """The parsed classifiers listed against the package.
+
+        Returns:
+            A list of parsed classifiers.
+        """
+        if not self._parsed_classifiers:
+            self._parsed_classifiers = []
+            for item in self.classifiers:
+                self._parsed_classifiers.append(Classifier.parse(item))
+
+        return self._parsed_classifiers
 
     @property
     def version(self) -> str:  # noqa: D102
         return self._pkg.info.version
+
+    @property
+    def repository_url(self) -> str:  # noqa: D102
+        return self._repository_url
 
     @property
     def url_code(self) -> str:  # noqa: D102
@@ -240,8 +298,8 @@ class PyPiPackageMetadata(PackageMetadata):
         Versioning spec:
             https://www.python.org/dev/peps/pep-0440/#version-specifiers
 
-        # noqa: DAR202
+
         Returns:
             A dictionary of parsed Requirements with the requirement name as key
         """
-        # TODO: Fill this in - it'll need to map the URLs
+        return self._artifacts
