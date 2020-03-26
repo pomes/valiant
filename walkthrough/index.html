@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="canonical" href="https://pomes.github.io/valiant/walkthrough/">
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Walkthrough - Valiant documentation</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Walkthrough";
+    var mkdocs_page_input_path = "walkthrough.md";
+    var mkdocs_page_url = "/valiant/walkthrough/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Valiant documentation</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="..">Introduction</a>
+                    </li>
+                </ul>
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Walkthrough</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#install">Install</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#containers">Containers</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#from-the-github-project">From the GitHub project</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#configuration">Configuration</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#review-a-dependency">Review a dependency</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#json-reports">JSON reports</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#auditing-a-project">Auditing a project</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#json-audit-reports">JSON audit reports</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../providers/">Report providers</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../limitations/">Limitations</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../cli/">Commands</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../configuration/">Configuration</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Valiant documentation</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Walkthrough</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/pomes/valiant/edit/master/docs/walkthrough.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="walkthrough">Walkthrough</h1>
+<p>Before you start, please remember that Valiant is brand new and still in
+a state of change/development. You should make sure that you use Valiant
+with this is mind.</p>
+<h2 id="install">Install</h2>
+<p>You need to be running Python 3.8 or higher. If you're not running 3.8,
+<a href="https://github.com/pyenv/pyenv">pyenv</a> can make this very easy for you
+and I'd strongly recommend checking out their instructions.</p>
+<p>I'd also recommend using a virtual environment. The "built in" approach to
+this (once you have Python 3.8 installed) is to:</p>
+<pre><code>python -m virtualenv --python 3.8 venv
+. venv/bin/activate
+python --version
+</code></pre>
+<p>Hopefully you get something like <code>Python 3.8.x</code>. With that going you can now
+install Valiant:</p>
+<pre><code>pip install valiant
+</code></pre>
+<p>...and check it's working:</p>
+<pre><code>valiant about
+</code></pre>
+<h3 id="containers">Containers</h3>
+<p>Containers can be handy if you're just taking Valiant for a spin.</p>
+<p>Grab a copy of the Python 3.8 image:</p>
+<pre><code>docker pull docker.io/python:3.8
+</code></pre>
+<p>Start it up:</p>
+<pre><code>docker run --rm -it docker.io/python:3.8 /bin/bash
+</code></pre>
+<p>Once in the container shell you can install Valiant and try it out:</p>
+<pre><code>pip install valiant
+valiant about
+</code></pre>
+<h3 id="from-the-github-project">From the GitHub project</h3>
+<pre><code>pip install git+https://github.com/pomes/valiant.git
+</code></pre>
+<p>It's a really good idea to do this type of thing in a virtual env!
+Poetry will help you out here and install Valiant as a dev dependency:</p>
+<pre><code class="bash">poetry add -D git+https://github.com/pomes/valiant.git
+</code></pre>
+
+<h2 id="configuration">Configuration</h2>
+<p>It's still very early days and Valiant isn't configurable. You can check the
+settings with:</p>
+<pre><code>valiant config
+</code></pre>
+<p>This will display the current configuration:</p>
+<pre><code>cache_dir: /home/fred/.cache/valiant/0.1.0
+config_dir: /home/fred/.config/valiant/0.1.0
+default_repository_name: pypi
+repositories: pypi
+reports: basic,spdx,safety
+</code></pre>
+<p>If you check the <code>config_dir</code> you'll see that Valiant is putting its logs in there.</p>
+<p>You'll also notice that wherever you run the <code>valiant</code> command you'll see a file named
+<code>valiant-0.1.0-requests-cache.sqlite</code> has been created. This is a cache for web
+requests and helps both speed up Valiant as well as reduce load on repository servers.
+Track any update to this in <a href="https://github.com/pomes/valiant/issues/4">Issue #4</a>.</p>
+<h2 id="review-a-dependency">Review a dependency</h2>
+<p>Say you wanted to find out about a dependency. The <code>report</code> command will give
+you information about the project/release plus run some checks.</p>
+<p>Let's try it out:</p>
+<pre><code class="bash">valiant report flask 1.1.1
+</code></pre>
+
+<p>You'll get the following output:</p>
+<pre><code>Package metadata
++-------------+----------------------------------------------------------------+
+|    Item     |                            Value(s)                            |
++=============+================================================================+
+| Package     | Flask                                                          |
++-------------+----------------------------------------------------------------+
+| Version     | 1.1.1                                                          |
++-------------+----------------------------------------------------------------+
+| Repository  | https://pypi.org/pypi                                          |
++-------------+----------------------------------------------------------------+
+| License     | BSD-3-Clause                                                   |
++-------------+----------------------------------------------------------------+
+| Summary     | A simple framework for building complex web applications.      |
++-------------+----------------------------------------------------------------+
+| Resources   | Project: https://palletsprojects.com/p/flask/                  |
+|             | Code: https://github.com/pallets/flask                         |
+|             | Documentation: https://flask.palletsprojects.com/              |
+|             | Issue tracker:: https://github.com/pallets/flask/issues        |
++-------------+----------------------------------------------------------------+
+| Classifiers | Development Status :: 5 - Production/Stable                    |
+|             | Environment :: Web Environment                                 |
+|             | Framework :: Flask                                             |
+|             | Intended Audience :: Developers                                |
+|             | License :: OSI Approved :: BSD License                         |
+|             | Operating System :: OS Independent                             |
+|             | Programming Language :: Python                                 |
+|             | Programming Language :: Python :: 2                            |
+|             | Programming Language :: Python :: 2.7                          |
+|             | Programming Language :: Python :: 3                            |
+|             | Programming Language :: Python :: 3.5                          |
+|             | Programming Language :: Python :: 3.6                          |
+|             | Programming Language :: Python :: 3.7                          |
+|             | Topic :: Internet :: WWW/HTTP :: Dynamic Content               |
+|             | Topic :: Internet :: WWW/HTTP :: WSGI :: Application           |
+|             | Topic :: Software Development :: Libraries :: Application      |
+|             | Frameworks                                                     |
+|             | Topic :: Software Development :: Libraries :: Python Modules   |
++-------------+----------------------------------------------------------------+
+| Artifacts   | bdist_wheel: https://files.pythonhosted.org/packages/9b/93/628 |
+|             | 509b8d5dc749656a9641f4caf13540e2cdec85276964ff8f43bbb1d3b/Flas |
+|             | k-1.1.1-py2.py3-none-any.whl                                   |
+|             | ---                                                            |
+|             | sdist: https://files.pythonhosted.org/packages/2e/80/3726a729d |
+|             | e758513fd3dbc64e93098eb009c49305a97c6751de55b20b694/Flask-1.1. |
+|             | 1.tar.gz                                                       |
++-------------+----------------------------------------------------------------+
+
+Report: Basic [https://pypi.org/pypi :: Flask :: 1.1.1]
+No findings
+
+Report: SPDX License [https://pypi.org/pypi :: Flask :: 1.1.1]
++----------+---------+----------+--------------------+--------------+
+| Priority |   ID    | Category |       Title        |   Message    |
++==========+=========+==========+====================+==============+
+|   info   | SPDX001 | license  | SPDX License found | BSD-3-Clause |
++----------+---------+----------+--------------------+--------------+
+
+Report: Safety [https://pypi.org/pypi :: Flask :: 1.1.1]
+No findings
+</code></pre>
+
+<p>It all looks pretty good. Let's try another one:</p>
+<pre><code class="bash">valiant report rdflib 4.2.2
+</code></pre>
+
+<p>This will yield some findings for us to consider:</p>
+<pre><code>Package metadata
++-------------+----------------------------------------------------------------+
+|    Item     |                            Value(s)                            |
++=============+================================================================+
+| Package     | rdflib                                                         |
++-------------+----------------------------------------------------------------+
+| Version     | 4.2.2                                                          |
++-------------+----------------------------------------------------------------+
+| Repository  | https://pypi.org/pypi                                          |
++-------------+----------------------------------------------------------------+
+| License     | https://raw.github.com/RDFLib/rdflib/master/LICENSE            |
++-------------+----------------------------------------------------------------+
+| Summary     | RDFLib is a Python library for working with RDF, a simple yet  |
+|             | powerful language for representing information.                |
++-------------+----------------------------------------------------------------+
+| Resources   | Project: https://github.com/RDFLib/rdflib                      |
+|             | Code:                                                          |
+|             | Documentation:                                                 |
+|             | Issue tracker::                                                |
++-------------+----------------------------------------------------------------+
+| Classifiers | License :: OSI Approved :: BSD License                         |
+|             | Natural Language :: English                                    |
+|             | Operating System :: OS Independent                             |
+|             | Programming Language :: Python                                 |
+|             | Programming Language :: Python :: 2                            |
+|             | Programming Language :: Python :: 2.6                          |
+|             | Programming Language :: Python :: 2.7                          |
+|             | Programming Language :: Python :: 3                            |
+|             | Programming Language :: Python :: 3.3                          |
+|             | Programming Language :: Python :: 3.4                          |
+|             | Programming Language :: Python :: 3.5                          |
+|             | Topic :: Software Development :: Libraries :: Python Modules   |
++-------------+----------------------------------------------------------------+
+| Artifacts   | bdist_wheel: https://files.pythonhosted.org/packages/3c/fe/630 |
+|             | bacb652680f6d481b9febbb3e2c3869194a1a5fc3401a4a41195a2f8f/rdfl |
+|             | ib-4.2.2-py3-none-any.whl                                      |
+|             | ---                                                            |
+|             | sdist: https://files.pythonhosted.org/packages/c5/77/1fa0f4cff |
+|             | d5faad496b1344ab665902bb2609f56e0fb19bcf80cff485da0/rdflib-4.2 |
+|             | .2.tar.gz                                                      |
++-------------+----------------------------------------------------------------+
+
+Report: Basic [https://pypi.org/pypi :: rdflib :: 4.2.2]
++----------+----------+----------+----------------------+----------------------+
+| Priority |    ID    | Category |        Title         |       Message        |
++==========+==========+==========+======================+======================+
+| warning  | BASIC003 | project  | No link to codebase  | The project doesn't  |
+|          |          |          |                      | provide a link to    |
+|          |          |          |                      | its codebase.        |
++----------+----------+----------+----------------------+----------------------+
+| warning  | BASIC004 | project  | An artifact has not  | A package of type    |
+|          |          |          | been signed          | bdist_wheel has not  |
+|          |          |          |                      | been signed          |
++----------+----------+----------+----------------------+----------------------+
+| warning  | BASIC004 | project  | An artifact has not  | A package of type    |
+|          |          |          | been signed          | sdist has not been   |
+|          |          |          |                      | signed               |
++----------+----------+----------+----------------------+----------------------+
+
+Report: SPDX License [https://pypi.org/pypi :: rdflib :: 4.2.2]
++----------+---------+----------+-----------------------+----------------------+
+| Priority |   ID    | Category |         Title         |       Message        |
++==========+=========+==========+=======================+======================+
+|   info   | SPDX002 | license  | SPDX License not      | Could not map        |
+|          |         |          | found                 | licence https://raw. |
+|          |         |          |                       | github.com/RDFLib/rd |
+|          |         |          |                       | flib/master/LICENSE  |
+|          |         |          |                       | to an SPDX license   |
++----------+---------+----------+-----------------------+----------------------+
+
+Report: Safety [https://pypi.org/pypi :: rdflib :: 4.2.2]
++----------+-----------+----------+---------------------+----------------------+
+| Priority |    ID     | Category |        Title        |       Message        |
++==========+===========+==========+=====================+======================+
+| priority | SAFETY001 | security | Vulnerability found | The CLI tools in     |
+|          |           |          |                     | RDFLib 4.2.2 can     |
+|          |           |          |                     | load Python modules  |
+|          |           |          |                     | from the current     |
+|          |           |          |                     | working directory,   |
+|          |           |          |                     | allowing code        |
+|          |           |          |                     | injection, because   |
+|          |           |          |                     | &quot;python -m&quot; looks in |
+|          |           |          |                     | this directory, as   |
+|          |           |          |                     | demonstrated by      |
+|          |           |          |                     | rdf2dot.             |
++----------+-----------+----------+---------------------+----------------------+
+</code></pre>
+
+<p>Sometimes you just want the findings:</p>
+<pre><code class="bash">valiant report rdflib 4.2.2 -s
+</code></pre>
+
+<p>This will give us a quick table to check:</p>
+<pre><code>+--------------+-----------+----------+----------+--------------+--------------+
+|   Package    |    ID     |  Level   | Category |    Title     |   Message    |
+| Coordinates  |           |          |          |              |              |
++==============+===========+==========+==========+==============+==============+
+| https://pypi | BASIC003  | warning  | project  | No link to   | The project  |
+| .org/pypi :: |           |          |          | codebase     | doesn't      |
+| rdflib ::    |           |          |          |              | provide a    |
+| 4.2.2        |           |          |          |              | link to its  |
+|              |           |          |          |              | codebase.    |
++--------------+-----------+----------+----------+--------------+--------------+
+| https://pypi | BASIC004  | warning  | project  | An artifact  | A package of |
+| .org/pypi :: |           |          |          | has not been | type         |
+| rdflib ::    |           |          |          | signed       | bdist_wheel  |
+| 4.2.2        |           |          |          |              | has not been |
+|              |           |          |          |              | signed       |
++--------------+-----------+----------+----------+--------------+--------------+
+| https://pypi | BASIC004  | warning  | project  | An artifact  | A package of |
+| .org/pypi :: |           |          |          | has not been | type sdist   |
+| rdflib ::    |           |          |          | signed       | has not been |
+| 4.2.2        |           |          |          |              | signed       |
++--------------+-----------+----------+----------+--------------+--------------+
+| https://pypi | SPDX002   | info     | license  | SPDX License | Could not    |
+| .org/pypi :: |           |          |          | not found    | map licence  |
+| rdflib ::    |           |          |          |              | https://raw. |
+| 4.2.2        |           |          |          |              | github.com/R |
+|              |           |          |          |              | DFLib/rdflib |
+|              |           |          |          |              | /master/LICE |
+|              |           |          |          |              | NSE to an    |
+|              |           |          |          |              | SPDX license |
++--------------+-----------+----------+----------+--------------+--------------+
+| https://pypi | SAFETY001 | priority | security | Vulnerabilit | The CLI      |
+| .org/pypi :: |           |          |          | y found      | tools in     |
+| rdflib ::    |           |          |          |              | RDFLib 4.2.2 |
+| 4.2.2        |           |          |          |              | can load     |
+|              |           |          |          |              | Python       |
+|              |           |          |          |              | modules from |
+|              |           |          |          |              | the current  |
+|              |           |          |          |              | working      |
+|              |           |          |          |              | directory,   |
+|              |           |          |          |              | allowing     |
+|              |           |          |          |              | code         |
+|              |           |          |          |              | injection,   |
+|              |           |          |          |              | because      |
+|              |           |          |          |              | &quot;python -m&quot;  |
+|              |           |          |          |              | looks in     |
+|              |           |          |          |              | this         |
+|              |           |          |          |              | directory,   |
+|              |           |          |          |              | as           |
+|              |           |          |          |              | demonstrated |
+|              |           |          |          |              | by rdf2dot.  |
++--------------+-----------+----------+----------+--------------+--------------+
+</code></pre>
+
+<p>You can run specific reports by listing them. In the command below I just ask
+for the report from the <code>safety</code> reporter:</p>
+<pre><code class="bash">valiant report rdflib 4.2.2 safety -s
+</code></pre>
+
+<p>For multiple reports, just use a comma separator:</p>
+<pre><code class="bash">valiant report rdflib 4.2.2 safety,basic -s
+</code></pre>
+
+<p>You can see the list of available reports by running the <code>valiant config</code> command.</p>
+<h3 id="json-reports">JSON reports</h3>
+<p>You can get a copy of the report in JSON by setting the output:</p>
+<pre><code class="bash">valiant report rdflib 4.2.2 -o json
+</code></pre>
+
+<p>You can also produce a JSON-based findings report:</p>
+<pre><code class="bash">valiant report rdflib 4.2.2 -s -o json
+</code></pre>
+
+<p>As we saw in the test output examples, you can limit the reports you want:</p>
+<pre><code class="bash">valiant report rdflib 4.2.2 safety -s -o json
+</code></pre>
+
+<p>As a hint, it can be useful to pass the result to the handy
+<a href="https://stedolan.github.io/jq/"><code>jq</code> tool</a>:</p>
+<pre><code class="bash">poetry run valiant report flask 1.1.1 -o json | jq
+</code></pre>
+
+<p>This will give you something like:</p>
+<pre><code class="json">[
+  {
+    &quot;id&quot;: &quot;SAFETY001&quot;,
+    &quot;coordinates&quot;: {
+      &quot;name&quot;: &quot;rdflib&quot;,
+      &quot;version&quot;: &quot;4.2.2&quot;,
+      &quot;repository_url&quot;: &quot;https://pypi.org/pypi&quot;
+    },
+    &quot;level&quot;: &quot;priority&quot;,
+    &quot;category&quot;: &quot;security&quot;,
+    &quot;title&quot;: &quot;Vulnerability found&quot;,
+    &quot;message&quot;: &quot;The CLI tools in RDFLib 4.2.2 can load Python modules from the current working directory, allowing code injection, because \&quot;python -m\&quot; looks in this directory, as demonstrated by rdf2dot.&quot;,
+    &quot;data&quot;: {
+      &quot;name&quot;: &quot;rdflib&quot;,
+      &quot;spec&quot;: &quot;==4.2.2&quot;,
+      &quot;version&quot;: &quot;4.2.2&quot;,
+      &quot;advisory&quot;: &quot;The CLI tools in RDFLib 4.2.2 can load Python modules from the current working directory, allowing code injection, because \&quot;python -m\&quot; looks in this directory, as demonstrated by rdf2dot.&quot;,
+      &quot;vuln_id&quot;: &quot;36882&quot;
+    },
+    &quot;url&quot;: &quot;https://github.com/pyupio/safety-db&quot;
+  }
+]
+</code></pre>
+
+<h2 id="auditing-a-project">Auditing a project</h2>
+<p>An audit is essentially a review of multiple dependencies. Valiant uses a requirements file as input. Importantly, the packages listed
+in the requirements file must be pinned to a specific version. The
+example below illustrates how this looks:</p>
+<pre><code>click==7.1.1
+flask==1.1.1
+isodate==0.6.0
+itsdangerous==1.1.0
+jinja2==2.11.1
+markupsafe==1.1.1
+numpy==1.18.2
+pandas==1.0.3
+pyparsing==2.4.6
+python-dateutil==2.8.1
+pytz==2019.3
+rdflib==4.2.2
+six==1.14.0
+werkzeug==1.0.0
+</code></pre>
+
+<p>Thankfully, Poetry's <a href="https://python-poetry.org/docs/cli/#export"><code>export</code></a>
+command makes this easy and we'll use this in the walk-through.</p>
+<p>Let's go through the steps of creating a small project and running
+an audit.</p>
+<p>First of all, create a directory for the test project:</p>
+<pre><code class="bash"># Setup the project
+mkdir test-valiant
+cd test-valiant
+</code></pre>
+
+<p>Make sure you're running Python 3.8 (or greater). I use
+<a href="https://github.com/pyenv/pyenv">pyenv</a> and this makes it easy:</p>
+<pre><code class="bash">pyenv local 3.8.2
+</code></pre>
+
+<p>Better still, create a virtualenv - see the instructions at the
+beginning of this page.</p>
+<p>Now we set up the Poetry project and add some dependencies:</p>
+<pre><code class="bash">pip install poetry
+poetry init -n
+
+# Add some dependencies
+poetry add flask rdflib pandas requests
+</code></pre>
+
+<p>It's now possible to export the pinned requirements file:</p>
+<pre><code class="bash"># Export the requirements file
+poetry export --without-hashes --format requirements.txt --output requirements.txt
+</code></pre>
+
+<p>You can now run an audit of your dependencies with:</p>
+<pre><code class="bash">valiant audit requirements.txt
+</code></pre>
+
+<p>This will pump out a lot of information for you to sift through! It's basically
+a set of reports - much like running the <code>valiant report</code> command for each package.</p>
+<p>If you just want to view the findings across all reports:</p>
+<pre><code class="bash">valiant audit requirements.txt -s
+</code></pre>
+
+<h3 id="json-audit-reports">JSON audit reports</h3>
+<p>As with the one-off report, you can get the audit in JSON format:</p>
+<pre><code>poetry run valiant audit requirements.txt -o json
+</code></pre>
+
+<p>The findings-only listing is also available:</p>
+<pre><code>poetry run valiant audit requirements.txt -s -o json
+</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../providers/" class="btn btn-neutral float-right" title="Report providers">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href=".." class="btn btn-neutral" title="Introduction"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+      <p>&copy; 2020 Duncan Dickinson.
+Licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC-BY 4.0</a>
+</p>
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/pomes/valiant/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href=".." style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../providers/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

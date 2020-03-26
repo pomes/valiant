@@ -50,7 +50,25 @@
                 <ul class="current">
                     <li class="toctree-l1 current"><a class="reference internal current" href=".">Introduction</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#features">Features</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#terminology">Terminology</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#quickstart">Quickstart</a>
+    </li>
     </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="walkthrough/">Walkthrough</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="providers/">Report providers</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="limitations/">Limitations</a>
                     </li>
                 </ul>
                 <ul>
@@ -98,8 +116,48 @@
               
                 <h1 id="introduction">Introduction</h1>
 <p>Welcome!</p>
-<p>This is just being setup so ummm... watch this space?</p>
-<p>Check out the <a href="https://github.com/pomes/valiant">GitHub project site</a>.</p>
+<p>Valiant's main purpose is to provide an auditing tool for Python-based
+software development projects. The goal is to provide a tool that allows
+for easy review of software dependencies and aid in determining areas of
+risk for your project.</p>
+<p>Please check out the <a href="https://github.com/pomes/valiant">GitHub project site</a>
+to dive into the codebase or raise/review issues.</p>
+<h2 id="features">Features</h2>
+<p>The following Valiant functionality works towards the project goals:</p>
+<ul>
+<li>Review a Python package using the <code>valiant report</code> command</li>
+<li>Prepare a bill of materials for all project dependencies using the
+    <code>valiant audit</code> command</li>
+<li>Provide a variety of reporting plugins that will help in examining dependencies
+    from different angles</li>
+</ul>
+<p>Valiant provides text- and JSON-based output options so the results can be either
+read on-screen (command line) or provided to a reporting database. Preparing the JSON
+output could be a useful part of your CI/CD process and interact with policy tools.</p>
+<p>Be mindful that Valiant is very new and under active development. There's a lot
+to be done and you must review all reports with a healthy analysis mindset.
+You should also be mindful that Valiant isn't judging a project to be good or
+bad - it's just trying to raise information that can help you assess risk.</p>
+<h2 id="terminology">Terminology</h2>
+<p>Just so we're all on the same page:</p>
+<ul>
+<li><em>Report provider</em>: A "plugin" that reviews the package information for items
+    of interest. For example, the <code>safety</code> report provider uses the
+    <a href="https://pypi.org/project/safety/">safety</a> package to check for known security
+    vulnerabilties.</li>
+<li><em>Finding</em>: An individual item of interest determined by a report provider</li>
+<li><em>Report</em>: Provides an outline of a package and combines the findings from one
+    or more <a href="providers/">report provider(s)</a></li>
+<li><em>Audit</em>: Prepares a set of reports for a project's dependencies</li>
+</ul>
+<h2 id="quickstart">Quickstart</h2>
+<p>Make sure you have a Python 3.8 environment ready to go and then:</p>
+<pre><code class="bash">pip install valiant
+valiant about
+valiant report django 3.0.4
+</code></pre>
+
+<p>See the <a href="walkthrough/">Walkthrough</a> for more in-depth details.</p>
               
             </div>
           </div>
@@ -107,7 +165,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="cli/" class="btn btn-neutral float-right" title="Commands">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="walkthrough/" class="btn btn-neutral float-right" title="Walkthrough">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
     </div>
@@ -141,7 +199,7 @@ Licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC-BY 4.0<
       
       
       
-        <span style="margin-left: 15px"><a href="cli/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="walkthrough/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
@@ -159,5 +217,5 @@ Licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC-BY 4.0<
 
 <!--
 MkDocs version : 1.1
-Build Date UTC : 2020-03-18 01:32:26
+Build Date UTC : 2020-03-26 23:17:31
 -->
