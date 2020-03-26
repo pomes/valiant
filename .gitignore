@@ -54,3 +54,4 @@ htmlcov/
 
 out/
 requirements.txt
+*.sqlite

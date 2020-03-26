@@ -3,6 +3,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, List, Optional
 
+from requests_cache import install_cache
+from valiant.log import configure_logging, setup_logging_configuration
 from valiant.repositories import RepositoryFactory
 
 from .__about__ import (
@@ -63,6 +65,32 @@ class Valiant:
         self._config: Config = config
         self._repo_factory = RepositoryFactory()
         self._report_factory = ReportFactory()
+
+        # Make sure the required directories exist
+        self._config.config_dir.mkdir(parents=True, exist_ok=True)
+        self._config.cache_dir.mkdir(parents=True, exist_ok=True)
+
+        # Setup logging
+        log_config = setup_logging_configuration(
+            handlers={
+                "default": {
+                    "level": "INFO",
+                    "formatter": "standard",
+                    "class": "logging.handlers.RotatingFileHandler",
+                    "filename": Path(self._config.config_dir, "valiant.log"),
+                    "maxBytes": 500000,
+                    "backupCount": 3,
+                }
+            },
+        )
+        configure_logging(log_config)
+
+        # TODO: this is just basic caching for now
+        install_cache(
+            f"{application_name}-{application_version}-requests-cache",
+            backend="sqlite",
+            expire_after=3600,
+        )
 
     @property
     def application_version(self) -> str:  # noqa: D102
@@ -169,6 +197,7 @@ class Valiant:
             repo_config = self._config.default_repository_configuration
 
         repo = self._repo_factory.get_repository(repo_config)
+
         metadata = repo.show(package_name, package_version)
 
         return PythonPackagePayload(

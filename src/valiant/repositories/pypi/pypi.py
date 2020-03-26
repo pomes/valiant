@@ -7,6 +7,7 @@ from typing import Any, Dict, List
 
 import requests
 
+from valiant.log import get_logger
 from valiant.repositories import (
     BaseRepository,
     PackageNotFoundException,
@@ -14,6 +15,8 @@ from valiant.repositories import (
     RepositoryException,
 )
 from .model import PyPiPackageMetadata
+
+log = get_logger()
 
 
 class PyPiRepository(BaseRepository):
@@ -47,7 +50,22 @@ class PyPiRepository(BaseRepository):
 
         r = requests.get(url)
         if r.status_code != requests.codes.ok:
+            log.error(
+                "Package not found",
+                package_name=name,
+                package_version=version,
+                repository_url=self.repository_configuration.base_url,
+                status_code=r.status_code,
+            )
             raise PackageNotFoundException(f"No result for {url}")
+
+        log.info(
+            "Package found",
+            package_name=name,
+            package_version=version,
+            repository_url=self.repository_configuration.base_url,
+            cache_used=r.from_cache,  # type: ignore
+        )
 
         data = r.json()
 

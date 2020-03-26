@@ -1,5 +1,7 @@
 """A basic package reporter."""
 from enum import Enum
+
+from valiant.log import get_logger
 from valiant.package import PackageCoordinates, PackageMetadata
 from valiant.reports import (
     BaseReportProvider,
@@ -10,6 +12,9 @@ from valiant.reports import (
     ReportProviderDetails,
 )
 from valiant.util import Dictionizer
+
+
+log = get_logger()
 
 
 class BasicId(Enum):
@@ -169,5 +174,13 @@ class BasicReportProvider(BaseReportProvider):
                         data=item,
                     )
                 )
+
+        log.info(
+            f"Basic reporter located {len(report.findings)} findings"
+            " for {str(package_metadata.coordinates)}",
+            package_name=package_metadata.name,
+            package_version=package_metadata.version,
+            repository_url=package_metadata.repository_url,
+        )
 
         return report

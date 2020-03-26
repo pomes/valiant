@@ -68,12 +68,12 @@ class Config:
             )
 
     @property
-    def cache_dir(self) -> Optional[Path]:
+    def cache_dir(self) -> Path:
         """Path to the cache."""
         return self._cache_dir  # noqa: DAR201
 
     @property
-    def config_dir(self) -> Optional[Path]:
+    def config_dir(self) -> Path:
         """Path to the config dir."""
         return self._config_dir  # noqa: DAR201
 

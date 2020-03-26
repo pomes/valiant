@@ -17,7 +17,10 @@ from .. import (
     FindingCategory,
     Finding,
 )
+from valiant.log import get_logger
 from valiant.util import Dictionizer
+
+log = get_logger()
 
 
 class VulnerabilityDictionizer(Dictionizer):
@@ -59,7 +62,7 @@ class SafetyId(Enum):
             id=self.id,
             category=self.category,
             level=self.level,
-            title=f"Vulnerability found - {vulnerability.name}{vulnerability.version}",
+            title=f"Vulnerability found",
             message=vulnerability.advisory,
             data=VulnerabilityDictionizer(vulnerability),
             url="https://github.com/pyupio/safety-db",
@@ -125,5 +128,13 @@ class SafetyReportProvider(BaseReportProvider):
                     package_metadata.coordinates, v
                 )
             )
+
+        log.info(
+            f"Safety reporter located {len(report.findings)} findings"
+            f" for {str(package_metadata.coordinates)}",
+            package_name=package_metadata.name,
+            package_version=package_metadata.version,
+            repository_url=package_metadata.repository_url,
+        )
 
         return report

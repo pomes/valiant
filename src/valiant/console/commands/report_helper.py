@@ -1,5 +1,5 @@
 """Helper funcs for generating reports."""
-from typing import List, Optional
+from typing import List
 
 from texttable import Texttable
 from valiant.package import PackageMetadata
@@ -36,21 +36,14 @@ def create_metadata_report(metadata: PackageMetadata) -> str:
             ["Classifiers", "\n".join(metadata.classifiers)],
             [
                 "Artifacts",
-                "\n---------------\n".join(
+                "\n---\n".join(
                     [f"{a.package_type}: {a.url}" for a in metadata.artifacts]
                 ),
             ],
         ]
     )
 
-    return f"""
-================
-Package metadata
-================
-
-{base_package_table.draw()}
-
-"""
+    return f"<h1>Package metadata</h1>\n{base_package_table.draw()}\n\n"
 
 
 def create_finding_report(metadata: PackageMetadata, report: Report) -> str:
@@ -60,20 +53,13 @@ def create_finding_report(metadata: PackageMetadata, report: Report) -> str:
     # noqa:DAR201
     """
     if len(report.findings.keys()) == 0:
-        findings_report = "No findings"
+        findings_report = "<comment>No findings</comment>"
     else:
         findings_table = Texttable()
-        findings_table.set_cols_dtype(["t", "t", "t", "t", "t", "t"])
-        findings_table.set_cols_align(["c", "c", "c", "l", "l", "l"])
-        findings_table.add_row(
-            ["Priority", "ID", "Category", "Title", "Message", "Data"]
-        )
+        findings_table.set_cols_dtype(["t", "t", "t", "t", "t"])
+        findings_table.set_cols_align(["c", "c", "c", "l", "l"])
+        findings_table.header(["Priority", "ID", "Category", "Title", "Message"])
         for finding in report.all_findings:
-            data: Optional[str] = None
-
-            if finding.data:
-                data = finding.data.to_json()
-
             findings_table.add_row(
                 [
                     finding.level.value,
@@ -81,23 +67,16 @@ def create_finding_report(metadata: PackageMetadata, report: Report) -> str:
                     finding.category,
                     finding.title,
                     finding.message,
-                    data,
                 ]
             )
 
-        findings_report = f"""\
-{findings_table.draw()}
-"""
+        findings_report = findings_table.draw()
+
     report_title = (
         f"Report: {report.provider_details.display_name} [{metadata.coordinates}]"
     )
 
-    return f"""\
-{report_title}
-{"~" * len(report_title)}
-
-{findings_report}
-"""
+    return f"<h1>{report_title}</h1>\n{findings_report}\n\n"
 
 
 def create_short_report(findings: List[Finding]) -> str:
@@ -110,7 +89,7 @@ def create_short_report(findings: List[Finding]) -> str:
         A nice table for you
     """
     report_table = Texttable()
-    report_table.add_row(
+    report_table.header(
         ["Package Coordinates", "ID", "Level", "Category", "Title", "Message"]
     )
 

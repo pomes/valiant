@@ -2,6 +2,7 @@
 from enum import Enum
 from typing import Any, Dict, List, Optional
 
+from valiant.log import get_logger
 from valiant.package import (
     CLASSIFIER_CATEGORY_LICENSE,
     Classifier,
@@ -20,6 +21,9 @@ from valiant.reports import (
 from valiant.util import Dictionizer
 
 from .license import SPDX_LICENSE_DATA_FILE_URL, SpdxLicense, SpdxLicenses
+
+
+log = get_logger()
 
 
 class SpdxId(Enum):
@@ -209,4 +213,13 @@ class SpdxLicenseReportProvider(BaseReportProvider):
         """
         report = Report(self.get_report_provider_details())
         report.add_findings(self.map_package_license_to_spdx(package_metadata))
+
+        log.info(
+            f"SPDX reporter located {len(report.findings)} findings"
+            f"for {str(package_metadata.coordinates)}",
+            package_name=package_metadata.name,
+            package_version=package_metadata.version,
+            repository_url=package_metadata.repository_url,
+        )
+
         return report
