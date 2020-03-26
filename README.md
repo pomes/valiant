@@ -10,6 +10,9 @@ check dependencies against policy documents to help
 
 The system is written in Python 3 and targets Python codebases.
 
+Please check out the [project site](http://pomes.github.io/valiant)
+for documentation.
+
 ## Key resources
 
 | Resource | Description |
@@ -17,10 +20,10 @@ The system is written in Python 3 and targets Python codebases.
 | [Codebase](https://github.com/pomes/valiant) | GitHub project |
 | [Security policy](SECURITY.md) | Please refer to this if you need to report a security concern |
 | [Project tracker](https://github.com/pomes/valiant/projects/1) | Structured to provide fulfilment of [project milestones](https://github.com/pomes/valiant/milestones) |
-| [Issue tracker](https://github.com/pomes/valiant/issues) | - |
-| [Documentation](http://pomes.github.io/valiant) | NOT YET READY |
+| [Issue tracker](https://github.com/pomes/valiant/issues) | GitHub issues |
+| [Documentation](http://pomes.github.io/valiant) | Project site |
 | [License](LICENSE.txt) | Project licence (MIT) |
-| [Contributing](CONTRIBUTING.md) | TBD |
+| [Contributing](CONTRIBUTING.md) | Want to join in? |
 
 ## Attribution
 
