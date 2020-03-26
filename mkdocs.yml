@@ -18,5 +18,8 @@ extra:
 
 nav:
   - Introduction: index.md
+  - Walkthrough: walkthrough.md
+  - Report providers: providers.md
+  - Limitations: limitations.md
   - Commands: cli.md
   - Configuration: configuration.md

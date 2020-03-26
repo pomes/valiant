@@ -8,13 +8,12 @@ Pre-requisites:
 
 - [Pyenv](https://github.com/pyenv/pyenv)
 - [Poetry](https://python-poetry.org/)
-- [Pre-commit]()
+- [Pre-commit](https://pre-commit.com/)
 
 Hint: Read the Poetry docs first as they guide you through a sound setup.
 
-Running `pyenv local` should list out at least a 3.7 and 3.8 release - my example is:
+Running `pyenv local` should list out at least a 3.8 release - my example is:
 
-    3.7.6
     3.8.2
 
 Configure your local python env with:
@@ -48,7 +47,7 @@ To run tests:
 
 To lint (against Python 3.8):
 
-    nox -rs lint-3.8
+    nox -rs lint
 
 
 ### Documentation
