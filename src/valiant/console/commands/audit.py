@@ -143,4 +143,11 @@ class AuditCommand(BaseCommand):
 
     def to_json(self, payloads: List[Payload]) -> str:
         """Converts data to json."""  # noqa:DAR101,DAR201
-        return ""  # data.to_json()
+        import json
+
+        if self.option("short"):
+            return json.dumps(
+                [f.to_dict() for f in self.compile_all_findings(payloads)]
+            )
+
+        return json.dumps([p.to_dict() for p in payloads])

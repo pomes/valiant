@@ -48,11 +48,11 @@ class ReportCommand(PackageCommand):
 
         return Payload(metadata=payload.package_metadata, reports=payload.reports)
 
-    def to_text(self, data: Payload) -> str:
+    def to_text(self, payload: Payload) -> str:
         """Prepares text representations.
 
         Args:
-            data: A payload with the package metadata and reports
+            payload: A payload with the package metadata and reports
 
         Returns:
             Text just for you.
@@ -61,18 +61,18 @@ class ReportCommand(PackageCommand):
             ValueError: When the package metadata or reports are missing
 
         """
-        if not data.metadata:
+        if not payload.metadata:
             raise ValueError("No package metadata available.")
 
-        if not data.reports:
+        if not payload.reports:
             raise ValueError("The report set has not been provided.")
 
         if self.option("short"):
-            output = create_short_report(data.reports.all_findings)
+            output = create_short_report(payload.reports.all_findings)
         else:
-            output = create_metadata_report(data.metadata)
+            output = create_metadata_report(payload.metadata)
 
-            for _, report in data.reports.items():
-                output += create_finding_report(data.metadata, report)
+            for _, report in payload.reports.items():
+                output += create_finding_report(payload.metadata, report)
 
         return output

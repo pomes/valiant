@@ -276,7 +276,7 @@ class PackageMetadata(Dictionizer):
             "url_code": self.url_code,
             "url_issue_tracker": self.url_issue_tracker,
             "url_documentation": self.url_documentation,
-            "artifacts": self.artifacts,
+            "artifacts": [a.to_dict() for a in self.artifacts],
         }
 
     @property

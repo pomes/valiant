@@ -40,27 +40,35 @@ class PackageCommand(BaseCommand):
 
     @abstractmethod
     def prepare_data(self) -> Payload:
-        """Subclass-based data prep."""
+        """Subclass-based payload prep."""
         raise NotImplementedError  # noqa:DAR101,DAR401
 
-    def output_data(self, data: Payload, format: str = None) -> None:
-        """Outputs the data to the required format."""  # noqa:DAR101
+    def output_data(self, payload: Payload, format: str = None) -> None:
+        """Outputs the payload to the required format."""  # noqa:DAR101
         if format == "json":
-            self.line(self.to_json(data))
+            self.line(self.to_json(payload))
         else:
-            self.line(self.to_text(data))
+            self.line(self.to_text(payload))
 
-    def to_text(self, data: Payload) -> str:
+    def to_text(self, payload: Payload) -> str:
         """Prepares text representations.
 
         Args:
-            data: The payload to display.
+            payload: The payload to display.
 
         Returns:
-            At the very least we'll return `data.message`.
+            At the very least we'll return `payload.message`.
         """
-        return data.message
+        return payload.message
 
-    def to_json(self, data: Payload) -> str:
-        """Converts data to json."""  # noqa:DAR101,DAR201
-        return data.to_json()
+    def to_json(self, payload: Payload) -> str:
+        """Converts payload to json."""  # noqa:DAR101,DAR201
+        import json
+
+        if self.option("short"):
+            if payload.reports:
+                return json.dumps([f.to_dict() for f in payload.reports.all_findings])
+            else:
+                return "[]"  # empty json list
+
+        return payload.to_json()
