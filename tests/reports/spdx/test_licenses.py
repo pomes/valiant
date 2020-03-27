@@ -62,3 +62,6 @@ def test_json_load(datafiles: py.path) -> None:
         assert mit.is_fsf_libre
         assert mit.name == "MIT License"
         assert mit.details_url == "http://spdx.org/licenses/MIT.json"
+
+        d = mit.to_dict()
+        assert d["id"] == "MIT"

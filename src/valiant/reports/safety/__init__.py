@@ -62,7 +62,7 @@ class SafetyId(Enum):
             id=self.id,
             category=self.category,
             level=self.level,
-            title=f"Vulnerability found",
+            title="Vulnerability found",
             message=vulnerability.advisory,
             data=VulnerabilityDictionizer(vulnerability),
             url="https://github.com/pyupio/safety-db",

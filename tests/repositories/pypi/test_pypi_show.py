@@ -1,36 +1,79 @@
 """Testing the PyPi repo show command."""
 import json
 
-from pathlib import Path
 from typing import Dict
 
 import py  # https://py.readthedocs.io/en/latest/index.html
 import pytest
 import requests
 
-from valiant.repositories import PackageNotFoundException
+from valiant.package import Classifier
+from valiant.repositories import (
+    PackageNotFoundException,
+    RepositoryConfiguration,
+    ValidationError,
+)
 from valiant.repositories.pypi import PyPiRepository
 
-from .setup import ALL_PKG_FILES, DATAFILE_VALIDATION, MockResponse, MonkeyPatch
-from .test_data import BASIC_PKG
+from . import (
+    ALL_PKG_FILES,
+    DATAFILE_VALIDATION,
+    TEST_FILE_DIR,
+    MockResponse,
+    MonkeyPatch,
+)
 
-PYPI_CONFIG = PyPiRepository.get_pypi_config()
 
-
-def test_basic(monkeypatch: MonkeyPatch) -> None:
+@pytest.mark.datafiles(TEST_FILE_DIR / "basic_package.json")
+def test_basic(
+    monkeypatch: MonkeyPatch, pypi_config: RepositoryConfiguration, datafiles: py.path
+) -> None:
     """Test a basic package manifest."""
+    with open(datafiles / "basic_package.json", "r") as f:
+        package_data = json.load(f)
 
     def mock_get(*args, **kwargs):  # noqa: ANN
-        return MockResponse(status_code=200, json_data=BASIC_PKG)
+        return MockResponse(status_code=200, json_data=package_data)
 
     # apply the monkeypatch for requests.get to mock_get
     monkeypatch.setattr(requests, "get", mock_get)
 
-    pkg = PyPiRepository(PYPI_CONFIG).show("flask", "-1.1.1")
+    pkg = PyPiRepository(pypi_config).show("flask", "-1.1.1")
     assert pkg.name == "Demo"
 
 
-def test_fail(monkeypatch: MonkeyPatch) -> None:
+@pytest.mark.datafiles(TEST_FILE_DIR / "basic_package.json")
+def test_basic_classifiers(
+    monkeypatch: MonkeyPatch, pypi_config: RepositoryConfiguration, datafiles: py.path
+) -> None:
+    """Test the classifiers in the basic package manifest."""
+    with open(datafiles / "basic_package.json", "r") as f:
+        package_data = json.load(f)
+
+    def mock_get(*args, **kwargs):  # noqa: ANN
+        return MockResponse(status_code=200, json_data=package_data)
+
+    # apply the monkeypatch for requests.get to mock_get
+    monkeypatch.setattr(requests, "get", mock_get)
+
+    pkg = PyPiRepository(pypi_config).show("flask", "-1.1.1")
+    test_classifiers = [
+        "Development Status :: 5 - Production/Stable",
+        "Environment :: Web Environment",
+    ]
+
+    assert len(pkg.classifiers) == 2
+    assert pkg.classifiers == test_classifiers
+
+    assert len(pkg.classifiers_parsed) == 2
+
+    classifiers = [Classifier.parse(c) for c in test_classifiers]
+
+    for c in classifiers:
+        assert c in pkg.classifiers_parsed
+
+
+def test_fail(monkeypatch: MonkeyPatch, pypi_config: RepositoryConfiguration) -> None:
     """Test a failed attempt to download a package manifest."""
 
     def mock_get(*args, **kwargs):  # noqa: ANN
@@ -40,10 +83,12 @@ def test_fail(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr(requests, "get", mock_get)
 
     with pytest.raises(PackageNotFoundException):
-        PyPiRepository(PYPI_CONFIG).show("FAKE", "-3.14")
+        PyPiRepository(pypi_config).show("FAKE", "-3.14")
 
 
-def test_empty_json(monkeypatch: MonkeyPatch) -> None:
+def test_empty_json(
+    monkeypatch: MonkeyPatch, pypi_config: RepositoryConfiguration
+) -> None:
     """Test handling of an HTTP success that returns an empty manifest."""
 
     def mock_get(*args, **kwargs):  # noqa: ANN
@@ -53,7 +98,25 @@ def test_empty_json(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr(requests, "get", mock_get)
 
     with pytest.raises(PackageNotFoundException):
-        PyPiRepository(PYPI_CONFIG).show("FAKE", "-3.14")
+        PyPiRepository(pypi_config).show("FAKE", "-3.14")
+
+
+@pytest.mark.datafiles(TEST_FILE_DIR / "broken_package.json")
+def test_bad_package_fails(
+    monkeypatch: MonkeyPatch, pypi_config: RepositoryConfiguration, datafiles: py.path
+) -> None:
+    """Ensures a package missing the name will fail."""
+    with open(datafiles / "broken_package.json", "r") as f:
+        package_data = json.load(f)
+
+    def mock_get(*args, **kwargs):  # noqa: ANN
+        return MockResponse(status_code=200, json_data=package_data)
+
+    # apply the monkeypatch for requests.get to mock_get
+    monkeypatch.setattr(requests, "get", mock_get)
+
+    with pytest.raises(ValidationError):
+        PyPiRepository(pypi_config).show("FAKE", "-3.14")
 
 
 @ALL_PKG_FILES
@@ -61,11 +124,14 @@ def test_empty_json(monkeypatch: MonkeyPatch) -> None:
     ("input_file,expected"), DATAFILE_VALIDATION,
 )
 def test_json_load(
-    monkeypatch: MonkeyPatch, datafiles: py.path, input_file: str, expected: Dict
+    monkeypatch: MonkeyPatch,
+    pypi_config: RepositoryConfiguration,
+    datafiles: py.path,
+    input_file: str,
+    expected: Dict,
 ) -> None:
     """Validate loading against sample data from pypi.org."""
-    source_data = Path(datafiles.join(input_file))
-    with open(source_data, "r") as f:
+    with open(datafiles / input_file, "r") as f:
         data = json.load(f)
 
     def mock_get(*args, **kwargs):  # noqa: ANN
@@ -74,8 +140,9 @@ def test_json_load(
     # apply the monkeypatch for requests.get to mock_get
     monkeypatch.setattr(requests, "get", mock_get)
 
-    pkg = PyPiRepository(PYPI_CONFIG).show("X", "-1")
+    pkg = PyPiRepository(pypi_config).show("X", "-1")
 
     assert pkg.name == expected["name"]
     assert pkg.version == expected["version"]
     assert pkg.license == expected["license"]
+    assert pkg.classifiers_parsed

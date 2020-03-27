@@ -11,12 +11,20 @@ def test_base_repository() -> None:
         BaseRepository()  # type: ignore
 
 
+def test_base_repository_supported_repo_types() -> None:
+    """Ensure that the base class supports nothing."""
+    assert BaseRepository.list_supported_repository_types() == []
+
+
 def test_repo_config_basic() -> None:
     """Test using the basic (pypi) repo."""
     repo = RepositoryConfiguration(name="pypi", base_url="https://pypi.org/pypi")
     assert repo.get_access_url() == "https://pypi.org/pypi"
     assert repo.name == "pypi"
     assert repo.repository_type == "unknown"
+
+    d = repo.to_dict()
+    assert d["name"] == "pypi"
 
 
 def test_repo_config_basic_port() -> None:

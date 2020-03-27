@@ -20,6 +20,7 @@ def test_default_config() -> None:
     assert repo.name == "pypi"
     assert len(c.repository_names) == 1
     assert c.repository_names[0] == "pypi"
+    assert c.report_configuration
     assert len(c.report_configuration.keys()) == 3
     assert set(c.report_configuration.keys()) == set(["basic", "safety", "spdx"])
     assert c.report_configuration["basic"] == ReportProviderConfiguration()
@@ -30,7 +31,7 @@ def test_default_config() -> None:
 def test_empty_config() -> None:
     """Checks config with no initial settings."""
     with pytest.raises(TypeError):
-        Config()
+        Config()  # type: ignore
 
 
 def test_bad_config_repeated_repos() -> None:

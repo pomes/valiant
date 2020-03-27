@@ -10,6 +10,7 @@ import structlog
 from typing import Dict
 from structlog.stdlib import LoggerFactory
 
+
 """A basic default that spits out to standard out."""
 DEFAULT_CONFIG = {
     "version": 1,

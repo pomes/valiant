@@ -119,6 +119,22 @@ class ReportProviderConfiguration:
 
     items: Optional[Dict[str, str]] = None
 
+    def get(self, key: str, default: str = None) -> Optional[str]:
+        """Retrieve a configuration item.
+
+        Args:
+            key: The item key
+            default: a value to return if the key doesn't exist
+
+        Returns:
+            The value of the config item assigned to the key.
+            default value otherwise
+        """
+        if self.items:
+            return self.items.get(key, default)
+
+        return default
+
 
 class Report(Dictionizer):
     """An individual report from a report provider."""

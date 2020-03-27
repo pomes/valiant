@@ -96,9 +96,9 @@ omit = [
     "src/valiant/config/__init__.py",
     "src/valiant/repositories/__init__.py",
     "src/valiant/repositories/pypi/__init__.py",
+    "src/valiant/reports/spdx/__main__.py",
     "src/valiant/util/__init__.py",
-    "src/valiant/util/spdx/__init__.py",
-    "src/valiant/util/spdx/__main__.py"
+    "src/valiant/log/__init__.py",
 ]
 
 exclude_lines = [

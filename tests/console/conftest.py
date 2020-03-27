@@ -1,4 +1,7 @@
-"""Pytest config."""
+"""Test configuration.
+
+See: https://docs.pytest.org/en/latest/pythonpath.html
+"""
 import pytest
 
 from _pytest.config import Config

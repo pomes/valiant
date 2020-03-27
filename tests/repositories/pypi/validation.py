@@ -1,22 +1,22 @@
-"""Provides the datafile config."""
-import os
+"""Validation dictionary.
 
-from typing import Any
+The hideous construct below provides a list of tuples.
 
-import py  # https://py.readthedocs.io/en/latest/index.html
-import pytest
+Each tuple contains the following:
 
+1. A filename for a json file located in the 'package-data' directory.
+    These are taken from actual PyPi projects.
 
-_dir = os.path.dirname(os.path.realpath(__file__))
-FIXTURE_DIR = py.path.local(_dir) / "data"
+2. A Dictionary that maps a subset (or all) of the expected data
 
-ALL_PKG_FILES = pytest.mark.datafiles(
-    FIXTURE_DIR / "flask-1.1.1.json",
-    FIXTURE_DIR / "gpiozero-1.5.1.json",
-    FIXTURE_DIR / "opencv-python-4.2.0.32.json",
-    FIXTURE_DIR / "tensorflow-2.1.0.json",
-)
+This setup lets us parametrize a set of test inputs and assert against the
+expected values. The code below indicates how to apply this to a test:
 
+    @pytest.mark.parametrize(
+        ("input_file,expected"), DATAFILE_VALIDATION,
+    )
+
+"""
 DATAFILE_VALIDATION = [
     (
         "flask-1.1.1.json",
@@ -68,16 +68,3 @@ DATAFILE_VALIDATION = [
         },
     )
 ]
-
-MonkeyPatch = Any
-
-
-class MockResponse:
-    """Basic mock for requests.get response."""
-
-    def __init__(self, status_code: int, json_data: Any):  # noqa: D107
-        self.status_code = status_code
-        self.json_data = json_data
-
-    def json(self) -> Any:  # noqa: D102
-        return self.json_data

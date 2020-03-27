@@ -8,33 +8,43 @@ from typing import Dict
 import py  # https://py.readthedocs.io/en/latest/index.html
 import pytest
 
-from valiant.repositories import ValidationError
+from valiant.repositories import RepositoryConfiguration, ValidationError
 from valiant.repositories.pypi import PyPiPackageMetadata
 
-from .setup import ALL_PKG_FILES, DATAFILE_VALIDATION
-from .test_data import BASIC_PKG, BASIC_PKG_2
+from . import ALL_PKG_FILES, DATAFILE_VALIDATION, TEST_FILE_DIR, load_test_json_data
 
 
 def test_empty_package_data() -> None:
     """Ensures exception when constructor is passed an empty dict."""
     with pytest.raises(ValidationError):
-        PyPiPackageMetadata({})
+        PyPiPackageMetadata("", {})
 
 
-def test_json_load_basic() -> None:
+@pytest.mark.datafiles(TEST_FILE_DIR / "basic_package.json")
+def test_json_load_basic(
+    datafiles: py.path, pypi_config: RepositoryConfiguration
+) -> None:
     """Small baseline test."""
-    pkg = PyPiPackageMetadata(BASIC_PKG)
+    pkg = PyPiPackageMetadata(
+        pypi_config.base_url, load_test_json_data(datafiles, "basic_package.json")
+    )
     assert pkg.name == "Demo"
     assert pkg.description == "Basic description"
     assert pkg.summary == "A short summary."
     assert pkg.url_documentation == "http://docs.example.com"
     assert pkg.url_project == "http://project.example.com"
     assert pkg.url_issue_tracker == "http://bugs.example.com"
+    assert pkg.repository_url == pypi_config.base_url
 
 
-def test_json_load_basic2() -> None:
+@pytest.mark.datafiles(TEST_FILE_DIR / "basic_package_2.json")
+def test_json_load_basic2(
+    datafiles: py.path, pypi_config: RepositoryConfiguration
+) -> None:
     """Small baseline test."""
-    pkg = PyPiPackageMetadata(BASIC_PKG_2)
+    pkg = PyPiPackageMetadata(
+        pypi_config.base_url, load_test_json_data(datafiles, "basic_package_2.json")
+    )
     assert pkg.name == "Demo 2"
     assert pkg.description == "Basic description"
     assert pkg.summary == "A short summary."
@@ -43,18 +53,44 @@ def test_json_load_basic2() -> None:
     assert pkg.url_issue_tracker == "http://bugs.example.com"
 
 
-def test_json_load_basic_to_dict() -> None:
+@pytest.mark.datafiles(TEST_FILE_DIR / "basic_package_3.json")
+def test_json_load_basic3(
+    datafiles: py.path, pypi_config: RepositoryConfiguration
+) -> None:
+    """Small baseline test."""
+    pkg = PyPiPackageMetadata(
+        pypi_config.base_url, load_test_json_data(datafiles, "basic_package_3.json")
+    )
+    assert pkg.name == "Demo 2"
+    assert pkg.description == "Basic description"
+    assert pkg.summary == "A short summary."
+    assert pkg.url_documentation == "http://docs.example.com"
+    assert pkg.url_project == "http://project.example.com"
+    assert pkg.url_issue_tracker == "http://bugs.example.com"
+
+
+@pytest.mark.datafiles(TEST_FILE_DIR / "basic_package.json")
+def test_json_load_basic_to_dict(
+    datafiles: py.path, pypi_config: RepositoryConfiguration
+) -> None:
     """Small baseline test of the string representation."""
-    pkg = PyPiPackageMetadata(BASIC_PKG)
+    pkg = PyPiPackageMetadata(
+        pypi_config.base_url, load_test_json_data(datafiles, "basic_package.json")
+    )
     val = pkg.to_dict()
     assert val["name"] == "Demo"
     assert val["version"] == "0"
     assert val["summary"] == "A short summary."
 
 
-def test_json_load_basic_to_json() -> None:
+@pytest.mark.datafiles(TEST_FILE_DIR / "basic_package.json")
+def test_json_load_basic_to_json(
+    datafiles: py.path, pypi_config: RepositoryConfiguration
+) -> None:
     """Small baseline test of the string representation."""
-    pkg = PyPiPackageMetadata(BASIC_PKG)
+    pkg = PyPiPackageMetadata(
+        pypi_config.base_url, load_test_json_data(datafiles, "basic_package.json")
+    )
     json_val = pkg.to_json()
     val = json.loads(json_val)
     assert val["name"] == "Demo"
@@ -62,9 +98,14 @@ def test_json_load_basic_to_json() -> None:
     assert val["summary"] == "A short summary."
 
 
-def test_json_load_basic_repr() -> None:
+@pytest.mark.datafiles(TEST_FILE_DIR / "basic_package.json")
+def test_json_load_basic_repr(
+    datafiles: py.path, pypi_config: RepositoryConfiguration
+) -> None:
     """Small baseline test of the string representation."""
-    pkg = PyPiPackageMetadata(BASIC_PKG)
+    pkg = PyPiPackageMetadata(
+        pypi_config.base_url, load_test_json_data(datafiles, "basic_package.json")
+    )
     val = json.loads(str(pkg))
     assert val["name"] == "Demo"
     assert val["version"] == "0"
@@ -75,12 +116,22 @@ def test_json_load_basic_repr() -> None:
 @pytest.mark.parametrize(
     ("input_file,expected"), DATAFILE_VALIDATION,
 )
-def test_json_load(datafiles: py.path, input_file: str, expected: Dict) -> None:
-    """Validate loading against sample data from pypi.org."""
+def test_json_load(
+    input_file: str,
+    expected: Dict,
+    datafiles: py.path,
+    pypi_config: RepositoryConfiguration,
+) -> None:
+    """Validate loading against sample data from pypi.org.
+
+    This is different to test_data_load.py as this test is more than
+    just a basic load. The DATAFILE_VALIDATION consttruct lays out
+    a set of attributes to test against for the various inputs.
+    """
     source_data = Path(datafiles.join(input_file))
     with open(source_data, "r") as f:
         data = json.load(f)
-    pkg = PyPiPackageMetadata(data)
+    pkg = PyPiPackageMetadata(pypi_config.base_url, data)
 
     assert pkg.name == expected["name"]
     assert pkg.version == expected["version"]

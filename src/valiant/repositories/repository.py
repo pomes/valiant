@@ -25,9 +25,6 @@ class BaseRepository(ABC):
             ValueError: If no configuration is provided or
                         no handler is available for the repo type.
         """
-        if not repository_configuration:
-            raise ValueError("No repository configuration provided.")
-
         if (
             repository_configuration.repository_type
             not in self.__class__.list_supported_repository_types()

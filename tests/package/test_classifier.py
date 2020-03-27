@@ -66,6 +66,24 @@ def test_parse_classifier(test_input: str, expected: Classifier) -> None:
     assert classifier == expected
 
 
+def test_classifier_to_dict() -> None:
+    """Test the conversion to a dictionary."""
+    d = Classifier(
+        original="Topic :: Internet :: WWW/HTTP :: Site Management :: Link Checking",
+        category="Topic",
+        subcategories=["Internet", "WWW/HTTP", "Site Management"],
+        value="Link Checking",
+    ).to_dict()
+
+    assert d["category"] == "Topic"
+    assert d["value"] == "Link Checking"
+    assert d["subcategories"] == ["Internet", "WWW/HTTP", "Site Management"]
+    assert (
+        d["original"]
+        == "Topic :: Internet :: WWW/HTTP :: Site Management :: Link Checking"
+    )
+
+
 @pytest.mark.parametrize(
     "test_input", ["BadString", "NoValue ::", "Bad ;; Delimiter"],
 )

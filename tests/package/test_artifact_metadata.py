@@ -22,7 +22,14 @@ def basic_artifact() -> ArtifactMetadata:
         signature_url="https://files.pythonhosted.org/packages/9b/93/628509b8d5dc749656a9641f4caf13540e2cdec85276964ff8f43bbb1d3b/Flask-1.1.1-py2.py3-none-any.whl.asc",  # noqa:B950
         package_type="bdist_wheel",
         python_version="py2.py3",
-        requires_python=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*",
+        requires_python=[
+            ">=2.7",
+            "!=3.0.*",
+            "!=3.1.*",
+            "!=3.2.*",
+            "!=3.3.*",
+            "!=3.4.*",
+        ],
         size=94457,
         upload_time_iso_8601=datetime(2019, 7, 8, 18, 0, 28, 597456),
         url="https://files.pythonhosted.org/packages/9b/93/628509b8d5dc749656a9641f4caf13540e2cdec85276964ff8f43bbb1d3b/Flask-1.1.1-py2.py3-none-any.whl",  # noqa:B950

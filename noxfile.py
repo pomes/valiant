@@ -152,8 +152,12 @@ def pytype(session: Session) -> None:
 
 @nox.session(python=supported_py_versions)
 def tests(session: Session) -> None:
-    """Run the test suite."""
-    args = session.posargs or ["--cov"]
+    """Run the test suite.
+
+    Get coverage by adding --cov:
+        nox -rs tests -- --cov
+    """
+    args = session.posargs or []
     packages = [
         "coverage[toml]",
         "pytest",
@@ -161,6 +165,7 @@ def tests(session: Session) -> None:
         "pytest-mock",
         "pytest-datafiles",
     ]
+
     session.run("poetry", "install", "--no-dev", external=True)
     install_with_constraints(
         session, *packages,
@@ -189,7 +194,7 @@ def xdoctest(session: Session) -> None:
 
 
 @nox.session(python=general_py_version)
-def coverage(session: Session) -> None:
+def coverage_report(session: Session) -> None:
     """Prepare the coverage report.
 
     Will produce xml by default.

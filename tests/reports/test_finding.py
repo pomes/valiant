@@ -4,6 +4,7 @@ from typing import Dict, List
 
 import pytest
 
+from valiant.package import PackageCoordinates
 from valiant.reports import Finding, FindingCategory, FindingLevel
 from valiant.util import Dictionizer
 
@@ -25,6 +26,9 @@ class BasicTestData(Dictionizer):  # noqa:D101
 def finding() -> Finding:
     """Just a sample finding."""
     return Finding(  # noqa:DAR201
+        coordinates=PackageCoordinates(
+            name="test", version="1.0.0", repository_url="http://www.example.com"
+        ),
         id="001",
         level=FindingLevel.INFO,
         category=FindingCategory.PROJECT.value,

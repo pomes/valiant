@@ -89,7 +89,7 @@ class Valiant:
         install_cache(
             f"{application_name}-{application_version}-requests-cache",
             backend="sqlite",
-            expire_after=3600,
+            expire_after=86400,
         )
 
     @property

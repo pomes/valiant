@@ -235,6 +235,9 @@ class PyPiPackageMetadata(PackageMetadata):
         if self._pkg.info.home_page:
             return self._pkg.info.home_page
 
+        if self._pkg.info.project_url:
+            return self._pkg.info.project_url
+
         return self._pkg.info.project_urls.get("Homepage", "")
 
     @property

@@ -24,12 +24,14 @@ class BaseReportProvider(ABC):
 
     @classmethod
     @abstractmethod
-    def get_report_provider_details(cls) -> ReportProviderDetails:
+    def get_report_provider_details(cls) -> ReportProviderDetails:  # pragma: no cover
         """Returns the provider details."""
         pass
 
     @abstractmethod
-    def generate_report(self, package_metadata: PackageMetadata) -> Report:
+    def generate_report(
+        self, package_metadata: PackageMetadata
+    ) -> Report:  # pragma: no cover
         """Constructs the report.
 
         Args:

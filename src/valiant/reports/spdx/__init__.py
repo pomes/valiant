@@ -31,7 +31,7 @@ class SpdxId(Enum):
 
     FOUND = ("SPDX001", "SPDX License found", FindingLevel.INFO)
     NOT_FOUND = ("SPDX002", "SPDX License not found", FindingLevel.INFO)
-    DEPRECATED = ("SPDX003", "Deprecated license.", FindingLevel.WARNING)
+    DEPRECATED = ("SPDX003", "Deprecated license", FindingLevel.WARNING)
     NOT_OSI_APPROVED = (
         "SPDX004",
         "License not OSI approved",
@@ -40,7 +40,7 @@ class SpdxId(Enum):
     )
     NOT_FSF_FREE = (
         "SPDX005",
-        "License not FSF ",
+        "License not FSF free software",
         FindingLevel.INFO,
         "https://www.gnu.org/licenses/license-list.html",
     )
