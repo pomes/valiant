@@ -33,6 +33,10 @@ You can then run the checks:
 
     pre-commit run --all-files
 
+### Coding
+
+I'm trying to follow the [Google Python Style Guide](https://google.github.io/styleguide/pyguide.html).
+
 ### Running tests
 
 Look at [`noxfile.py`](noxfile.py) for the main test automation suite.
@@ -50,6 +54,49 @@ To lint (against Python 3.8):
     nox -rs lint
 
 
+### Before checking in
+
+To check that you'll pass the pre-commit hooks, stage your files and then run:
+
+    pre-commit run
+
+### Tips
+
+When testing the command line you may wish to see the error/exception trace.
+The `-v` option will generally help here. For commands providing JSON output
+you can utilise the [jq](https://stedolan.github.io/jq/) tool to pretty up the output.
+In the example below I redirect stderr so that errors are also displayed nicely:
+
+    valiant report rdflib 4.2.2 basic -o json -v 2>&1 |  jq -C
+
+### Deploying
+
+When the code is ready to release, tag it off in git using the version number (e.g. `git tag 0.1.0`).
+
+Deploy to the PyPi Test repo first. You'll need
+[an account and key](https://packaging.python.org/tutorials/packaging-projects/#uploading-the-distribution-archives).
+
+Configure Poetry:
+
+    poetry config repositories.pypi_test https://test.pypi.org/legacy/
+
+Build and deploy:
+
+    poetry build
+    poetry publish -r pypi_test -u __token__
+
+Check that it all went ok: https://test.pypi.org/project/valiant/
+
+Install the package from the test repository (pref in a container - `docker run --rm -it docker.io/python:3.8 /bin/sh`):
+
+    pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple valiant==VERSION
+    valiant about
+    valiant config
+
+When everything checks out, push up to the main PyPi repository:
+
+    poetry publish -u __token__
+
 ### Documentation
 
 The site documentation uses [`mkdocs`](https://www.mkdocs.org/).
@@ -66,21 +113,6 @@ To [deploy the documentation to GitHub](https://www.mkdocs.org/user-guide/deploy
 
 This will prepare the site and push it to the `gh-pages` branch. Make sure the site's
 looking good and ready to go (`mkdocs serve`) first!
-
-### Before checking in
-
-To check that you'll pass the pre-commit hooks, stage your files and then run:
-
-    pre-commit run
-
-### Tips
-
-When testing the command line you may wish to see the error/exception trace.
-The `-v` option will generally help here. For commands providing JSON output
-you can utilise the [jq](https://stedolan.github.io/jq/) tool to pretty up the output.
-In the example below I redirect stderr so that errors are also displayed nicely:
-
-    valiant report rdflib 4.2.2 basic -o json -v 2>&1 |  jq -C
 
 ### Useful references
 
