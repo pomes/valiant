@@ -5,7 +5,7 @@ from valiant.console import Cli
 
 # TODO: Add in Valiant configuration tests when config setup is ready
 
-EXPECTED_VERSION = "0.1.0"
+EXPECTED_VERSION = "0.2.0"
 
 
 def test_cli_app_setup() -> None:

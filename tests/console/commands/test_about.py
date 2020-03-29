@@ -11,5 +11,5 @@ def test_cli_about(app: Cli) -> None:
 
     assert result == 0
     output = command_tester.io.fetch_output()
-    assert output.startswith("Valiant 0.1.0")
+    assert output.startswith("Valiant 0.2.0")
     assert output.find("Licence: MIT")

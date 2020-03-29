@@ -13,7 +13,7 @@ from valiant.valiant import PythonPackagePayload
 def test_application_details() -> None:
     """Validate the general app info."""
     v = Factory().create_valiant()
-    assert v.application_version == "0.1.0"
+    assert v.application_version == "0.2.0"
     assert v.application_name == "valiant"
     assert v.application_title == "Valiant"
     assert v.application_vendor == "Pomes"
