@@ -221,7 +221,13 @@ class PyPiPackageMetadata(PackageMetadata):
 
     @property
     def url_code(self) -> str:  # noqa: D102
-        return self._pkg.info.project_urls.get("Code", "")
+        keys = ["Code", "Repository"]
+
+        for item in keys:
+            if item in self._pkg.info.project_urls:
+                return self._pkg.info.project_urls.get(item)
+
+        return ""
 
     @property
     def url_documentation(self) -> str:  # noqa: D102
