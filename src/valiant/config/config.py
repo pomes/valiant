@@ -30,6 +30,7 @@ class Config(Dictionizer):
         Raises:
             ValueError: if the config isn't meeting the mark
         """
+        from string import Template
         from requests_cache import install_cache
         from valiant.log import configure_logging
 
@@ -45,14 +46,31 @@ class Config(Dictionizer):
 
         if not self.logging_configuration_file:
             self.log_dir.mkdir(parents=True, exist_ok=True)
+            # Manipulate the log file location for the built-in logging definition
+            log_file_t = Template(
+                self.logging_configuration["handlers"]["default"]["filename"]
+            )
+            self.logging_configuration["handlers"]["default"][
+                "filename"
+            ] = log_file_t.substitute(
+                log_dir=self.log_dir,
+                cache_dir=self.cache_dir,
+                configuration_dir=self.configuration_dir,
+            )
 
         configure_logging(
             dict_config=self.logging_configuration,
             file_config=self.logging_configuration_file,
         )
 
+        cache_dir = Template(self.requests_cache["file"])
+
         install_cache(
-            self.requests_cache["file"],
+            cache_dir.substitute(
+                log_dir=self.log_dir,
+                cache_dir=self.cache_dir,
+                configuration_dir=self.configuration_dir,
+            ),
             backend=self.requests_cache["backend"],
             expire_after=self.requests_cache["expire_after"],
         )
@@ -77,6 +95,7 @@ class Config(Dictionizer):
                     "logging_configuration_file": str(self.logging_configuration_file)
                     if self.logging_configuration_file
                     else None,
+                    "requests_cache": self.requests_cache,
                 }
             }
         }

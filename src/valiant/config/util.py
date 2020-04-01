@@ -17,8 +17,6 @@ def get_valiant_base_config() -> ConfigMap:
     Returns:
         A default Config instance.
     """
-    from os import path
-    from pathlib import Path
     from valiant import Valiant
     from valiant.log import setup_logging_configuration
     from valiant.repositories.pypi import PyPiRepository
@@ -36,9 +34,7 @@ def get_valiant_base_config() -> ConfigMap:
                 "default_repository": "pypi",
                 "default_reports": ["basic", "spdx", "safety"],
                 "requests_cache": {
-                    "file": path.join(
-                        dirs.user_cache_dir, f"{app}-{version}-requests-cache",
-                    ),
+                    "file": f"$cache_dir/{app}-{version}-requests-cache",
                     "backend": "sqlite",
                     "expire_after": 86400,
                 },
@@ -50,7 +46,7 @@ def get_valiant_base_config() -> ConfigMap:
                             "level": "INFO",
                             "formatter": "standard",
                             "class": "logging.handlers.RotatingFileHandler",
-                            "filename": Path(dirs.user_log_dir, "valiant.log"),
+                            "filename": "$log_dir/valiant.log",
                             "maxBytes": 500000,
                             "backupCount": 3,
                         }

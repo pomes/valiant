@@ -40,10 +40,12 @@ class ConfigCommand(BaseCommand):
             )
 
         return (
-            f"<info>configuration_dir</info>: "
+            "<info>configuration_dir</info>: "
             f"<comment>{self.valiant.configuration_dir}</comment>"
             f"\n<info>cache_dir</info>: <comment>{self.valiant.cache_dir}</comment>"
             f"\n<info>log_dir</info>: <comment>{self.valiant.log_dir}</comment>"
+            "\n<info>logging_configuration_file</info>: "
+            f"<comment>{self.valiant._config.logging_configuration_file}</comment>"
             f"\n<info>default_repository</info>: "
             f"<comment>{self.valiant.default_repository_name}</comment>"
             f"\n<info>repositories</info>: <comment>{repo_config}</comment>"

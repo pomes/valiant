@@ -71,6 +71,8 @@ def configure_logging(
 
     This is usually called by valiant.config.Config.__init__
 
+    If a file_config is provided, the dict_config is ignored.
+
     See: https://docs.python.org/3/library/logging.config.html#logging.config.dictConfig
 
     Args:
