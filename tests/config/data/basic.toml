@@ -1,0 +1,5 @@
+[tool.valiant]
+configuration_dir = "/tmp/etc/valiant"
+cache_dir = "/tmp/var/local/valiant/0.2.0"
+log_dir = "/tmp/var/local/log/valiant"
+default_reports = [ "basic", "spdx"]

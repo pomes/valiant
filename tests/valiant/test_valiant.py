@@ -3,16 +3,60 @@ from pathlib import Path
 
 import pytest
 
-
-from valiant import Factory, Valiant
-from valiant.config import Config
-from valiant.repositories.pypi import PyPiRepository
-from valiant.valiant import PythonPackagePayload
+from valiant import Valiant
+from valiant.config import ConfigBuilder
+from valiant.config.source import MappingSource
 
 
-def test_application_details() -> None:
+@pytest.fixture(scope="function")
+def config_builder(tmp_path: Path) -> ConfigBuilder:
+    """Create a builder ready for test runs.
+
+    Returns:
+        ConfigBuilder instance.
+    """
+    import os
+    from valiant.config.util import create_valiant_builder
+
+    builder = create_valiant_builder(
+        include_pyproject=False, include_user_config=False, include_site_config=False
+    )
+    builder.add_source(
+        MappingSource(
+            {
+                "tool": {
+                    "valiant": {
+                        "configuration_dir": os.path.join(tmp_path, "etc"),
+                        "cache_dir": os.path.join(tmp_path, "var"),
+                        "log_dir": os.path.join(tmp_path, "log"),
+                    }
+                }
+            }
+        )
+    )
+    return builder
+
+
+@pytest.fixture(scope="function")
+def configured_valiant(config_builder: ConfigBuilder) -> Valiant:
+    """Returns a Valiant instance with testing config ready.
+
+    # noqa:DAR201
+    # noqa:DAR401
+    """
+    from valiant.config.util import generate_valiant_config_from_map
+
+    conf_map = config_builder.build()
+    if conf_map:
+        conf = generate_valiant_config_from_map(conf_map)
+        return Valiant(conf)
+    else:
+        raise ValueError("Could not build you a Valiant")
+
+
+def test_application_details(configured_valiant: Valiant) -> None:
     """Validate the general app info."""
-    v = Factory().create_valiant()
+    v = configured_valiant
     assert v.application_version == "0.2.0"
     assert v.application_name == "valiant"
     assert v.application_title == "Valiant"
@@ -31,48 +75,8 @@ def test_config_empty() -> None:
         Valiant()  # type: ignore
 
 
-def test_config_missing_repo_config(tmp_path: Path) -> None:
-    """Testing valiant configuration custom settings."""
-    with pytest.raises(ValueError):
-        Config(
-            cache_dir=str(tmp_path),
-            config_dir=str(tmp_path),
-            repository_configurations=[],
-        )
-
-
-def test_config_default() -> None:
+def test_config_default(configured_valiant: Valiant) -> None:
     """Tests the factory defaults."""
-    v = Factory().create_valiant()
+    v = configured_valiant
     assert v.cache_dir is not None
-    assert v.config_dir is not None
-
-
-def test_config_custom(tmp_path: Path) -> None:
-    """Testing valiant configuration custom settings."""
-    c = Config(
-        cache_dir=str(tmp_path),
-        config_dir=str(tmp_path),
-        repository_configurations=[PyPiRepository.get_pypi_config()],
-    )
-    v = Factory().create_valiant(c)
-    assert v.cache_dir == Path(tmp_path)
-    assert v.config_dir == Path(tmp_path)
-
-
-def test_reports_no_config(tmp_path: Path) -> None:
-    """Fail if no report configuration has been provided."""
-    c = Config(
-        cache_dir=str(tmp_path),
-        config_dir=str(tmp_path),
-        repository_configurations=[PyPiRepository.get_pypi_config()],
-    )
-    v = Factory().create_valiant(c)
-    ppp = PythonPackagePayload(
-        repository_base_url="",
-        package_name="",
-        package_version="",
-        package_metadata=None,  # type:ignore
-    )
-    with pytest.raises(ValueError):
-        v.get_package_reports(ppp)
+    assert v.configuration_dir is not None

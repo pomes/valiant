@@ -1,5 +1,6 @@
 """CLI Application config."""
 from cleo.config import ApplicationConfig as BaseApplicationConfig  # pragma: no cover
+from clikit.api.args.format.option import Option
 from clikit.api.formatter import Style  # pragma: no cover
 
 
@@ -23,3 +24,17 @@ class ApplicationConfig(BaseApplicationConfig):  # pragma: no cover
 
         for style in ApplicationConfig._STYLES:
             self.add_style(style)
+
+        self.add_option(
+            "config",
+            "c",
+            Option.REQUIRED_VALUE | Option.STRING,
+            "Load configuration from a TOML file",
+        )
+
+        self.add_option(
+            "out",
+            "o",
+            Option.REQUIRED_VALUE | Option.STRING,
+            "the desired output type (json, toml)",
+        )

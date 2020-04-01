@@ -1,11 +1,12 @@
 """Handles the valiant context."""
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Mapping, Optional, Set, Tuple
 
-from requests_cache import install_cache
-from valiant.log import configure_logging, setup_logging_configuration
-from valiant.repositories import RepositoryFactory
+from valiant.config import Config
+from valiant.package import PackageMetadata
+from valiant.reports import ReportSet
+from valiant.repositories import RepositoryConfiguration
 
 from .__about__ import (
     application_copyright_holder,
@@ -19,10 +20,6 @@ from .__about__ import (
     application_vendor,
     application_version,
 )
-from .config import Config
-from .package import PackageMetadata
-from .reports import ReportFactory, ReportProviderConfiguration, ReportSet
-from valiant.repositories import RepositoryConfiguration
 
 
 @dataclass(frozen=True)
@@ -44,7 +41,10 @@ class PythonPackagePayload:
         Returns:
             The new instance
         """
-        return PythonPackagePayload(
+        import dataclasses
+
+        return dataclasses.replace(
+            self,
             repository_base_url=self.repository_base_url,
             package_name=self.package_name,
             package_version=self.package_version,
@@ -62,35 +62,16 @@ class Valiant:
         Args:
             config: The application configuration
         """
+        from valiant.reports import ReportFactory
+        from valiant.repositories import RepositoryFactory
+
         self._config: Config = config
         self._repo_factory = RepositoryFactory()
         self._report_factory = ReportFactory()
 
-        # Make sure the required directories exist
-        self._config.config_dir.mkdir(parents=True, exist_ok=True)
-        self._config.cache_dir.mkdir(parents=True, exist_ok=True)
-
-        # Setup logging
-        log_config = setup_logging_configuration(
-            handlers={
-                "default": {
-                    "level": "INFO",
-                    "formatter": "standard",
-                    "class": "logging.handlers.RotatingFileHandler",
-                    "filename": Path(self._config.config_dir, "valiant.log"),
-                    "maxBytes": 500000,
-                    "backupCount": 3,
-                }
-            },
-        )
-        configure_logging(log_config)
-
-        # TODO: this is just basic caching for now
-        install_cache(
-            f"{application_name}-{application_version}-requests-cache",
-            backend="sqlite",
-            expire_after=86400,
-        )
+    @staticmethod
+    def application_details() -> Tuple:  # noqa: D102
+        return (application_vendor, application_name, application_version)
 
     @property
     def application_version(self) -> str:  # noqa: D102
@@ -132,6 +113,12 @@ class Valiant:
     def application_copyright_holder(self) -> str:  # noqa: D102
         return application_copyright_holder
 
+    def configuration_to_json(self) -> str:  # noqa: D102
+        return self._config.to_json()
+
+    def configuration_to_toml(self) -> str:  # noqa: D102
+        return self._config.to_toml()
+
     @property
     def cache_dir(self) -> Optional[Path]:
         """Gets the current instance's cache dir.
@@ -142,13 +129,31 @@ class Valiant:
         return self._config.cache_dir
 
     @property
-    def config_dir(self) -> Optional[Path]:
+    def configuration_dir(self) -> Optional[Path]:
         """Gets the current instance's config dir.
 
         Returns:
             A Path object to the config directory
         """
-        return self._config.config_dir
+        return self._config.configuration_dir
+
+    @property
+    def log_dir(self) -> Optional[Path]:
+        """Gets the current instance's log dir.
+
+        Returns:
+            A Path object to the config directory
+        """
+        return self._config.log_dir
+
+    @property
+    def default_reports(self) -> Set[str]:
+        """Get a set of the default reports.
+
+        Returns:
+            A set of report names
+        """
+        return self._config.default_reports
 
     @property
     def default_repository_name(self) -> str:
@@ -156,24 +161,13 @@ class Valiant:
         return self._config.default_repository_name  # noqa: DAR201
 
     @property
-    def repository_configuration(self) -> Dict[str, RepositoryConfiguration]:
+    def repository_configuration(self) -> Mapping[str, RepositoryConfiguration]:
         """All the repos.
 
         Returns:
             The job lot of repo configurations.
         """
-        return self._config.repository_configuration
-
-    @property
-    def report_configuration(self) -> Dict[str, ReportProviderConfiguration]:
-        """The reporting config.
-
-        Returns:
-            A dict of the config. Can be empty.
-        """
-        if not self._config.report_configuration:
-            return {}
-        return self._config.report_configuration
+        return self._config.repository_configurations
 
     def get_package_metadata(
         self,
@@ -208,7 +202,7 @@ class Valiant:
         )
 
     def get_package_reports(
-        self, payload: PythonPackagePayload, reports: List[str] = None
+        self, payload: PythonPackagePayload, reports: Set[str] = None
     ) -> PythonPackagePayload:
         """Prepares the reports for the package defined in the payload.
 
@@ -219,26 +213,15 @@ class Valiant:
 
         Returns:
             A new payload instance enhanced with reports.
-
-        Raises:
-            ValueError: When no report config is provided.
         """
-        if not self._config.report_configuration:
-            raise ValueError("No report configuration has been provided.")
-
         if not reports or len(reports) == 0:
             report_set = self._report_factory.generate_reports(
                 package_metadata=payload.package_metadata,
-                configuration=self._config.report_configuration,
+                report_list=self._config.default_reports,
             )
         else:
-            report_configuration: Dict[str, ReportProviderConfiguration] = {}
-            for item in reports:
-                report_configuration[item] = self._config.report_configuration[item]
-
             report_set = self._report_factory.generate_reports(
-                package_metadata=payload.package_metadata,
-                configuration=report_configuration,
+                package_metadata=payload.package_metadata, report_list=reports,
             )
 
         return payload.clone_with_reports(report_set)

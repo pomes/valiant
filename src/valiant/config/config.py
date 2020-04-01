@@ -1,91 +1,136 @@
 """Configuration for Valiant."""
 from copy import deepcopy
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Optional
+
+from typing import Any, Dict, List, Mapping, Optional, Set, Tuple, Union
 
 from valiant.repositories import RepositoryConfiguration
-from valiant.repositories.pypi import PyPiRepository
-from valiant.reports import ReportProviderConfiguration
+from valiant.util import Dictionizer
 
 
-class Config:
+@dataclass(frozen=True)
+class Config(Dictionizer):
     """Configuration object."""
 
-    def __init__(
-        self,
-        repository_configurations: List[RepositoryConfiguration],
-        config_dir: str,
-        cache_dir: str,
-        default_repository: Optional[str] = None,
-        report_configuration: Optional[Dict[str, ReportProviderConfiguration]] = None,
-    ):
-        """Constructor.
+    configuration_dir: Path
+    cache_dir: Path
+    log_dir: Path
+    default_repository: str
+    repository_configurations: Mapping[str, RepositoryConfiguration]
+    default_reports: Set[str]
+    logging_configuration: Mapping
+    requests_cache: Mapping[str, Union[str, int]]
+    logging_configuration_file: Optional[Path]
+    metadata: Optional[Mapping[str, Any]] = None
 
-        Args:
-            repository_configurations: A list of repository configurations.
-            cache_dir: Used by Valiant to cache assets.
-            config_dir: Contains the configuration files.
-            default_repository: The repository configuration to use by default
-                                Only needed if there are > 1 repositories
-            report_configuration: The report types to run by default
+    def __post_init__(self):
+        """Performs post init checks.
 
         Raises:
-            ValueError: When the `repositories` list has items with the same name.
+            ValueError: if the config isn't meeting the mark
         """
-        if len(repository_configurations) == 0:
-            raise ValueError("No repositories were provided.")
-        elif not default_repository and len(repository_configurations) > 1:
-            raise ValueError("A default repository is required.")
+        from requests_cache import install_cache
+        from valiant.log import configure_logging
 
-        self._cache_dir = Path(cache_dir)
-        self._config_dir = Path(config_dir)
-
-        self._report_configuration: Optional[
-            Dict[str, ReportProviderConfiguration]
-        ] = None
-        if report_configuration:
-            self._report_configuration = deepcopy(report_configuration)
-
-        self._repositories: Dict[str, RepositoryConfiguration] = {}
-
-        for repo in repository_configurations:
-            if repo.name in self._repositories:
-                raise ValueError(f"Found repositories with the same name: {repo.name}")
-            else:
-                self._repositories[repo.name] = deepcopy(repo)
-
-        if len(self._repositories) == 1 and not default_repository:
-            self._default_repository = next(iter(self._repositories.keys()))
-        elif default_repository:
-            self._default_repository = default_repository
-        else:  # pragma: no cover
-            raise ValueError("Could not reconcile repository configuration.")
-
-        if self._default_repository not in self._repositories:
+        if self.default_repository not in self.repository_configurations.keys():
             raise ValueError(
-                f"The default repository ({self._default_repository})"
+                f"The default repository ({self.default_repository})"
                 " was not provided in the list of repositories."
             )
 
-    @property
-    def cache_dir(self) -> Path:
-        """Path to the cache."""
-        return self._cache_dir  # noqa: DAR201
+        # Make sure the required directories exist
+        self.configuration_dir.mkdir(parents=True, exist_ok=True)
+        self.cache_dir.mkdir(parents=True, exist_ok=True)
 
-    @property
-    def config_dir(self) -> Path:
-        """Path to the config dir."""
-        return self._config_dir  # noqa: DAR201
+        if not self.logging_configuration_file:
+            self.log_dir.mkdir(parents=True, exist_ok=True)
 
-    @property
-    def report_configuration(self) -> Optional[Dict[str, ReportProviderConfiguration]]:
-        """The reporting config."""
-        return self._report_configuration  # noqa: DAR201
+        configure_logging(
+            dict_config=self.logging_configuration,
+            file_config=self.logging_configuration_file,
+        )
+
+        install_cache(
+            self.requests_cache["file"],
+            backend=self.requests_cache["backend"],
+            expire_after=self.requests_cache["expire_after"],
+        )
+
+    def to_dict(self) -> Dict:
+        """Convert to dict.
+
+        Note that only a subset of the configuration items are currently
+        returned to reflect those items for which configuration is
+        supported.
+
+        Returns:
+            A subset of the configuration.
+        """
+        return {
+            "tool": {
+                "valiant": {
+                    "configuration_dir": str(self.configuration_dir),
+                    "cache_dir": str(self.cache_dir),
+                    "log_dir": str(self.log_dir),
+                    "default_reports": list(self.default_reports),
+                    "logging_configuration_file": str(self.logging_configuration_file)
+                    if self.logging_configuration_file
+                    else None,
+                }
+            }
+        }
+
+    @staticmethod
+    def prepare_repository_configurations(
+        repository_configurations: List[RepositoryConfiguration],
+        default_repository: str = None,
+    ) -> Tuple[str, Dict[str, RepositoryConfiguration]]:
+        """Helper method to setup repository_configurations.
+
+        Primarily maps the config list to a dict using the repo name as the key.
+        If no default_repository is nominated and the list has only 1 member then
+        that repo is set to be the default.
+
+        Args:
+            repository_configurations: A list of repo configs
+            default_repository: A nominated default
+
+        Returns:
+            A tuple of (default_repository, repository_configurations)
+
+        Raises:
+            ValueError: if multiple repo configs have the same name,
+                or a default_repo could not be determined,
+                or a default_repo is set but doesn't exist as a key in the resulting map.
+        """
+        repositories: Dict[str, RepositoryConfiguration] = {}
+
+        for repo in repository_configurations:
+            if repo.name in repositories:
+                raise ValueError(f"Found repositories with the same name: {repo.name}")
+            else:
+                repositories[repo.name] = deepcopy(repo)
+
+        if len(repositories) == 1 and not default_repository:
+            def_repo = next(iter(repositories.keys()))
+        elif default_repository:
+            def_repo = default_repository
+        else:  # pragma: no cover
+            raise ValueError("Could not reconcile repository configuration.")
+
+        if def_repo not in repositories:
+            raise ValueError(
+                f"The default repository ({def_repo})"
+                " was not provided in the list of repositories."
+            )
+
+        return def_repo, repositories
 
     @property
     def default_repository_name(self) -> str:
         """The default repo name."""
-        return self._default_repository  # noqa: DAR201
+        return self.default_repository  # noqa: DAR201
 
     @property
     def default_repository_configuration(self) -> RepositoryConfiguration:
@@ -98,15 +143,6 @@ class Config:
         return self.get_repository_configuration(self.default_repository_name)
 
     @property
-    def repository_configuration(self) -> Dict[str, RepositoryConfiguration]:
-        """All the repos.
-
-        Returns:
-            The job lot of repo configurations.
-        """
-        return self._repositories
-
-    @property
     def repository_names(self) -> List[str]:
         """Returns a list of the known repositories.
 
@@ -115,7 +151,7 @@ class Config:
         Returns:
             A list of repository names.
         """
-        return list(self._repositories.keys())
+        return list(self.repository_configurations.keys())
 
     def get_repository_configuration(self, key: str) -> RepositoryConfiguration:
         """Lookup a repository.
@@ -130,39 +166,8 @@ class Config:
             KeyError: If the name can't be found.
         """
         try:
-            repo = self._repositories[key]
+            repo = self.repository_configurations[key]
         except KeyError as ke:
             raise KeyError(f"Repository with name {key} could not be found.") from ke
 
         return repo
-
-
-def _load_default_config() -> Config:
-    """Returns an instance with the defaults.
-
-    Returns:
-        A default Config instance.
-    """
-    from appdirs import AppDirs
-
-    from valiant.__about__ import (
-        application_name,
-        application_vendor,
-        application_version,
-    )
-
-    dirs = AppDirs(
-        appname=application_name,
-        appauthor=application_vendor,
-        version=application_version,
-    )
-    return Config(
-        repository_configurations=[PyPiRepository.get_pypi_config()],
-        config_dir=dirs.user_config_dir,
-        cache_dir=dirs.user_cache_dir,
-        report_configuration={
-            "basic": ReportProviderConfiguration(),
-            "spdx": ReportProviderConfiguration(),
-            "safety": ReportProviderConfiguration(),
-        },
-    )

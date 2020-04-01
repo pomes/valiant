@@ -47,6 +47,8 @@ class PackageCommand(BaseCommand):
         """Outputs the payload to the required format."""  # noqa:DAR101
         if format == "json":
             self.line(self.to_json(payload))
+        elif format == "toml":
+            self.line(self.to_toml(payload))
         else:
             self.line(self.to_text(payload))
 
@@ -65,10 +67,26 @@ class PackageCommand(BaseCommand):
         """Converts payload to json."""  # noqa:DAR101,DAR201
         import json
 
-        if self.option("short"):
+        if "short" in self.options and self.option("short"):
             if payload.reports:
                 return json.dumps([f.to_dict() for f in payload.reports.all_findings])
             else:
                 return "[]"  # empty json list
 
         return payload.to_json()
+
+    def to_toml(self, payload: Payload) -> str:
+        """Converts payload to toml."""  # noqa:DAR101,DAR201
+        import toml
+
+        if "short" in self.options and self.option("short"):
+            if payload.reports:
+                return toml.dumps(
+                    [f.to_dict() for f in payload.reports.all_findings]  # type: ignore
+                )
+            else:
+                return "[]"  # empty json list
+
+        return toml.dumps(
+            {"tool": {self.valiant.application_name: {"report": payload.to_dict()}}}
+        )

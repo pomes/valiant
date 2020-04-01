@@ -11,7 +11,6 @@ class ShowCommand(PackageCommand):
         {package : The package name}
         {version : The package version}
         {--r|repository= : The repository to use}
-        {--o|out= : the desired output type (json)}
     """
 
     def prepare_data(self) -> Payload:

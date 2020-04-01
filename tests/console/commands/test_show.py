@@ -40,5 +40,6 @@ def test_cli_show_package_found(app: Cli) -> None:
     command = app.find("show")
     command_tester = CommandTester(command)
 
-    result = command_tester.execute("flask 1.1.1")
+    result = command_tester.execute("flask 1.1.1 -v")
+    # print(command_tester.io.fetch_error())
     assert result == 0

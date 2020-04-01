@@ -1,6 +1,10 @@
 """CLI Command: about."""
 import json
-from typing import Optional
+
+from typing import Dict, Optional
+
+import toml
+
 from .base_command import BaseCommand
 
 
@@ -8,27 +12,32 @@ class AboutCommand(BaseCommand):
     """Shows information about Valiant.
 
     about
-        {--o|out= : the desired output type (json)}
     """
 
     def handle(self) -> Optional[int]:  # noqa: D102
         format = self.option("out")
         if format == "json":
             self.line(self.to_json())
+        elif format == "toml":
+            self.line(self.to_toml())
         else:
             self.line(self.to_text())
         return 0
 
+    def to_dict(self) -> Dict:  # noqa: D102
+        return {
+            "name": self.valiant.application_name,
+            "version": self.valiant.application_version,
+            "license": self.valiant.application_licence,
+            "url": self.valiant.application_homepage,
+        }
+
     def to_json(self) -> str:  # noqa: D102
-        return json.dumps(
-            {
-                "application": {
-                    "name": self.valiant.application_name,
-                    "version": self.valiant.application_version,
-                    "license": self.valiant.application_licence,
-                    "url": self.valiant.application_homepage,
-                }
-            }
+        return json.dumps(self.to_dict())
+
+    def to_toml(self) -> str:  # noqa: D102
+        return toml.dumps(
+            {"tool": {self.valiant.application_name: {"about": self.to_dict()}}}
         )
 
     def to_text(self) -> str:  # noqa: D102

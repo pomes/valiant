@@ -59,12 +59,16 @@ class PyPiRepository(BaseRepository):
             )
             raise PackageNotFoundException(f"No result for {url}")
 
+        if hasattr(r, "cache_used"):
+            cache_note = r.cache_used  # type: ignore
+        else:
+            cache_note = False
         log.info(
             "Package found",
             package_name=name,
             package_version=version,
             repository_url=self.repository_configuration.base_url,
-            cache_used=r.from_cache,  # type: ignore
+            cache_used=cache_note,
         )
 
         data = r.json()

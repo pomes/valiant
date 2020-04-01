@@ -2,7 +2,7 @@
 import argparse
 import pickle  # noqa: S403
 
-from . import SPDX_LICENSE_DATA_FILE_URL, SpdxLicenses
+from .license import SPDX_LICENSE_DATA_FILE_URL, SpdxLicenses
 
 
 """Builds a pickle file from the SPDX License json data.

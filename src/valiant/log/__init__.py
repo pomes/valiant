@@ -4,10 +4,11 @@ This is an initial logging setup and may be underwhelming.
 """
 from copy import deepcopy
 import logging
-from logging.config import dictConfig
+from logging.config import dictConfig, fileConfig
+from pathlib import Path
 import sys
 import structlog
-from typing import Dict
+from typing import Dict, Optional
 from structlog.stdlib import LoggerFactory
 
 
@@ -25,12 +26,8 @@ DEFAULT_CONFIG = {
         },
     },
     "loggers": {
-        "": {  # root logger
-            "handlers": ["default"],
-            "level": "INFO",
-            "propagate": False,
-        }
-    },
+        "": {"handlers": ["default"], "level": "INFO", "propagate": False}
+    },  # root logger
 }
 
 
@@ -67,17 +64,24 @@ def setup_logging_configuration(
     return config
 
 
-def configure_logging(config: Dict = DEFAULT_CONFIG) -> None:
+def configure_logging(
+    dict_config: Dict = DEFAULT_CONFIG, file_config: Optional[Path] = None
+) -> None:
     """Configures logging for the application.
 
-    This is called by Valiant.__init__
+    This is usually called by valiant.config.Config.__init__
 
     See: https://docs.python.org/3/library/logging.config.html#logging.config.dictConfig
 
     Args:
-        config: A dictionary acceptable to logging.config.dictConfig
+        dict_config: A dictionary acceptable to logging.config.dictConfig
+        file_config: Path to a logging config file - see
+            https://docs.python.org/3/library/logging.config.html#logging-config-fileformat
     """
-    dictConfig(deepcopy(config))
+    if file_config:
+        fileConfig(file_config)
+    else:
+        dictConfig(deepcopy(dict_config))
 
     # See: http://www.structlog.org/en/stable/standard-library.html#rendering-within-structlog
     structlog.configure_once(

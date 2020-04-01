@@ -20,7 +20,6 @@ class AuditCommand(BaseCommand):
         {requirements-file : The file containing a requirements list}
         {reports? : One or more reports to run (optional - default is all reports)}
         {--s|short : Single table output}
-        {--o|out= : the desired output type (json)}
 
     The audit command expects a very basic requirements file with one line per requirement
     and each requirement pinned to a specific version (e.g. texttable==1.6.2)
@@ -36,7 +35,7 @@ class AuditCommand(BaseCommand):
 
     def handle(self) -> Optional[int]:  # noqa: D102
         requirements = Path(self.argument("requirements-file"))
-        report_list: Optional[List[str]] = None
+        report_list: List[str] = []
         format = self.option("out")
         package_list: List[AuditCommand._RequirementsEntry] = []
         payloads: List[Payload] = []
@@ -62,7 +61,7 @@ class AuditCommand(BaseCommand):
                     package_name=req.package, package_version=req.version,
                 )
                 reports = self.valiant.get_package_reports(
-                    package_metadata, reports=report_list
+                    package_metadata, reports=set(report_list)
                 )
                 payloads.append(
                     Payload(metadata=reports.package_metadata, reports=reports.reports)
@@ -70,6 +69,8 @@ class AuditCommand(BaseCommand):
 
             if format == "json":
                 self.line(self.to_json(payloads))
+            elif format == "toml":
+                self.line(self.to_toml(payloads))
             else:
                 self.line(self.to_text(payloads))
 
@@ -151,3 +152,30 @@ class AuditCommand(BaseCommand):
             )
 
         return json.dumps([p.to_dict() for p in payloads])
+
+    def to_toml(self, payloads: List[Payload]) -> str:
+        """Converts data to toml."""  # noqa:DAR101,DAR201
+        import toml
+
+        if self.option("short"):
+            return toml.dumps(
+                {
+                    "tool": {
+                        self.valiant.application_name: {
+                            "report": [
+                                f.to_dict() for f in self.compile_all_findings(payloads)
+                            ]
+                        }
+                    }
+                }
+            )
+
+        return toml.dumps(
+            {
+                "tool": {
+                    self.valiant.application_name: {
+                        "report": [p.to_dict() for p in payloads]
+                    }
+                }
+            }
+        )

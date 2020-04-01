@@ -1,18 +1,11 @@
 """Models for reports and report providers."""
 from dataclasses import dataclass
 from datetime import datetime
-from enum import Enum
+
 from typing import Dict, Iterable, List, Optional, Tuple
 
-from valiant.util import Dictionizer
+from valiant.util import Dictionizer, NoValue
 from valiant.package import PackageCoordinates
-
-
-class NoValue(Enum):
-    """As per https://docs.python.org/3/library/enum.html#omitting-values."""
-
-    def __repr__(self):  # noqa:D105
-        return "<%s.%s>" % (self.__class__.__name__, self.name)
 
 
 class FindingLevel(NoValue):
@@ -111,29 +104,6 @@ class ReportProviderDetails(Dictionizer):
             "version": self.version,
             "url": self.url,
         }
-
-
-@dataclass(frozen=True)
-class ReportProviderConfiguration:
-    """A very generic class to allow for flexible configuration."""
-
-    items: Optional[Dict[str, str]] = None
-
-    def get(self, key: str, default: str = None) -> Optional[str]:
-        """Retrieve a configuration item.
-
-        Args:
-            key: The item key
-            default: a value to return if the key doesn't exist
-
-        Returns:
-            The value of the config item assigned to the key.
-            default value otherwise
-        """
-        if self.items:
-            return self.items.get(key, default)
-
-        return default
 
 
 class Report(Dictionizer):

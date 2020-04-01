@@ -16,7 +16,6 @@ class ReportCommand(PackageCommand):
         {reports? : One or more reports to run (optional - default is all reports)}
         {--r|repository= : The repository to use (not used)}
         {--s|short : Single table output}
-        {--o|out= : the desired output type (json)}
     """
 
     def prepare_data(self) -> Payload:
@@ -37,13 +36,13 @@ class ReportCommand(PackageCommand):
         if self.argument("reports"):
             report_list = self.argument("reports").split(",")
         else:
-            report_list = None
+            report_list = []
 
         if not package_metadata:
             raise ValueError("Package details could not be loaded.")
 
         payload = self.valiant.get_package_reports(
-            package_metadata, reports=report_list
+            package_metadata, reports=set(report_list)
         )
 
         return Payload(metadata=payload.package_metadata, reports=payload.reports)

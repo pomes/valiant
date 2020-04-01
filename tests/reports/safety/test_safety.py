@@ -3,11 +3,10 @@ import json
 from dataclasses import dataclass
 from typing import Any
 
-import valiant.reports.safety
+import valiant.reports.safety.provider
 from safety.safety import Vulnerability
-from safety.util import Package as SafetyPackage
 from valiant.package import PackageCoordinates
-from valiant.reports import FindingCategory, FindingLevel, ReportProviderConfiguration
+from valiant.reports import FindingCategory, FindingLevel
 from valiant.reports.safety import SafetyReportProvider, VulnerabilityDictionizer
 
 
@@ -34,29 +33,6 @@ def test_report_provider_details() -> None:
     assert rpd.version == "1.8.7"
 
 
-def test_report_configuration(monkeypatch: Any) -> None:
-    """Check the report config."""
-
-    def mock_check(packages, key, db_mirror, cached, ignore_ids, proxy):  # noqa:ANN
-        assert packages == [SafetyPackage(key="fake-lib", version="x.y.z")]
-        assert key == "mykey"
-        assert db_mirror == "mydb"
-        assert ignore_ids == ["id1", "id2"]
-        assert not cached
-        assert proxy is None
-        return []
-
-    monkeypatch.setattr(
-        valiant.reports.safety, "safety_check", mock_check,
-    )
-
-    config = ReportProviderConfiguration(
-        {"key": "mykey", "db": "mydb", "ignore_ids": "id1,id2"}
-    )
-    rp = SafetyReportProvider(ReportProviderConfiguration(config))
-    rp.generate_report(MockPackage())
-
-
 def test_safety_generate_report(monkeypatch: Any) -> None:
     """Test the generate_report method."""
 
@@ -72,10 +48,10 @@ def test_safety_generate_report(monkeypatch: Any) -> None:
         ]
 
     monkeypatch.setattr(
-        valiant.reports.safety, "safety_check", mock_check,
+        valiant.reports.safety.provider, "safety_check", mock_check,
     )
 
-    rp = SafetyReportProvider(ReportProviderConfiguration())
+    rp = SafetyReportProvider()
     report = rp.generate_report(MockPackage())
     assert len(report.all_findings) == 1
 
