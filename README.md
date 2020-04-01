@@ -6,7 +6,8 @@ track their dependencies in terms of licensing, security, and dependability.
 
 The goal is to help reduce the fragility of the "input side" of software development
 by making it easy to assess and track dependencies. Further work will also aim to
-check dependencies against policy documents to help
+check dependencies against policy documents to help integrate Valiant into developer
+and release workflows.
 
 The system is written in Python 3 and targets Python codebases.
 
@@ -18,12 +19,12 @@ for documentation.
 | Resource | Description |
 | -------- | ----------- |
 | [Codebase](https://github.com/pomes/valiant) | GitHub project |
-| [Security policy](SECURITY.md) | Please refer to this if you need to report a security concern |
+| [Security policy](https://github.com/pomes/valiant/blob/master/SECURITY.md) | Please refer to this if you need to report a security concern |
 | [Project tracker](https://github.com/pomes/valiant/projects/1) | Structured to provide fulfilment of [project milestones](https://github.com/pomes/valiant/milestones) |
 | [Issue tracker](https://github.com/pomes/valiant/issues) | GitHub issues |
 | [Documentation](http://pomes.github.io/valiant) | Project site |
-| [License](LICENSE.txt) | Project licence (MIT) |
-| [Contributing](CONTRIBUTING.md) | Want to join in? |
+| [License](https://github.com/pomes/valiant/blob/master/LICENSE) | Project licence (MIT) |
+| [Contributing](https://github.com/pomes/valiant/blob/master/CONTRIBUTING.md) | Want to join in? |
 
 ## Attribution
 
