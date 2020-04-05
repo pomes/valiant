@@ -5,4 +5,4 @@ jinja2==2.11.1
 markupsafe==1.1.1
 werkzeug==1.0.1
 insecure-package==0.1.0
-django==1.2
+django==1.11.28
