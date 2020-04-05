@@ -1,11 +1,10 @@
 """Models for reports and report providers."""
 from dataclasses import dataclass
 from datetime import datetime
+from typing import cast, Dict, Iterable, List, Mapping, Optional, Tuple, Union
 
-from typing import Dict, Iterable, List, Optional, Tuple
-
-from valiant.util import Dictionizer, NoValue
 from valiant.package import PackageCoordinates
+from valiant.util import Dictionizer, NoValue
 
 
 class FindingLevel(NoValue):
@@ -59,16 +58,19 @@ class Finding(Dictionizer):
     message: str
 
     """Allows report providers to optionally add further data."""
-    data: Optional[Dictionizer]
+    data: Optional[Union[Mapping, Dictionizer]]
 
     """A link for further details."""
     url: Optional[str]
 
     def to_dict(self) -> Dict:  # noqa:D102
-        data = None
+        data: Mapping = {}
 
         if self.data:
-            data = self.data.to_dict()
+            if hasattr(self.data, "to_dict"):
+                data = cast(Dictionizer, self.data).to_dict()
+            else:
+                data = cast(Mapping, self.data)
 
         return {
             "id": self.id,

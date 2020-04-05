@@ -44,11 +44,11 @@ def configured_valiant(config_builder: ConfigBuilder) -> Valiant:
     # noqa:DAR201
     # noqa:DAR401
     """
-    from valiant.config.util import generate_valiant_config_from_map
+    from valiant.config.util import ConfigMapBuilder
 
     conf_map = config_builder.build()
     if conf_map:
-        conf = generate_valiant_config_from_map(conf_map)
+        conf = ConfigMapBuilder.generate_valiant_config_from_map(conf_map)
         return Valiant(conf)
     else:
         raise ValueError("Could not build you a Valiant")

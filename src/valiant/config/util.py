@@ -1,12 +1,14 @@
 """A set of utility functions for Valiant config."""
 from collections import ChainMap
+from collections.abc import Mapping as MappingType
 from pathlib import Path
 from typing import Any
 from typing import ChainMap as ChainMapType
-from typing import Mapping, Optional, Tuple
+from typing import Dict, List, Mapping, Optional, Set, Tuple, Union
 
 from valiant.config import Config, ConfigBuilder
 from valiant.config.builder import ConfigMap
+from valiant.repositories import RepositoryConfiguration
 
 
 def get_valiant_base_config() -> ConfigMap:
@@ -39,6 +41,7 @@ def get_valiant_base_config() -> ConfigMap:
                     "expire_after": 86400,
                 },
                 "repository_configurations": {"pypi": PyPiRepository.get_pypi_config()},
+                "local-plugins": {"paths": [], "reports": {}},
                 "logging_configuration_file": None,
                 "logging_configuration": setup_logging_configuration(
                     handlers={
@@ -57,50 +60,140 @@ def get_valiant_base_config() -> ConfigMap:
     }
 
 
-def generate_valiant_config_from_map(config: ChainMapType) -> Config:
-    """Create a Config instance from a dictionary rendition.
+class ConfigMapBuilder:
+    """Tries to simplify the building of a Config instance from a Mapping."""
 
-    Args:
-        config: A dictionary that aligns with the init params for Config
+    def __init__(self) -> None:
+        """Initializer."""
+        self.configuration_dir: Path
+        self.cache_dir: Path
+        self.log_dir: Path
+        self.default_repository: str
+        self.repository_configurations: Mapping[str, RepositoryConfiguration]
+        self.default_reports: Set[str]
+        self.requests_cache: Mapping[str, Union[str, int]]
+        self.logging_configuration: Mapping
+        self.logging_configuration_file: Optional[Path]
+        self.local_plugin_paths: List[str]
+        self.local_report_plugins: Mapping[str, str]
+        self.metadata: Optional[Mapping[str, Any]]
 
-    Returns:
-        A Config instance ready to go
-    """
+    def build(self) -> Config:
+        """Build the instance."""  # noqa:DAR201
+        return Config(
+            configuration_dir=self.configuration_dir,
+            cache_dir=self.cache_dir,
+            log_dir=self.log_dir,
+            default_repository=self.default_repository,
+            default_reports=self.default_reports,
+            repository_configurations=self.repository_configurations,
+            requests_cache=self.requests_cache,
+            logging_configuration=self.logging_configuration,
+            logging_configuration_file=self.logging_configuration_file,
+            local_plugin_paths=self.local_plugin_paths,
+            local_report_plugins=self.local_report_plugins,
+            metadata=self.metadata,
+        )
 
+    @staticmethod
     def _valiant_config_in_mapping(cfg: Mapping) -> bool:
         if "tool" in cfg:
             if "valiant" in cfg["tool"]:
                 return True
         return False
 
+    @staticmethod
     def _extract_valiant_configuration_maps(
         map: ChainMap,
     ) -> Tuple[Mapping[str, Any], Mapping[str, Any]]:
         metadata = map["_builder_metadata"]
         valiant_config: Mapping[str, Any] = ChainMap(
-            *[m["tool"]["valiant"] for m in map.maps if _valiant_config_in_mapping(m)]
+            *[
+                m["tool"]["valiant"]
+                for m in map.maps
+                if ConfigMapBuilder._valiant_config_in_mapping(m)
+            ]
         )
         return (metadata, valiant_config)
 
-    metadata, valiant_conf = _extract_valiant_configuration_maps(config)
+    @staticmethod
+    def _extract_repo_confs(
+        confs: Mapping[str, Union[Mapping, RepositoryConfiguration]]
+    ) -> Mapping[str, RepositoryConfiguration]:
+        from typing import cast
 
-    log_config_file: Optional[Path] = None
-    if "logging_configuration_file" in valiant_conf:
-        if valiant_conf["logging_configuration_file"]:
-            log_config_file = Path(valiant_conf["logging_configuration_file"])
+        repo_confs: Dict[str, RepositoryConfiguration] = {}
+        for k, v in confs.items():
+            if type(v) is RepositoryConfiguration:
+                repo_confs[k] = cast(RepositoryConfiguration, v)
+            elif issubclass(type(v), MappingType):
+                repo_confs[k] = RepositoryConfiguration(**(cast(Mapping, v)))
 
-    return Config(
-        configuration_dir=Path(valiant_conf["configuration_dir"]),
-        cache_dir=Path(valiant_conf["cache_dir"]),
-        log_dir=Path(valiant_conf["log_dir"]),
-        default_repository=valiant_conf["default_repository"],
-        default_reports=set(valiant_conf["default_reports"]),
-        repository_configurations=valiant_conf["repository_configurations"],
-        requests_cache=valiant_conf["requests_cache"],
-        logging_configuration=valiant_conf["logging_configuration"],
-        logging_configuration_file=log_config_file,
-        metadata=metadata,
-    )
+        return repo_confs
+
+    @staticmethod
+    def _extract_plugin_conf(
+        config: Mapping[str, Any],
+    ) -> Tuple[List[str], Mapping[str, str]]:
+        local_plugin_paths = []
+        if "paths" in config["local-plugins"]:
+            local_plugin_paths = config["local-plugins"]["paths"]
+
+        local_report_plugins = {}
+        if "valiant.report" in config["local-plugins"]:
+            local_report_plugins = config["local-plugins"]["valiant.report"]
+
+        return local_plugin_paths, local_report_plugins
+
+    @staticmethod
+    def _extract_log_configuration(
+        config: Mapping[str, Any],
+    ) -> Tuple[Optional[Path], Mapping]:
+
+        if "logging_configuration_file" in config:
+            if config["logging_configuration_file"]:
+                return Path(config["logging_configuration_file"]), {}
+
+        return None, config["logging_configuration"]
+
+    @staticmethod
+    def generate_valiant_config_from_map(config: ChainMapType) -> Config:
+        """Create a Config instance from a dictionary rendition.
+
+        Args:
+            config: A dictionary that aligns with the init params for Config
+
+        Returns:
+            A Config instance ready to go
+        """
+        builder = ConfigMapBuilder()
+
+        metadata, valiant_conf = ConfigMapBuilder._extract_valiant_configuration_maps(
+            config
+        )
+        builder.metadata = metadata
+
+        builder.configuration_dir = Path(valiant_conf["configuration_dir"])
+        builder.cache_dir = Path(valiant_conf["cache_dir"])
+        builder.log_dir = Path(valiant_conf["log_dir"])
+        builder.default_repository = valiant_conf["default_repository"]
+        builder.default_reports = set(valiant_conf["default_reports"])
+        builder.repository_configurations = ConfigMapBuilder._extract_repo_confs(
+            valiant_conf["repository_configurations"]
+        )
+        builder.requests_cache = valiant_conf["requests_cache"]
+
+        (
+            builder.logging_configuration_file,
+            builder.logging_configuration,
+        ) = ConfigMapBuilder._extract_log_configuration(valiant_conf)
+
+        (
+            builder.local_plugin_paths,
+            builder.local_report_plugins,
+        ) = ConfigMapBuilder._extract_plugin_conf(valiant_conf)
+
+        return builder.build()
 
 
 def valiant_config_filter(d: ConfigMap) -> ConfigMap:

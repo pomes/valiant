@@ -1,0 +1,16 @@
+[tool.valiant]
+configuration_dir = "/tmp/etc/valiant"
+cache_dir = "/tmp/var/local/valiant/0.2.0"
+log_dir = "/tmp/var/local/log/valiant"
+default_reports = [ "basic", "spdx"]
+default_repository = "mypi"
+
+[tool.valiant.repository_configurations.mypi]
+name = "mypi"
+base_url = "https://mypi.org/pypi"
+repository_type = "warehouse"
+
+[tool.valiant.repository_configurations.pypi]
+name = "pypi"
+base_url = "https://pypi.org/pypi"
+repository_type = "warehouse"

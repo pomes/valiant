@@ -30,7 +30,18 @@ class ConfigCommand(BaseCommand):
         repo_config = ",".join(self.valiant.repository_configuration.keys())
 
         verbose_text = ""
-        if self.io.is_verbose():
+
+        if self.io.is_debug():
+            from pprint import pformat
+
+            verbose_text = (
+                "\n<info>All config data:</info>\n  <comment>"
+                + pformat(
+                    self.valiant._config.to_dict(), compact=True, sort_dicts=False
+                )
+                + "</comment>"
+            )
+        elif self.io.is_verbose():
             from pprint import pformat
 
             verbose_text = (
@@ -38,6 +49,10 @@ class ConfigCommand(BaseCommand):
                 + pformat(self.valiant._config.metadata, compact=True, sort_dicts=False)
                 + "</comment>"
             )
+
+        loaded_plugins = ", ".join(
+            [f"{p[0]}:{p[1]}" for p in self.valiant.loaded_report_plugins]
+        )
 
         return (
             "<info>configuration_dir</info>: "
@@ -50,5 +65,7 @@ class ConfigCommand(BaseCommand):
             f"<comment>{self.valiant.default_repository_name}</comment>"
             f"\n<info>repositories</info>: <comment>{repo_config}</comment>"
             f"\n<info>reports</info> : <comment> {self.valiant.default_reports} </comment>"
+            "\n<info>Loaded report plugins:</info>: "
+            f"<comment>{loaded_plugins}</comment>"
             f"{verbose_text}"
         )

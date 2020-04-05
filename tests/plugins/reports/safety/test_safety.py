@@ -3,11 +3,11 @@ import json
 from dataclasses import dataclass
 from typing import Any
 
-import valiant.reports.safety.provider
+
 from safety.safety import Vulnerability
 from valiant.package import PackageCoordinates
 from valiant.reports import FindingCategory, FindingLevel
-from valiant.reports.safety import SafetyReportProvider, VulnerabilityDictionizer
+from valiant.plugins.reports.safety import SafetyReportPlugin
 
 
 @dataclass
@@ -27,7 +27,7 @@ class MockPackage:
 
 def test_report_provider_details() -> None:
     """Basic provider check."""
-    rpd = SafetyReportProvider.get_report_provider_details()
+    rpd = SafetyReportPlugin.report_provider_details()
     assert rpd.name == "safety"
     assert rpd.display_name == "Safety"
     assert rpd.version == "1.8.7"
@@ -35,6 +35,7 @@ def test_report_provider_details() -> None:
 
 def test_safety_generate_report(monkeypatch: Any) -> None:
     """Test the generate_report method."""
+    import valiant.plugins.reports.safety.provider
 
     def mock_check(*args, **kwargs):  # noqa:ANN
         return [
@@ -48,11 +49,11 @@ def test_safety_generate_report(monkeypatch: Any) -> None:
         ]
 
     monkeypatch.setattr(
-        valiant.reports.safety.provider, "safety_check", mock_check,
+        valiant.plugins.reports.safety.provider, "safety_check", mock_check,
     )
 
-    rp = SafetyReportProvider()
-    report = rp.generate_report(MockPackage())
+    rp = SafetyReportPlugin()
+    report = rp.prepare_report(MockPackage(), "")
     assert len(report.all_findings) == 1
 
     f = report.all_findings[0]
@@ -66,13 +67,11 @@ def test_safety_generate_report(monkeypatch: Any) -> None:
     assert f.category == FindingCategory.SECURITY.value
     assert f.url == "https://github.com/pyupio/safety-db"
 
-    assert type(f.data) == VulnerabilityDictionizer
-    data = f.data.to_dict()
-    assert data["name"] == "vname"
-    assert data["spec"] == "vspec"
-    assert data["version"] == "vversion"
-    assert data["advisory"] == "vadvisory"
-    assert data["vuln_id"] == "12345"
+    assert f.data["name"] == "vname"
+    assert f.data["spec"] == "vspec"
+    assert f.data["version"] == "vversion"
+    assert f.data["advisory"] == "vadvisory"
+    assert f.data["vuln_id"] == "12345"
 
     assert f.to_dict()["level"] == FindingLevel.PRIORITY.value
 

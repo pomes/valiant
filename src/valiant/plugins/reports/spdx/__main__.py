@@ -10,7 +10,8 @@ from .license import SPDX_LICENSE_DATA_FILE_URL, SpdxLicenses
 This function generates the `spdx-licenses.pickle` file found in this package.
 
 Example:
-    python -m valiant.reports.spdx valiant/reports/spdx/spdx-licenses.pickle
+    poetry run python -m valiant.plugins.reports.spdx \
+        src/valiant/plugins/reports/spdx/spdx-licenses.pickle
 
 Returns:
     The path of the pickle file

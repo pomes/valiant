@@ -29,21 +29,33 @@ classifiers = [
 [tool.poetry.urls]
 "Issue tracker" = "https://github.com/pomes/valiant/issues"
 
+[tool.poetry.plugins]
+
+[tool.poetry.plugins."valiant.report"]
+"demo" = "valiant.plugins.reports.demo:DemoReportPlugin"
+"basic" = "valiant.plugins.reports.basic:BasicReportPlugin"
+"spdx" = "valiant.plugins.reports.spdx:SpdxLicenseReportPlugin"
+"safety" = "valiant.plugins.reports.safety:SafetyReportPlugin"
+
+[tool.valiant.local-plugins]
+paths = ["./tests/plugins"]
+
+[tool.valiant.local-plugins."valiant.report"]
+localdemo = "reports.localdemo:LocalDemoReportPlugin"
+
 [tool.poetry.dependencies]
 python = "^3.8"
 cleo = "^0.7.6"
-#gql = "^0.3.0"
 appdirs = "^1.4.3"
 desert = "^2020.1.6"
 marshmallow = "^3.5.1"
 requests = "^2.23.0"
 setuptools = "^46.0.0"
-#pybraries = "^0.2.0"
-safety = "^1.8.7"
 texttable = "^1.6.2"
 wcwidth = "^0.1.8"
 requests-cache = "^0.5.2"
 structlog = "^20.1.0"
+safety = "^1.8.7"
 [tool.poetry.dev-dependencies]
 pytest = "^4.6"
 black = "^19.10b0"

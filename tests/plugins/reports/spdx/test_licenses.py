@@ -11,7 +11,7 @@ from typing import Dict
 import py  # https://py.readthedocs.io/en/latest/index.html
 import pytest
 
-from valiant.reports.spdx import SpdxLicense, SpdxLicenses
+from valiant.plugins.reports.spdx import SpdxLicense, SpdxLicenses
 
 
 FIXTURE_DIR = os.path.join(
@@ -32,8 +32,8 @@ def licenses() -> SpdxLicenses:
 
 def test_builtin_loader_release_attributes(licenses: SpdxLicenses,) -> None:
     """Tests that the SPDX license data can be unpickled."""
-    assert licenses.release_date == date(2020, 3, 11)
-    assert licenses.version == "3.8-22-gbcb6222"
+    assert licenses.release_date == date(2020, 3, 26)
+    assert licenses.version == "3.8-39-g9cb4f86"
     assert isinstance(licenses.licenses, Dict)
 
 

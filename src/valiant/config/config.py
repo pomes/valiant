@@ -1,6 +1,6 @@
 """Configuration for Valiant."""
 from copy import deepcopy
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 from typing import Any, Dict, List, Mapping, Optional, Set, Tuple, Union
@@ -19,9 +19,11 @@ class Config(Dictionizer):
     default_repository: str
     repository_configurations: Mapping[str, RepositoryConfiguration]
     default_reports: Set[str]
-    logging_configuration: Mapping
     requests_cache: Mapping[str, Union[str, int]]
+    logging_configuration: Mapping
     logging_configuration_file: Optional[Path]
+    local_plugin_paths: List[str] = field(default_factory=list)
+    local_report_plugins: Mapping[str, str] = field(default_factory=dict)
     metadata: Optional[Mapping[str, Any]] = None
 
     def __post_init__(self):
@@ -30,6 +32,7 @@ class Config(Dictionizer):
         Raises:
             ValueError: if the config isn't meeting the mark
         """
+        import sys
         from string import Template
         from requests_cache import install_cache
         from valiant.log import configure_logging
@@ -39,6 +42,8 @@ class Config(Dictionizer):
                 f"The default repository ({self.default_repository})"
                 " was not provided in the list of repositories."
             )
+
+        sys.path.extend(self.local_plugin_paths)
 
         # Make sure the required directories exist
         self.configuration_dir.mkdir(parents=True, exist_ok=True)
@@ -63,10 +68,10 @@ class Config(Dictionizer):
             file_config=self.logging_configuration_file,
         )
 
-        cache_dir = Template(self.requests_cache["file"])
+        rcache_dir = Template(self.requests_cache["file"])
 
         install_cache(
-            cache_dir.substitute(
+            rcache_dir.substitute(
                 log_dir=self.log_dir,
                 cache_dir=self.cache_dir,
                 configuration_dir=self.configuration_dir,
@@ -91,11 +96,20 @@ class Config(Dictionizer):
                     "configuration_dir": str(self.configuration_dir),
                     "cache_dir": str(self.cache_dir),
                     "log_dir": str(self.log_dir),
+                    "default_repository": self.default_repository,
+                    "repository_configurations": {
+                        k: self.repository_configurations[k].to_dict()
+                        for k in self.repository_configurations.keys()
+                    },
                     "default_reports": list(self.default_reports),
                     "logging_configuration_file": str(self.logging_configuration_file)
                     if self.logging_configuration_file
                     else None,
                     "requests_cache": self.requests_cache,
+                    "local_plugins": {
+                        "paths": [str(i) for i in self.local_plugin_paths],
+                        "report": self.local_report_plugins,
+                    },
                 }
             }
         }

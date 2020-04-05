@@ -1,7 +1,8 @@
 """Package exceptions."""
+from valiant.exceptions import ValiantException
 
 
-class RepositoryException(Exception):  # noqa: D101
+class RepositoryException(ValiantException):  # noqa: D101
 
     pass
 

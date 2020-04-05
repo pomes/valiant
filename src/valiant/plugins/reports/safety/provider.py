@@ -3,23 +3,23 @@
 See: https://github.com/pyupio/safety
 """
 from enum import Enum
+from pathlib import Path
 from typing import Dict, List
 
-from safety import __author__, __version__
+from safety import __author__ as safety_author, __version__ as safety_version
 from safety.safety import Vulnerability
 from safety.safety import check as safety_check
 from safety.util import Package as SafetyPackage
 from valiant.log import get_logger
+from valiant.plugins.reports import BaseReportPlugin
 from valiant.util import Dictionizer
 
-from ...package import PackageCoordinates, PackageMetadata
-from .. import (
-    BaseReportProvider,
+from valiant.package import PackageCoordinates, PackageMetadata
+from valiant.reports import (
     Finding,
     FindingCategory,
     FindingLevel,
     Report,
-    ReportProviderDetails,
 )
 
 
@@ -67,30 +67,29 @@ class SafetyId(Enum):
             level=self.level,
             title="Vulnerability found",
             message=vulnerability.advisory,
-            data=VulnerabilityDictionizer(vulnerability),
+            data=VulnerabilityDictionizer(vulnerability).to_dict(),
             url="https://github.com/pyupio/safety-db",
         )
 
 
-class SafetyReportProvider(BaseReportProvider):
+class SafetyReportPlugin(BaseReportPlugin):
     """Provider implementation."""
 
-    @classmethod
-    def get_report_provider_details(cls) -> ReportProviderDetails:
-        """Returns the provider details."""
-        return ReportProviderDetails(  # noqa: DAR201
-            name="safety",
-            vendor=__author__,
-            display_name="Safety",
-            version=__version__,
-            url="https://pyup.io/safety/",
-        )
+    name = "safety"
+    vendor = safety_author
+    display_name = "Safety"
+    version = safety_version
+    url = "https://pyup.io/safety/"
 
-    def generate_report(self, package_metadata: PackageMetadata) -> Report:
+    @classmethod
+    def prepare_report(
+        cls, package_metadata: PackageMetadata, configuration_dir: Path
+    ) -> Report:
         """Constructs the report.
 
         Args:
             package_metadata: containing at least the package metadata
+            configuration_dir: A likely location for config files
 
         Returns:
             The report.
@@ -127,7 +126,7 @@ class SafetyReportProvider(BaseReportProvider):
             proxy=None,
         )
 
-        report = Report(SafetyReportProvider.get_report_provider_details())
+        report = Report(cls.report_provider_details())
 
         for v in vulnerabilities:
             report.add_finding(

@@ -1,15 +1,15 @@
 """A basic package reporter."""
 from enum import Enum
+from pathlib import Path
 
 from valiant.log import get_logger
 from valiant.package import PackageCoordinates, PackageMetadata
+from valiant.plugins.reports import BaseReportPlugin
 from valiant.reports import (
-    BaseReportProvider,
     Finding,
     FindingCategory,
     FindingLevel,
     Report,
-    ReportProviderDetails,
 )
 from valiant.util import Dictionizer
 
@@ -100,29 +100,32 @@ class BasicId(Enum):
         )
 
 
-class BasicReportProvider(BaseReportProvider):
+class BasicReportPlugin(BaseReportPlugin):
     """Basic report provider implementation.
 
     Examines the package metadata and calls out any concerns.
     """
 
-    @classmethod
-    def get_report_provider_details(cls) -> ReportProviderDetails:
-        """Returns the provider details."""
-        return ReportProviderDetails(  # noqa: DAR201
-            name="basic", vendor="Valiant", display_name="Basic", version="0.1", url=""
-        )
+    name = "basic"
+    vendor = "Valiant"
+    display_name = "Basic"
+    version = "0.1"
+    url = ""
 
-    def generate_report(self, package_metadata: PackageMetadata) -> Report:
+    @classmethod
+    def prepare_report(
+        cls, package_metadata: PackageMetadata, configuration_dir: Path
+    ) -> Report:
         """Constructs the report.
 
         Args:
             package_metadata: containing at least the package metadata
+            configuration_dir: A likely location for config files
 
         Returns:
             The report.
         """
-        report = Report(BasicReportProvider.get_report_provider_details())
+        report = Report(cls.report_provider_details())
 
         if not package_metadata.license:
             report.add_finding(

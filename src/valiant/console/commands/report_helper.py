@@ -88,6 +88,9 @@ def create_short_report(findings: List[Finding]) -> str:
     Returns:
         A nice table for you
     """
+    if len(findings) == 0:
+        return "<comment>No findings</comment>"
+
     report_table = Texttable()
     report_table.header(
         ["Package Coordinates", "ID", "Level", "Category", "Title", "Message"]

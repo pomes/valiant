@@ -5,6 +5,7 @@ from typing import Mapping, Optional, Set, Tuple
 
 from valiant.config import Config
 from valiant.package import PackageMetadata
+from valiant.plugins.reports import ReportPlugins
 from valiant.reports import ReportSet
 from valiant.repositories import RepositoryConfiguration
 
@@ -62,12 +63,17 @@ class Valiant:
         Args:
             config: The application configuration
         """
-        from valiant.reports import ReportFactory
         from valiant.repositories import RepositoryFactory
 
         self._config: Config = config
         self._repo_factory = RepositoryFactory()
-        self._report_factory = ReportFactory()
+
+        local_plugins: Optional[Mapping[str, str]] = None
+        if self._config.local_report_plugins:
+            local_plugins = self._config.local_report_plugins
+
+        self._report_plugins: ReportPlugins = ReportPlugins(local_plugins=local_plugins)
+        self._report_plugins.load_plugins()
 
     @staticmethod
     def application_details() -> Tuple:  # noqa: D102
@@ -169,6 +175,26 @@ class Valiant:
         """
         return self._config.repository_configurations
 
+    @property
+    def loaded_report_plugin_names(self) -> Set[str]:
+        """Returns the set of loaded reporting plugins."""
+        if self._report_plugins.names:  # noqa: DAR201
+            return set(self._report_plugins.names)
+        return set()
+
+    @property
+    def loaded_report_plugins(self) -> Set[Tuple[str, str]]:
+        """Returns a set of name,version tuples for the loaded plugins."""
+        if self._report_plugins:  # noqa: DAR201
+            return set(
+                [
+                    (p.plugin_name, p.plugin_version)
+                    for p in self._report_plugins.plugins.values()
+                ]
+            )
+
+        return set()
+
     def get_package_metadata(
         self,
         package_name: str,
@@ -213,15 +239,30 @@ class Valiant:
 
         Returns:
             A new payload instance enhanced with reports.
+
+        Raises:
+            ValueError: If any of the requested reports aren't available in the list
+                        of loaded report plugins.
         """
-        if not reports or len(reports) == 0:
-            report_set = self._report_factory.generate_reports(
-                package_metadata=payload.package_metadata,
-                report_list=self._config.default_reports,
+        report_list = set(reports or self._config.default_reports)
+
+        if not report_list.issubset(self.loaded_report_plugin_names):
+            raise ValueError(
+                f"The requested reports ({report_list}) is not a subset "
+                f"of the loaded report plugins ({self.loaded_report_plugin_names})"
             )
-        else:
-            report_set = self._report_factory.generate_reports(
-                package_metadata=payload.package_metadata, report_list=reports,
+
+        report_set = ReportSet()
+        for report in report_list:
+            report_plugin = self._report_plugins.get(report)
+            if not report_plugin:
+                raise ValueError("")
+
+            report_set.add_report(
+                report_plugin.run(
+                    configuration_dir=self.configuration_dir,
+                    package_metadata=payload.package_metadata,
+                )
             )
 
         return payload.clone_with_reports(report_set)

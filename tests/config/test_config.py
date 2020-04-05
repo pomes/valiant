@@ -48,12 +48,12 @@ def get_config_instance(builder: ConfigBuilder) -> Config:
     # noqa:DAR201
     # noqa:DAR401
     """
-    from valiant.config.util import generate_valiant_config_from_map
+    from valiant.config.util import ConfigMapBuilder
 
     conf_map = builder.build()
 
     if conf_map:
-        return generate_valiant_config_from_map(conf_map)
+        return ConfigMapBuilder.generate_valiant_config_from_map(conf_map)
     else:
         raise ValueError("Failed to generate config instance.")
 

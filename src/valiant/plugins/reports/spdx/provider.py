@@ -1,5 +1,6 @@
 """Report provider relating to SPDX (https://spdx.org/about)."""
 from enum import Enum
+from pathlib import Path
 from typing import List
 
 from valiant.log import get_logger
@@ -9,16 +10,14 @@ from valiant.package import (
     PackageCoordinates,
     PackageMetadata,
 )
-from valiant.reports import (
-    BaseReportProvider,
-    Finding,
-    FindingCategory,
-    FindingLevel,
-    Report,
-    ReportProviderDetails,
-)
+from valiant.plugins.reports import BaseReportPlugin
+from valiant.reports import Finding, FindingCategory, FindingLevel, Report
 from valiant.util import Dictionizer
 
+from .license import SpdxLicenses
+
+
+SPDX_LICENCES = SpdxLicenses.builtin_loader()
 
 log = get_logger()
 
@@ -73,6 +72,11 @@ class SpdxId(Enum):
         Returns:
             The configured finding.
         """
+        if data:
+            data_map = data.to_dict()
+        else:
+            data_map = {}
+
         return Finding(
             coordinates=coordinates,
             id=self.id,
@@ -80,33 +84,23 @@ class SpdxId(Enum):
             category=self.category,
             level=self.level,
             message=message,
-            data=data,
+            data=data_map,
             url=url if url else self.url,
         )
 
 
-class SpdxLicenseReportProvider(BaseReportProvider):
+class SpdxLicenseReportPlugin(BaseReportPlugin):
     """SPDX License report provider implementation.
 
     Attempts to match the license provided in package metadata to
     an SPDX license.
     """
 
-    def __init__(self):  # noqa:D107
-        from .license import SpdxLicenses
-
-        self._licenses = SpdxLicenses.builtin_loader()
-
-    @classmethod
-    def get_report_provider_details(cls) -> ReportProviderDetails:
-        """Returns the provider details."""
-        return ReportProviderDetails(  # noqa: DAR201
-            name="spdx",
-            vendor="Valiant",
-            display_name="SPDX License",
-            version="0.1",
-            url="https://spdx.org/licenses/",
-        )
+    name = "spdx"
+    vendor = "Valiant"
+    display_name = "SPDX License"
+    version = "0.1"
+    url = "https://spdx.org/licenses/"
 
     @staticmethod
     def _extract_licences_from_metadata(
@@ -138,13 +132,14 @@ class SpdxLicenseReportProvider(BaseReportProvider):
 
         return candidates
 
+    @staticmethod
     def _map_to_spdx(
-        self, package_metadata: PackageMetadata, candidates: List[Classifier]
+        package_metadata: PackageMetadata, candidates: List[Classifier]
     ) -> List[Finding]:
         findings: List[Finding] = []
 
         for item in candidates:
-            match = self._licenses.get_license(item.value)
+            match = SPDX_LICENCES.get_license(item.value)
             if match:
                 findings.append(
                     SpdxId.FOUND.generate_finding(
@@ -180,8 +175,9 @@ class SpdxLicenseReportProvider(BaseReportProvider):
 
         return findings
 
+    @staticmethod
     def map_package_license_to_spdx(
-        self, package_metadata: PackageMetadata,
+        package_metadata: PackageMetadata,
     ) -> List[Finding]:
         """Attempts to map all licence info to SPDX licenses.
 
@@ -191,26 +187,32 @@ class SpdxLicenseReportProvider(BaseReportProvider):
         Returns:
             A list of findings. Some will provide a mapping others will not.
         """
-        candidates = SpdxLicenseReportProvider._extract_licences_from_metadata(
+        candidates = SpdxLicenseReportPlugin._extract_licences_from_metadata(
             package_metadata
         )
 
         if len(candidates) == 0:
             return []
 
-        return self._map_to_spdx(package_metadata, candidates)
+        return SpdxLicenseReportPlugin._map_to_spdx(package_metadata, candidates)
 
-    def generate_report(self, package_metadata: PackageMetadata) -> Report:
+    @classmethod
+    def prepare_report(
+        cls, package_metadata: PackageMetadata, configuration_dir: Path
+    ) -> Report:
         """Constructs the report.
 
         Args:
             package_metadata: containing at least the package metadata
+            configuration_dir: A likely location for config files
 
         Returns:
             The report.
         """
-        report = Report(self.get_report_provider_details())
-        report.add_findings(self.map_package_license_to_spdx(package_metadata))
+        report = Report(cls.report_provider_details())
+        report.add_findings(
+            SpdxLicenseReportPlugin.map_package_license_to_spdx(package_metadata)
+        )
 
         log.info(
             f"SPDX reporter located {len(report.findings)} findings"

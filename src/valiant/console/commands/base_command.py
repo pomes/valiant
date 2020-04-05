@@ -31,7 +31,7 @@ class BaseCommand(CleoCommand):
         """
         from pathlib import Path
         from valiant.config.util import (
-            generate_valiant_config_from_map,
+            ConfigMapBuilder,
             create_valiant_builder,
         )
         from valiant.config.source import TomlSource
@@ -47,7 +47,7 @@ class BaseCommand(CleoCommand):
             if not conf_map:
                 raise ValueError("Failed to construct the Valiant configuration.")
 
-            conf = generate_valiant_config_from_map(conf_map)
+            conf = ConfigMapBuilder.generate_valiant_config_from_map(conf_map)
             BaseCommand.__valiant = Valiant(conf)
         return BaseCommand.__valiant
 

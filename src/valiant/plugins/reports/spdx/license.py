@@ -159,7 +159,7 @@ class SpdxLicenses:
         from importlib import resources as pkg_resources
         import pickle  # noqa: S403
 
-        DATA_PACKAGE = "valiant.reports.spdx"
+        DATA_PACKAGE = "valiant.plugins.reports.spdx"
         DATA_FILE = "spdx-licenses.pickle"
 
         if not pkg_resources.is_resource(DATA_PACKAGE, DATA_FILE):  # pragma: no cover
