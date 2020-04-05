@@ -64,8 +64,8 @@ class ConfigCommand(BaseCommand):
             f"\n<info>default_repository</info>: "
             f"<comment>{self.valiant.default_repository_name}</comment>"
             f"\n<info>repositories</info>: <comment>{repo_config}</comment>"
-            f"\n<info>reports</info> : <comment> {self.valiant.default_reports} </comment>"
-            "\n<info>Loaded report plugins:</info>: "
+            f"\n<info>reports</info>: <comment> {self.valiant.default_reports} </comment>"
+            "\n<info>Loaded report plugins</info>: "
             f"<comment>{loaded_plugins}</comment>"
             f"{verbose_text}"
         )
