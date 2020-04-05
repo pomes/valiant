@@ -172,22 +172,7 @@ Poetry will help you out here and install Valiant as a dev dependency:</p>
 </code></pre>
 
 <h2 id="configuration">Configuration</h2>
-<p>It's still very early days and Valiant isn't configurable. You can check the
-settings with:</p>
-<pre><code>valiant config
-</code></pre>
-<p>This will display the current configuration:</p>
-<pre><code>cache_dir: /home/fred/.cache/valiant/0.1.0
-config_dir: /home/fred/.config/valiant/0.1.0
-default_repository_name: pypi
-repositories: pypi
-reports: basic,spdx,safety
-</code></pre>
-<p>If you check the <code>config_dir</code> you'll see that Valiant is putting its logs in there.</p>
-<p>You'll also notice that wherever you run the <code>valiant</code> command you'll see a file named
-<code>valiant-0.1.0-requests-cache.sqlite</code> has been created. This is a cache for web
-requests and helps both speed up Valiant as well as reduce load on repository servers.
-Track any update to this in <a href="https://github.com/pomes/valiant/issues/4">Issue #4</a>.</p>
+<p>Please check out the <a href="../configuration/">Configuration page</a> for details.</p>
 <h2 id="review-a-dependency">Review a dependency</h2>
 <p>Say you wanted to find out about a dependency. The <code>report</code> command will give
 you information about the project/release plus run some checks.</p>

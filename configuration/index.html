@@ -70,6 +70,22 @@
                 <ul class="current">
                     <li class="toctree-l1 current"><a class="reference internal current" href="./">Configuration</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#version-010">Version 0.1.0</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#notes">Notes</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#version-020">Version 0.2.0</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#placeholders">Placeholders</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#configuring-logs">Configuring logs</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#the-loading-process">The loading process</a>
+    </li>
+        </ul>
+    </li>
     </ul>
                     </li>
                 </ul>
@@ -109,6 +125,7 @@
             <div class="section">
               
                 <h1 id="configuration">Configuration</h1>
+<h2 id="version-010">Version 0.1.0</h2>
 <p>It's still very early days and Valiant isn't configurable. You can check the
 settings with:</p>
 <pre><code>valiant config
@@ -121,10 +138,126 @@ repositories: pypi
 reports: basic,spdx,safety
 </code></pre>
 <p>If you check the <code>config_dir</code> you'll see that Valiant is putting its logs in there.</p>
+<h3 id="notes">Notes</h3>
 <p>You'll also notice that wherever you run the <code>valiant</code> command you'll see a file named
 <code>valiant-0.1.0-requests-cache.sqlite</code> has been created. This is a cache for web
 requests and helps both speed up Valiant as well as reduce load on repository servers.
 Track any update to this in <a href="https://github.com/pomes/valiant/issues/4">Issue #4</a>.</p>
+<h2 id="version-020">Version 0.2.0</h2>
+<p>Configuration has been improved under version 0.2.0 - and will benefit from
+real-world testing.</p>
+<p>This version will allow you to load configuration from multiple sources, including
+from a config file passed via the command line.</p>
+<p>Valiant configuration uses the <a href="https://github.com/toml-lang/toml">TOML</a> format.</p>
+<p>The easiest way to start a custom configuration is to run the following:</p>
+<pre><code>valiant config --out toml
+</code></pre>
+<p>This will provide a base config file that you can start editing. The example config
+below is a useful start:</p>
+<pre><code class="toml">[tool.valiant]
+configuration_dir = &quot;/etc/valiant&quot;
+cache_dir = &quot;/tmp/valiant/cache&quot;
+log_dir = &quot;/tmp/valiant/log&quot;
+default_reports = [ &quot;basic&quot; ]
+
+[tool.valiant.requests_cache]
+file = &quot;$cache_dir/valiant-0.2.0-requests-cache&quot;
+backend = &quot;sqlite&quot;
+expire_after = 86400
+</code></pre>
+
+<p>I can save the config into a file named <code>test.toml</code> and use the following command:</p>
+<pre><code>poetry run valiant config --config test.toml -o toml
+</code></pre>
+<h3 id="placeholders">Placeholders</h3>
+<p>You'll note the <code>$cache_dir</code> placeholder in the <code>file</code> setting for <code>requests-cache</code>.
+A very limited set of placeholders are available for the following settings:</p>
+<ul>
+<li><code>[tool.valiant.requests_cache]</code> - <code>file</code>: The location of the requests cache. Note
+    that you don't include the file extension here.</li>
+</ul>
+<p>The following placeholders will work and are based on the associated config setting:</p>
+<ul>
+<li><code>configuration_dir</code></li>
+<li><code>cache_dir</code></li>
+<li><code>log_dir</code></li>
+</ul>
+<h3 id="configuring-logs">Configuring logs</h3>
+<p>Who doesn't love configuring logs?</p>
+<p>Valiant makes use of <a href="http://www.structlog.org/en/stable/"><code>structlog</code></a> to provide
+logging. If you need a custom logging setup, you first set up a
+<a href="https://docs.python.org/3/library/logging.config.html#logging-config-fileformat">logging configuration file</a>
+- the one below just spits out to the command line (stdout):</p>
+<pre><code class="ini">[loggers]
+keys=root
+
+[handlers]
+keys=consoleHandler
+
+[formatters]
+keys=simpleFormatter
+
+[logger_root]
+level=INFO
+handlers=consoleHandler
+
+[handler_consoleHandler]
+class=StreamHandler
+level=INFO
+formatter=simpleFormatter
+args=(sys.stdout,)
+
+[formatter_simpleFormatter]
+format=%(message)s
+datefmt=
+</code></pre>
+
+<p>Then, in your Valiant config file, set the <code>logging_configuration_file</code> entry
+to the location of your logging config file:</p>
+<pre><code class="toml">[tool.valiant]
+logging_configuration_file = &quot;/etc/valiant/logging.conf&quot;
+</code></pre>
+
+<h3 id="the-loading-process">The loading process</h3>
+<p>Configuration can be loaded from a number of places.</p>
+<p><em>Before we start</em> please note that the <code>configuration_dir</code> setting
+doesn't indicate a location for Valiant to look for its own configuration.
+Instead, it could be used by plugins. If you need to specify a Valiant
+configuration file, please use the <code>--config</code> option in the command line.</p>
+<p>To start with, run the <code>config</code> command as follows:</p>
+<pre><code>poetry run valiant config -v
+</code></pre>
+<p>You'll see something along the following lines:</p>
+<pre><code class="bash">configuration_dir: /home/fred/.config/valiant/0.2.0
+cache_dir: /home/fred/.cache/valiant/0.2.0
+log_dir: /home/fred/.cache/valiant/0.2.0/log
+default_repository: pypi
+repositories: pypi
+reports :  {'basic', 'spdx', 'safety'}
+metadata:
+  {'build_results': {'dictionary': 'Read',
+                   '/etc/xdg/xdg-cinnamon/valiant/0.2.0/config.toml': 'Not_Read',
+                   '/home/fred/.config/valiant/0.2.0/config.toml': 'Not_Read',
+                   '/home/fred/my_project/pyproject.toml': 'Read'}}
+</code></pre>
+
+<p>The <code>metadata</code> section illustrates how Valiant is loading its configuration:</p>
+<ol>
+<li>First of all, a default config is read (noted as <code>dictionary</code>)</li>
+<li>Then a site-level <code>config.toml</code> is checked - in this example, <code>Not_Read</code> highlights
+    that no file was found.</li>
+<li>Then the user-level <code>config.toml</code> file is read, if it exists</li>
+<li>Finally, if the current directory has a
+    <a href="https://www.python.org/dev/peps/pep-0518/"><code>pyproject.toml</code></a> file then it will
+    be read</li>
+<li>(not shown) If I passed in a configuration file using the <code>--config</code> option this will
+    be read last</li>
+</ol>
+<p><em>Note:</em> The <a href="https://pypi.org/project/appdirs/">AppDirs package</a> is used to determine
+appropriate directory locations - check out their doco for the rationale behind the
+selected directories.</p>
+<p>Importantly, each step can replace settings made in an earlier step. This means that,
+ultimately, the file passed in with the <code>--config</code> option will gazump earlier settings.</p>
               
             </div>
           </div>
