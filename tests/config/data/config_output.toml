@@ -1,0 +1,18 @@
+# This file should mostly reflect `valiant config -o toml`
+# with mods for the _dir locations
+[tool.valiant]
+configuration_dir = "/tmp/valiant_test/etc"
+cache_dir = "/tmp/valiant_test/var/cache"
+log_dir = "/tmp/valiant_test/var/log"
+default_repository = "pypi"
+default_reports = [ "safety", "spdx", "basic",]
+
+[tool.valiant.requests_cache]
+file = "$cache_dir/valiant-0.2.0-requests-cache"
+backend = "sqlite"
+expire_after = 86400
+
+[tool.valiant.repository_configurations.pypi]
+name = "pypi"
+base_url = "https://pypi.org/pypi"
+repository_type = "warehouse"

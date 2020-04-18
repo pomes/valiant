@@ -1,9 +1,32 @@
 """Wrapper for plugins.
 
-The code here is based on the Flake8 project (https://gitlab.com/pycqa/flake8).
-Please review https://gitlab.com/pycqa/flake8/-/blob/master/LICENSE for the
-original copyright and MIT licence statement.
+Copyright (c) 2020 The Valiant Authors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+NOTICE
+
+Parts of the code here are based on code from the Flake8 project
+(https://gitlab.com/pycqa/flake8). Please review the FLAKE8_LICENCE file
+(in this directory) for the original copyright and MIT licence statement.
 """
+
 from importlib.metadata import EntryPoint
 from typing import Any, Optional
 

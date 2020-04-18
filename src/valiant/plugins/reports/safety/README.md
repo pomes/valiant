@@ -42,7 +42,11 @@ checks if a package has a known vulnerability.
 
 ## Configuration
 
-Please refer to the [Safety website](https://pyup.io/safety/)
+* Use the `SAFETY_API_KEY` environment variable to provide a pyup key.
+* A comma-separated list in the `SAFETY_IGNORE_IDS` environment variable is
+    used to ignore vulnerabilities by ID.
+
+Please refer to the [Safety website](https://pyup.io/safety/) for details.
 
 ## Discussion
 

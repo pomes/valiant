@@ -4,9 +4,9 @@ cache_dir = "/tmp/var/local/valiant/0.2.0"
 log_dir = "/tmp/var/local/log/valiant"
 default_reports = [ "basic", "spdx"]
 
-[tool.valiant.local_plugins]
+[tool.valiant.local-plugins]
 paths = ["/usr/local/lib"]
 
-[tool.valiant.local_plugins.report]
+[tool.valiant.local-plugins."valiant.report"]
 report1 = "mypkg.Reporter:Report1"
 report2 = "mypkg.Reporter:Report1"

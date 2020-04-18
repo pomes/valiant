@@ -1,6 +1,8 @@
 # TODO: Move to pyproject.toml when possible - https://gitlab.com/pycqa/flake8/issues/428
 [flake8]
-select = ANN,B,B9,BLK,C,D,DAR,E,F,S,W
+select = ANN,B,B9,BLK,C,D,DAR,E,F,S,W,C
+copyright-check = True
+copyright-author = The Valiant Authors
 ignore = E203,E501,W503,ANN101,ANN102,ANN204
 max-line-length = 88
 max-complexity = 10

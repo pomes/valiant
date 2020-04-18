@@ -1,8 +1,5 @@
 [tool.valiant]
-configuration_dir = "/tmp/etc/valiant"
-cache_dir = "/tmp/var/local/valiant/0.2.0"
-log_dir = "/tmp/var/local/log/valiant"
+configuration_dir = "/tmp/valiant_test/etc"
+cache_dir = "/tmp/valiant_test/var/cache"
+log_dir = "/tmp/valiant_test/var/log"
 default_reports = [ "basic", "spdx"]
-
-[tool.valiant.local-plugins]
-paths = []

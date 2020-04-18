@@ -1,5 +1,24 @@
-"""Safety report tests."""
-import json
+"""Safety report tests.
+
+Copyright (c) 2020 The Valiant Authors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"""
 from dataclasses import dataclass
 from typing import Any
 
@@ -33,8 +52,49 @@ def test_report_provider_details() -> None:
     assert rpd.version == "1.8.7"
 
 
+def test_safety_parameters(monkeypatch: Any) -> None:
+    """Test the envvars are passed into the safety check."""
+    import valiant.plugins.reports.safety.provider
+
+    def mock_check(*args, **kwargs):  # noqa:ANN
+        assert kwargs["key"] == "APIKEY"
+        assert kwargs["ignore_ids"] == ["1234"]
+        return []
+
+    monkeypatch.setattr(
+        valiant.plugins.reports.safety.provider, "safety_check", mock_check,
+    )
+
+    monkeypatch.setenv("SAFETY_API_KEY", "APIKEY")
+    monkeypatch.setenv("SAFETY_IGNORE_IDS", "1234")
+
+    rp = SafetyReportPlugin()
+    rp.prepare_report(MockPackage(), "")
+
+
+def test_safety_parameters_ignore_list(monkeypatch: Any) -> None:
+    """Test the ignore list is broken up correctly."""
+    import valiant.plugins.reports.safety.provider
+
+    def mock_check(*args, **kwargs):  # noqa:ANN
+        assert kwargs["key"] == "APIKEY"
+        assert kwargs["ignore_ids"] == ["1234", "5678", "1357"]
+        return []
+
+    monkeypatch.setattr(
+        valiant.plugins.reports.safety.provider, "safety_check", mock_check,
+    )
+
+    monkeypatch.setenv("SAFETY_API_KEY", "APIKEY")
+    monkeypatch.setenv("SAFETY_IGNORE_IDS", "1234,5678,1357")
+
+    rp = SafetyReportPlugin()
+    rp.prepare_report(MockPackage(), "")
+
+
 def test_safety_generate_report(monkeypatch: Any) -> None:
     """Test the generate_report method."""
+    import json
     import valiant.plugins.reports.safety.provider
 
     def mock_check(*args, **kwargs):  # noqa:ANN

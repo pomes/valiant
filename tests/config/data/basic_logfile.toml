@@ -1,0 +1,2 @@
+[tool.valiant]
+logging_configuration_file = "/tmp/valiant_test_data/logging.conf"

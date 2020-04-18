@@ -1,15 +1,29 @@
 """Logging for the Valiant system.
 
 This is an initial logging setup and may be underwhelming.
+
+Copyright (c) 2020 The Valiant Authors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from copy import deepcopy
-import logging
 from logging.config import dictConfig, fileConfig
 from pathlib import Path
-import sys
-import structlog
 from typing import Dict, Optional
-from structlog.stdlib import LoggerFactory
 
 
 """A basic default that spits out to standard out."""
@@ -22,7 +36,7 @@ DEFAULT_CONFIG = {
             "level": "INFO",
             "formatter": "standard",
             "class": "logging.StreamHandler",
-            "stream": "ext://sys.stdout",  # Default is stderr
+            "stream": "ext://sys.stdout",
         },
     },
     "loggers": {
@@ -53,6 +67,8 @@ def setup_logging_configuration(
     Returns:
         A ready-to-go logging config.
     """
+    from copy import deepcopy
+
     config = deepcopy(DEFAULT_CONFIG)
     config["disable_existing_loggers"] = disable_existing_loggers
     if handlers:
@@ -73,14 +89,34 @@ def configure_logging(
 
     If a file_config is provided, the dict_config is ignored.
 
+    If logging has already been configured further calls to this function will
+    just be silently ignored.
+
     See: https://docs.python.org/3/library/logging.config.html#logging.config.dictConfig
 
     Args:
         dict_config: A dictionary acceptable to logging.config.dictConfig
         file_config: Path to a logging config file - see
             https://docs.python.org/3/library/logging.config.html#logging-config-fileformat
+
+    Raises:
+        ValueError: When the file provided in file_config does not exist.
     """
+    from copy import deepcopy
+    import structlog
+    from structlog.stdlib import LoggerFactory
+
+    if structlog.is_configured():
+        return
+
     if file_config:
+        if not file_config.exists():
+            raise ValueError(
+                (
+                    f"The logging configuration file does not exist: {file_config}."
+                    f" CWD is {Path.cwd()}."
+                )
+            )
         fileConfig(file_config)
     else:
         dictConfig(deepcopy(dict_config))
@@ -125,4 +161,6 @@ def get_logger():  # noqa:ANN201
             repository_url=package_metadata.repository_url,
         )
     """
+    import structlog
+
     return structlog.get_logger()

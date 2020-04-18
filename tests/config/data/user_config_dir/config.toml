@@ -1,0 +1,11 @@
+[tool.valiant]
+configuration_dir = "/tmp/valiant_test/usr/local/etc"
+cache_dir = "/tmp/valiant_test/usr/local/var/cache"
+log_dir = "/tmp/valiant_test/usr/local/var/log"
+default_reports = [ "safety", "spdx"]
+
+[tool.valiant.local-plugins]
+paths = ["/usr/local/lib"]
+
+[tool.valiant.local-plugins."valiant.report"]
+report1 = "mypkg.Reporter:Report1"

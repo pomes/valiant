@@ -1,26 +1,42 @@
 """Integrating the Safety library.
 
-See: https://github.com/pyupio/safety
+Integrating the Safety library.
+
+Copyright (c) 2020 The Valiant Authors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+import os
+
 from enum import Enum
 from pathlib import Path
 from typing import Dict, List
 
-from safety import __author__ as safety_author, __version__ as safety_version
+from safety import __author__ as safety_author
+from safety import __version__ as safety_version
 from safety.safety import Vulnerability
 from safety.safety import check as safety_check
 from safety.util import Package as SafetyPackage
 from valiant.log import get_logger
-from valiant.plugins.reports import BaseReportPlugin
-from valiant.util import Dictionizer
-
 from valiant.package import PackageCoordinates, PackageMetadata
-from valiant.reports import (
-    Finding,
-    FindingCategory,
-    FindingLevel,
-    Report,
-)
+from valiant.plugins.reports import BaseReportPlugin
+from valiant.reports import Finding, FindingCategory, FindingLevel, Report
+from valiant.util import Dictionizer
 
 
 log = get_logger()
@@ -105,9 +121,9 @@ class SafetyReportPlugin(BaseReportPlugin):
             db = None
             ignore_ids = None
         """
-        key = None
+        key = os.getenv("SAFETY_API_KEY", None)
         db = None
-        ignore_ids = None
+        ignore_ids = os.getenv("SAFETY_IGNORE_IDS", None)
         ignore_id_list: List[str] = []
 
         if ignore_ids:

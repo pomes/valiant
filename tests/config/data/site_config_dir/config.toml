@@ -1,0 +1,5 @@
+[tool.valiant]
+configuration_dir = "/tmp/valiant_test/opt/etc"
+cache_dir = "/tmp/valiant_test/opt/var/cache"
+log_dir = "/tmp/valiant_test/opt/var/log"
+default_reports = [ "basic"]
