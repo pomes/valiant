@@ -1,5 +1,6 @@
 # Valiant
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
+![Default CI workflow](https://github.com/pomes/valiant/workflows/Default%20CI%20workflow/badge.svg)
 
 The Valiant project aims to provide auditing tools that help project teams
 track their dependencies in terms of licensing, security, and dependability.

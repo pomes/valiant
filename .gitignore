@@ -56,3 +56,4 @@ out/
 requirements.txt
 *.sqlite
 pytest.out
+junit/
