@@ -57,3 +57,4 @@ requirements.txt
 *.sqlite
 pytest.out
 junit/
+*.py,cover

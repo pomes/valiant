@@ -6,7 +6,7 @@ on: [push]
 
 jobs:
   build:
-    name: Default nox tasks
+    name: CI tasks
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -14,7 +14,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python
       uses: actions/setup-python@v1
       with:
         python-version: ${{ matrix.python-version }}
@@ -28,21 +28,32 @@ jobs:
       run: nox -rs lint safety mypy
 
     - name: Pytest
-      run: nox -s tests -- --junitxml=junit/test-results-${{ matrix.python-version }}.xml
+      run: |
+        nox -rs tests -- \
+          --junitxml=junit/test-results-${{ matrix.python-version }}.xml \
+          --cov --cov-report xml:build/reports/coverage/${{ matrix.python-version }}.xml \
+          --cov-report html:build/reports/coverage/html/${{ matrix.python-version }} \
+          --cov-report term
 
     - name: Upload pytest test results
       uses: actions/upload-artifact@master
       with:
         name: pytest-results-${{ matrix.python-version }}
-        path: junit/test-results-${{ matrix.python-version }}.xml
-      # Use always() to always run this step to publish test results when there are test failures
+        path: junit
       if: always()
-
-    - name: Coverage report
-      run: nox -s coverage_report -- xml -o build/reports/coverage/coverage-${{ matrix.python-version }}.xml
 
     - name: Upload coverage results
       uses: actions/upload-artifact@master
       with:
         name: coverage-results-${{ matrix.python-version }}
-        path: build/reports/coverage/coverage-${{ matrix.python-version }}.xml
+        path: build/reports/coverage
+      if: always()
+
+    - name: Build the distribution
+      run: poetry build
+
+    #- name: Archive build artifacts
+    #  uses: actions/upload-artifact@v1
+    #  with:
+    #    name: dist
+    #    path: dist
