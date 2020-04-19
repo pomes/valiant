@@ -77,7 +77,7 @@ def configured_valiant(config_builder: ConfigBuilder) -> Valiant:
 def test_application_details(configured_valiant: Valiant) -> None:
     """Validate the general app info."""
     v = configured_valiant
-    assert v.application_version == "0.2.0"
+    assert v.application_version == "0.3.0"
     assert v.application_name == "valiant"
     assert v.application_title == "Valiant"
     assert v.application_vendor == "Pomes"

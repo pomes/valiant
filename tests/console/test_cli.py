@@ -23,7 +23,7 @@ from cleo import ApplicationTester
 from valiant.console import Cli
 
 
-EXPECTED_VERSION = "0.2.0"
+EXPECTED_VERSION = "0.3.0"
 
 
 def test_cli_app_setup() -> None:
