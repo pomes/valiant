@@ -71,7 +71,9 @@ In the example below I redirect stderr so that errors are also displayed nicely:
 
 ### Deploying
 
-When the code is ready to release, tag it off in git using the version number (e.g. `git tag 0.1.0`).
+When the code is ready to release, tag it off in git using the version number:
+
+    git tag -a 0.2.0 -m "Valiant release 0.2.0"
 
 Deploy to the PyPi Test repo first. You'll need
 [an account and key](https://packaging.python.org/tutorials/packaging-projects/#uploading-the-distribution-archives).
