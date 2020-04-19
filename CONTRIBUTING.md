@@ -73,7 +73,14 @@ In the example below I redirect stderr so that errors are also displayed nicely:
 
 When the code is ready to release, tag it off in git using the version number:
 
-    git tag -a 0.2.0 -m "Valiant release 0.2.0"
+    # Tag:
+    git tag -s 0.2.0 -m "Valiant release 0.2.0"
+
+    # Verify:
+    git tag -v 0.2.0
+
+    # Push:
+    git push origin 0.2.0
 
 Deploy to the PyPi Test repo first. You'll need
 [an account and key](https://packaging.python.org/tutorials/packaging-projects/#uploading-the-distribution-archives).
@@ -89,7 +96,7 @@ Build and deploy:
 
 Check that it all went ok: https://test.pypi.org/project/valiant/
 
-Install the package from the test repository (pref in a container - `docker run --rm -it docker.io/python:3.8 /bin/sh`):
+Install the package from the test repository (pref in a container - `docker run --rm -it docker.io/python:3.8 /bin/bash`):
 
     pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple valiant==VERSION
     valiant about
@@ -104,14 +111,18 @@ When everything checks out, push up to the main PyPi repository:
 The site documentation uses [`mkdocs`](https://www.mkdocs.org/).
 The configuration is located in [`mkdocs.yml`](mkdocs.yml).
 
+Build the docs:
+
+    nox -s docs
+
 When working on the docs it can be handy to check your work as
 you go:
 
-    mkdocs serve
+    nox -s docs_serve
 
 To [deploy the documentation to GitHub](https://www.mkdocs.org/user-guide/deploying-your-docs/):
 
-    mkdocs gh-deploy
+    nox -s docs_publish
 
 This will prepare the site and push it to the `gh-pages` branch. Make sure the site's
 looking good and ready to go (`mkdocs serve`) first!
