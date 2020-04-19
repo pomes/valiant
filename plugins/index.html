@@ -60,15 +60,33 @@
                     </li>
                 </ul>
                 <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../limitations/">Limitations</a>
-                    </li>
-                </ul>
-                <ul>
                     <li class="toctree-l1"><a class="reference internal" href="../cli/">Commands</a>
                     </li>
                 </ul>
                 <ul>
                     <li class="toctree-l1"><a class="reference internal" href="../configuration/">Configuration</a>
+                    </li>
+                </ul>
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Plugins</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#using-report-plugins">Using report plugins</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#write-a-plugin">Write a plugin</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#implementing">Implementing</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#entry-points">Entry points</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#local-plugins">Local plugins</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../limitations/">Limitations</a>
                     </li>
                 </ul>
       </div>
@@ -106,11 +124,211 @@
           <div role="main">
             <div class="section">
               
-                
+                <h1 id="plugins">Plugins</h1>
+<p><em>As of version 0.2.0 <a href="../providers/">Valiant report providers</a> are now plugins.</em></p>
+<p>Valiant uses a plugin approach based on
+<a href="https://flake8.pycqa.org/en/latest/plugin-development/index.html">Flake8's</a>.
+This allows third-parties to provide Valiant plugins that will help users in
+auditing their dependencies.</p>
+<h2 id="using-report-plugins">Using report plugins</h2>
+<p>You can see which report plugins are available by running <code>valiant config</code> and
+check the <code>Loaded report plugins</code> line:</p>
+<pre><code>Loaded report plugins: basic:0.1, demo:0.1, safety:1.8.7, localdemo:0.1, spdx:0.1
+</code></pre>
+<p>The <code>reports</code> line will tell you which reports are run by default:</p>
+<pre><code>reports:  {'safety', 'basic', 'spdx'}
+</code></pre>
+<p>The default reports can be configured - see <a href="../configuration/">Configuration</a>.</p>
+<h2 id="write-a-plugin">Write a plugin</h2>
+<p>There are two approaches to writing a plugin:</p>
+<ol>
+<li>Using package discovery provided by Setuptools. You just need to provide one or more
+    <a href="https://setuptools.readthedocs.io/en/latest/pkg_resources.html#entry-points">entry points</a>
+    in your package.</li>
+<li>Using local scripts</li>
+</ol>
+<h3 id="implementing">Implementing</h3>
+<p>The <a href="https://github.com/pomes/valiant/blob/master/src/valiant/plugins/reports/demo.py"><code>demo</code></a>
+report plugin is provided as a template from which you can build your own report plugin. The code
+for <code>demo</code> is reproduced below:</p>
+<pre><code class="python">&quot;&quot;&quot;Demonstrator plugin.&quot;&quot;&quot;
+from pathlib import Path
+
+from valiant.plugins.reports import (
+    BaseReportPlugin,
+    Finding,
+    FindingCategory,
+    FindingLevel,
+    PackageMetadata,
+    Report,
+    get_logger,
+)
+
+log = get_logger()
+
+
+class DemoReportPlugin(BaseReportPlugin):
+    &quot;&quot;&quot;A sample reporting plugin.&quot;&quot;&quot;
+
+    name = &quot;demo&quot;
+    vendor = &quot;Valiant&quot;
+    display_name = &quot;Demo&quot;
+    version = &quot;0.1&quot;
+    url = &quot;&quot;
+
+    @classmethod
+    def prepare_report(
+        cls, package_metadata: PackageMetadata, configuration_dir: Path
+    ) -&gt; Report:
+        &quot;&quot;&quot;Run the report.
+
+        Args:
+            package_metadata: The package information
+            configuration_dir: A directory for locating config
+
+        Returns:
+            A report with (perhaps) a finding or two.
+        &quot;&quot;&quot;
+        report = Report(cls.report_provider_details())
+        log.info(
+            &quot;The demo plugin was called&quot;,
+            package_name=package_metadata.name,
+            package_version=package_metadata.version,
+        )
+        report.add_finding(
+            Finding(
+                coordinates=package_metadata.coordinates,
+                id=&quot;DEMO001&quot;,
+                title=&quot;Demo finding&quot;,
+                category=FindingCategory.PROJECT.value,
+                level=FindingLevel.INFO,
+                message=&quot;This is a demo finding&quot;,
+                data={&quot;value&quot;: &quot;demo&quot;},
+                url=&quot;http://www.example.com&quot;,
+            )
+        )
+        return report
+
+</code></pre>
+
+<p>The main work items you need to undertake are:</p>
+<ol>
+<li>Create a class that extends <code>BaseReportPlugin</code></li>
+<li>Set your plugin class values (<code>name</code>, <code>version</code>, <code>vendor</code>, <code>display_name</code>, <code>url</code>)</li>
+<li>Overload the <code>prepare_report</code> class method</li>
+<li>Access your plugin either via the entry point or local approach</li>
+</ol>
+<p>The <code>prepare_report</code> class method signature is as follows:</p>
+<pre><code class="python">@classmethod
+def prepare_report(
+    cls, package_metadata: PackageMetadata, configuration_dir: Path
+) -&gt; Report
+</code></pre>
+
+<p>Valiant will pass your plugin:</p>
+<ul>
+<li>An instance of
+    <a href="https://github.com/pomes/valiant/blob/master/src/valiant/package/model.py"><code>PackageMetadata</code></a>
+    for your plugin to report on.</li>
+<li>A <code>configuration_dir</code> that you might use in order to get configuration for your plugin.
+    If your plugin/app has an established configuration approach you can just ignore
+    <code>configuration_dir</code>.</li>
+</ul>
+<p>Your implementation will work its magic and return an instance of
+<a href="https://github.com/pomes/valiant/blob/master/src/valiant/reports/model.py"><code>Report</code></a>
+that Valiant will add to the set of reports to be provided to the user.</p>
+<p>Creating a report is straight-forward, just use the following:</p>
+<pre><code>report = Report(cls.report_provider_details())
+</code></pre>
+<p>This will get your plugin info together (using <code>report_provider_details</code>).</p>
+<p>From there you start adding
+<a href="https://github.com/pomes/valiant/blob/master/src/valiant/reports/model.py"><code>Finding</code>s</a>.
+A Finding is an item that your plugin determines to be a useful information item. This
+could be a general bit of information, a security concern, details about project popularity
+- the focus is really on anything that can help the user in auditing their dependencies.
+You can take a look at the
+<a href="https://github.com/pomes/valiant/tree/master/src/valiant/plugins/reports">built-in report plugins</a>
+to see how they're preparing findings.</p>
+<p>Preparing a single finding is a matter of drawing together some details:</p>
+<pre><code class="python">report.add_finding(
+    Finding(
+        coordinates=package_metadata.coordinates,
+        id=&quot;DEMO001&quot;,
+        title=&quot;Demo finding&quot;,
+        category=FindingCategory.PROJECT.value,
+        level=FindingLevel.INFO,
+        message=&quot;This is a demo finding&quot;,
+        data={&quot;value&quot;: &quot;demo&quot;},
+        url=&quot;http://www.example.com&quot;,
+    )
+)
+</code></pre>
+
+<p>Breaking this down with some explanation:</p>
+<p><code>coordinates=package_metadata.coordinates</code>
+:   Just use this line verbatim</p>
+<p><code>id="DEMO001"</code>
+:   Your plugin should produce an identifier per finding type. The format for
+    <code>id</code> is the uppercase name of the plugin plus a 3-digit number.</p>
+<p><code>title="Demo finding"</code>
+:   An eye-cathing title for the finding</p>
+<p><code>category=FindingCategory.PROJECT.value</code>
+:   An open category string. Use anything that you feel is a useful category but check the
+    <code>FindingCategory</code> enum to see if one already exists.</p>
+<p><code>level=FindingLevel.INFO</code>
+:   One of <code>priority</code>, <code>warning</code>, <code>info</code> - use the FindingLevel enum to help you.</p>
+<p><code>message="This is a demo finding"</code>
+:   A summary of the finding.</p>
+<p><code>data={"value": "demo"}</code> |
+:   A Mapping that provides useful data about the finding. Use JSON-convertible types
+    (e.g. <code>str</code> and <code>int</code>) in the Mapping to allow for different output formats.</p>
+<p><code>url="http://www.example.com"</code>
+:   A handy URL that will give further information about the finding.</p>
+<h3 id="entry-points">Entry points</h3>
+<p>As Valiant uses the <a href="https://python-poetry.org/">Poetry</a> packaging tool, we can look
+at its own <code>pyproject.toml</code> and see how the report plugins are flagged as entry points:</p>
+<pre><code class="toml">[tool.poetry.plugins.&quot;valiant.report&quot;]
+&quot;demo&quot; = &quot;valiant.plugins.reports.demo:DemoReportPlugin&quot;
+&quot;basic&quot; = &quot;valiant.plugins.reports.basic:BasicReportPlugin&quot;
+&quot;spdx&quot; = &quot;valiant.plugins.reports.spdx:SpdxLicenseReportPlugin&quot;
+&quot;safety&quot; = &quot;valiant.plugins.reports.safety:SafetyReportPlugin&quot;
+</code></pre>
+
+<p>Valiant will look for all declared <code>valiant.report</code> entry points. Any package you've installed
+(e.g. via <code>pip</code>) that declares such an entry point can then be a report provider for your
+reports/audits.</p>
+<h3 id="local-plugins">Local plugins</h3>
+<p>You don't need to package up your plugin to use it - this is handy if it's just for
+a project your team is working on.</p>
+<p>You can add the following lines to your <code>pyproject.toml</code> or any of your
+<a href="../configuration/">configuration files</a> to start using local plugins.</p>
+<pre><code class="toml">[tool.valiant.local-plugins]
+paths = [&quot;./tests/plugins&quot;]
+
+[tool.valiant.local-plugins.&quot;valiant.report&quot;]
+localdemo = &quot;reports.localdemo:LocalDemoReportPlugin&quot;
+</code></pre>
+
+<p>The <code>paths</code> item is a list of paths in which Valiant will seek out your plugin.</p>
+<p>The <code>[tool.valiant.local-plugins."valiant.report"]</code> section contains one or more
+report plugins. Each plugin is described using <code>&lt;name&gt; = "&lt;entry point&gt;"</code>.</p>
+<p>The example above (<code>localdemo = "reports.localdemo:LocalDemoReportPlugin"</code>)
+designates a report provider named <code>localdemo</code> with an entry point being a class
+that extends <code>BaseReportPlugin</code>. You can review the code for this plugin at:
+<a href="https://github.com/pomes/valiant/blob/master/tests/plugins/reports/localdemo.py">LocalDemoReportPlugin</a></p>
               
             </div>
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../limitations/" class="btn btn-neutral float-right" title="Limitations">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../configuration/" class="btn btn-neutral" title="Configuration"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>
@@ -140,6 +358,10 @@ Licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC-BY 4.0<
           <a href="https://github.com/pomes/valiant/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
+        <span><a href="../configuration/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../limitations/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

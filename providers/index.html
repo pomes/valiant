@@ -68,15 +68,19 @@
                     </li>
                 </ul>
                 <ul>
-                    <li class="toctree-l1"><a class="reference internal" href="../limitations/">Limitations</a>
-                    </li>
-                </ul>
-                <ul>
                     <li class="toctree-l1"><a class="reference internal" href="../cli/">Commands</a>
                     </li>
                 </ul>
                 <ul>
                     <li class="toctree-l1"><a class="reference internal" href="../configuration/">Configuration</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../plugins/">Plugins</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../limitations/">Limitations</a>
                     </li>
                 </ul>
       </div>
@@ -116,9 +120,11 @@
               
                 <h1 id="report-providers">Report providers</h1>
 <p>You can view a list of available report providers by running
-<code>valiant config</code>. You'll see them listed against <code>reports</code></p>
-<pre><code>reports: basic,spdx,safety
+<code>valiant config</code>. You'll see them listed in the <code>Loaded report plugins</code> line:</p>
+<pre><code>Loaded report plugins: basic:0.1, demo:0.1, safety:1.8.7, localdemo:0.1, spdx:0.1
 </code></pre>
+<p>Report providers are plugins and you can write your own - check
+out the <a href="../plugins/">Plugins page</a>.</p>
 <h2 id="basic">basic</h2>
 <p>See: <a href="https://github.com/pomes/valiant/blob/master/src/valiant/plugins/reports/basic/README.md">README</a></p>
 <h2 id="safety">safety</h2>
@@ -132,7 +138,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../limitations/" class="btn btn-neutral float-right" title="Limitations">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../cli/" class="btn btn-neutral float-right" title="Commands">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
         <a href="../walkthrough/" class="btn btn-neutral" title="Walkthrough"><span class="icon icon-circle-arrow-left"></span> Previous</a>
@@ -170,7 +176,7 @@ Licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC-BY 4.0<
         <span><a href="../walkthrough/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../limitations/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../cli/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

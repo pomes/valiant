@@ -59,18 +59,24 @@
                     <li class="toctree-l1"><a class="reference internal" href="../providers/">Report providers</a>
                     </li>
                 </ul>
-                <ul class="current">
-                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Limitations</a>
-    <ul class="current">
-    </ul>
-                    </li>
-                </ul>
                 <ul>
                     <li class="toctree-l1"><a class="reference internal" href="../cli/">Commands</a>
                     </li>
                 </ul>
                 <ul>
                     <li class="toctree-l1"><a class="reference internal" href="../configuration/">Configuration</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../plugins/">Plugins</a>
+                    </li>
+                </ul>
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Limitations</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#overcome">Overcome</a>
+    </li>
+    </ul>
                     </li>
                 </ul>
       </div>
@@ -112,10 +118,18 @@
 <p>It's new! ...and can be improved!</p>
 <ul>
 <li>Only packages in the central <a href="https://pypi.org/">PyPI</a> repo can be queried</li>
+</ul>
+<h2 id="overcome">Overcome</h2>
+<ul>
+<li>
+<p><strong>Fixed in 0.2.0</strong>:</p>
+<ul>
 <li>The report providers are currently built-in. The ultimate goal is to provide a
-    <a href="http://flake8.pycqa.org/en/latest/plugin-development/index.html">Flake8-style plugin model</a></li>
+  <a href="http://flake8.pycqa.org/en/latest/plugin-development/index.html">Flake8-style plugin model</a></li>
 <li>The caching database doesn't get stored in the cache directory -
-    <a href="https://github.com/pomes/valiant/issues/4">track this issue</a></li>
+  <a href="https://github.com/pomes/valiant/issues/4">track this issue</a></li>
+</ul>
+</li>
 </ul>
               
             </div>
@@ -124,10 +138,8 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../cli/" class="btn btn-neutral float-right" title="Commands">Next <span class="icon icon-circle-arrow-right"></span></a>
       
-      
-        <a href="../providers/" class="btn btn-neutral" title="Report providers"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../plugins/" class="btn btn-neutral" title="Plugins"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -159,10 +171,8 @@ Licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC-BY 4.0<
           <a href="https://github.com/pomes/valiant/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
-        <span><a href="../providers/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../plugins/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
-      
-        <span style="margin-left: 15px"><a href="../cli/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
