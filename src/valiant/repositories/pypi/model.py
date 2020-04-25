@@ -86,6 +86,7 @@ class Info:
     requires_python: Optional[str]
     summary: str
     version: str
+    yanked: Optional[bool]
 
 
 @dataclass
@@ -109,6 +110,7 @@ class Release:
     upload_time: datetime
     upload_time_iso_8601: datetime
     url: str
+    yanked: Optional[bool]
 
 
 @dataclass
@@ -128,6 +130,7 @@ class ArtifactUrl:
     upload_time: datetime
     upload_time_iso_8601: datetime
     url: str
+    yanked: Optional[bool]
 
 
 @dataclass
@@ -160,7 +163,8 @@ class PyPiPackageMetadata(PackageMetadata):
         self._artifacts: List[ArtifactMetadata] = []
 
         try:
-            self._pkg = desert.schema(PyPiPackage).load(package_data)
+            schema = desert.schema_class(PyPiPackage)()
+            self._pkg = schema.load(package_data)
         except marshmallow.exceptions.ValidationError as ve:
             raise ValidationError(f"Could not validate the JSON data: {ve}") from ve
 

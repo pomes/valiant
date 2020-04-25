@@ -12,6 +12,7 @@ repos:
         exclude: ^tests/repositories/pypi/.*-data/.*.json$
       - id: check-toml
       - id: check-json
+        exclude: ^tests/repositories/pypi/.*-data/.*.json$
       - id: check-yaml
       - id: check-ast
 

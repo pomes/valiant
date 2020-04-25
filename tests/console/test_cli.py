@@ -23,14 +23,11 @@ from cleo import ApplicationTester
 from valiant.console import Cli
 
 
-EXPECTED_VERSION = "0.3.0"
-
-
-def test_cli_app_setup() -> None:
+def test_cli_app_setup(valiant_app_name: str, valiant_version: str) -> None:
     """Make sure the cli is setup fine."""
     cli = Cli()
-    assert cli.config.name == "valiant"
-    assert cli.config.version == EXPECTED_VERSION
+    assert cli.config.name == valiant_app_name
+    assert cli.config.version == valiant_version
 
 
 def test_main_succeeds(app_tester: ApplicationTester) -> None:

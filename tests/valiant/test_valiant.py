@@ -74,17 +74,23 @@ def configured_valiant(config_builder: ConfigBuilder) -> Valiant:
         raise ValueError("Could not build you a Valiant")
 
 
-def test_application_details(configured_valiant: Valiant) -> None:
+def test_application_details(
+    configured_valiant: Valiant,
+    valiant_app_name: str,
+    valiant_version: str,
+    valiant_license: str,
+    valiant_url: str,
+) -> None:
     """Validate the general app info."""
     v = configured_valiant
-    assert v.application_version == "0.3.0"
-    assert v.application_name == "valiant"
+    assert v.application_version == valiant_version
+    assert v.application_name == valiant_app_name
     assert v.application_title == "Valiant"
     assert v.application_vendor == "Pomes"
     assert v.application_tagline == "Dependency Investigations Unit"
     assert v.application_description == "Valiant helps you investigate dependencies"
-    assert v.application_licence == "MIT"
-    assert v.application_homepage == "https://github.com/pomes/valiant"
+    assert v.application_licence == valiant_license
+    assert v.application_homepage == valiant_url
     assert v.application_copyright_year == 2020
     assert v.application_copyright_holder == "Duncan Dickinson"
 

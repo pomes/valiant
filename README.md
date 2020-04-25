@@ -34,3 +34,5 @@ this project and guide my implementation efforts.
 
 The [Hypermodern Python series](https://cjolowicz.github.io/posts/hypermodern-python-01-setup/) by
 Claudio Jolowicz is a great resource and you'll see his guidance instilled in this codebase.
+
+[ ~ Dependencies scanned by PyUp.io ~ ]
