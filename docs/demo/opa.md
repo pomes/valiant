@@ -559,7 +559,7 @@ then check that (meta)data using OPA.
 Ultimately, the goal is to recognise/reduce risk in your software project's supply chain.
 This contributes to teams ensuring sustainability in their projects.
 
-## Further reading:
+## Further reading
 
 - [OPA Documentation](https://www.openpolicyagent.org/docs/latest/)
 - [Policy-driven continuous integration with Open Policy Agent](https://blog.openpolicyagent.org/policy-driven-continuous-integration-with-open-policy-agent-b98a8748e536)
