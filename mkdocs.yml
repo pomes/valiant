@@ -23,4 +23,5 @@ nav:
   - Commands: cli.md
   - Configuration: configuration.md
   - Plugins: plugins.md
+  - Valiant and Open Policy Agent: demo/opa.md
   - Limitations: limitations.md

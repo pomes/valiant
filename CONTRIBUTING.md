@@ -101,6 +101,7 @@ Install the package from the test repository (pref in a container - `docker run 
     pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple valiant==VERSION
     valiant about
     valiant config
+    valiant report flask 1.1.1
 
 When everything checks out, push up to the main PyPi repository:
 

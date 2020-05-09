@@ -1,0 +1,199 @@
+{
+    "message": "",
+    "metadata": {
+        "name": "valiant",
+        "version": "0.2.1",
+        "summary": "Audit tool to help investigate Python dependencies",
+        "license": "MIT",
+        "classifiers": [
+            "Development Status :: 1 - Planning",
+            "Environment :: Console",
+            "Intended Audience :: Developers",
+            "License :: OSI Approved :: MIT License",
+            "Programming Language :: Python :: 3",
+            "Programming Language :: Python :: 3.8",
+            "Topic :: Security",
+            "Topic :: Software Development",
+            "Topic :: Software Development :: Quality Assurance",
+            "Topic :: System :: Software Distribution"
+        ],
+        "url_project": "https://github.com/pomes/valiant",
+        "url_code": "https://github.com/pomes/valiant",
+        "url_issue_tracker": "https://github.com/pomes/valiant/issues",
+        "url_documentation": "https://pomes.github.io/valiant/",
+        "artifacts": [
+            {
+                "comment_text": "",
+                "digests": {
+                    "md5": "278e81fbe0dee953ae6b70d0773598e5",
+                    "sha256": "61954e90a1c674c9fca6f4b8ef9d4ac9417667796531986325230b80f524d212"
+                },
+                "sha256_digest": "61954e90a1c674c9fca6f4b8ef9d4ac9417667796531986325230b80f524d212",
+                "signed": false,
+                "signature_url": "https://files.pythonhosted.org/packages/cd/65/f4b091944380d779633d8674e2367ee07ea422a97dd166f2b4b56a447295/valiant-0.2.1-py3-none-any.whl.asc",
+                "package_type": "bdist_wheel",
+                "python_version": "py3",
+                "requires_python": ">=3.8,<4.0",
+                "size": 122303,
+                "upload_time_iso_8601": "2020-04-25T23:58:03.547274+00:00",
+                "url": "https://files.pythonhosted.org/packages/cd/65/f4b091944380d779633d8674e2367ee07ea422a97dd166f2b4b56a447295/valiant-0.2.1-py3-none-any.whl"
+            },
+            {
+                "comment_text": "",
+                "digests": {
+                    "md5": "6ae57da8cedcbfc3e675cc1dbc3bb540",
+                    "sha256": "7b783dd6a8e9ce55431e1c65f7cee6d484ff3b140e728d093fcee0af575b3eca"
+                },
+                "sha256_digest": "7b783dd6a8e9ce55431e1c65f7cee6d484ff3b140e728d093fcee0af575b3eca",
+                "signed": false,
+                "signature_url": "https://files.pythonhosted.org/packages/84/4c/5ec954cb207c9ad60f2e8f753c640c53cdf4e390685b2bdc814b25a6fbff/valiant-0.2.1.tar.gz.asc",
+                "package_type": "sdist",
+                "python_version": "source",
+                "requires_python": ">=3.8,<4.0",
+                "size": 67277,
+                "upload_time_iso_8601": "2020-04-25T23:58:05.071523+00:00",
+                "url": "https://files.pythonhosted.org/packages/84/4c/5ec954cb207c9ad60f2e8f753c640c53cdf4e390685b2bdc814b25a6fbff/valiant-0.2.1.tar.gz"
+            }
+        ]
+    },
+    "reports": {
+        "spdx": {
+            "created": "2020-04-26T11:55:11.921875",
+            "provider": {
+                "name": "spdx",
+                "vendor": "Valiant",
+                "display_name": "SPDX License",
+                "version": "0.1",
+                "url": "https://spdx.org/licenses/"
+            },
+            "findings": [
+                {
+                    "id": "SPDX001",
+                    "coordinates": {
+                        "name": "valiant",
+                        "version": "0.2.1",
+                        "repository_url": "https://pypi.org/pypi"
+                    },
+                    "level": "info",
+                    "category": "license",
+                    "title": "SPDX License found",
+                    "message": "MIT",
+                    "data": {
+                        "name": "MIT License",
+                        "reference": "./MIT.html",
+                        "id": "MIT",
+                        "is_deprecated": false,
+                        "details_url": "http://spdx.org/licenses/MIT.json",
+                        "reference_number": "256",
+                        "see_also": [
+                            "https://opensource.org/licenses/MIT"
+                        ],
+                        "is_osi_approved": true,
+                        "is_fsf_libre": true
+                    },
+                    "url": "http://spdx.org/licenses/MIT.json"
+                }
+            ]
+        },
+        "safety": {
+            "created": "2020-04-26T11:55:11.925130",
+            "provider": {
+                "name": "safety",
+                "vendor": "pyup.io",
+                "display_name": "Safety",
+                "version": "1.8.7",
+                "url": "https://pyup.io/safety/"
+            },
+            "findings": []
+        },
+        "basic": {
+            "created": "2020-04-26T11:55:11.925462",
+            "provider": {
+                "name": "basic",
+                "vendor": "Valiant",
+                "display_name": "Basic",
+                "version": "0.1",
+                "url": ""
+            },
+            "findings": [
+                {
+                    "id": "BASIC005",
+                    "coordinates": {
+                        "name": "valiant",
+                        "version": "0.2.1",
+                        "repository_url": "https://pypi.org/pypi"
+                    },
+                    "level": "warning",
+                    "category": "project",
+                    "title": "Package not production ready",
+                    "message": "The package is marked as '1 - Planning'",
+                    "data": {
+                        "original": "Development Status :: 1 - Planning",
+                        "category": "Development Status",
+                        "value": "1 - Planning",
+                        "subcategories": []
+                    },
+                    "url": ""
+                },
+                {
+                    "id": "BASIC004",
+                    "coordinates": {
+                        "name": "valiant",
+                        "version": "0.2.1",
+                        "repository_url": "https://pypi.org/pypi"
+                    },
+                    "level": "warning",
+                    "category": "project",
+                    "title": "An artifact has not been signed",
+                    "message": "A package of type bdist_wheel has not been signed",
+                    "data": {
+                        "comment_text": "",
+                        "digests": {
+                            "md5": "278e81fbe0dee953ae6b70d0773598e5",
+                            "sha256": "61954e90a1c674c9fca6f4b8ef9d4ac9417667796531986325230b80f524d212"
+                        },
+                        "sha256_digest": "61954e90a1c674c9fca6f4b8ef9d4ac9417667796531986325230b80f524d212",
+                        "signed": false,
+                        "signature_url": "https://files.pythonhosted.org/packages/cd/65/f4b091944380d779633d8674e2367ee07ea422a97dd166f2b4b56a447295/valiant-0.2.1-py3-none-any.whl.asc",
+                        "package_type": "bdist_wheel",
+                        "python_version": "py3",
+                        "requires_python": ">=3.8,<4.0",
+                        "size": 122303,
+                        "upload_time_iso_8601": "2020-04-25T23:58:03.547274+00:00",
+                        "url": "https://files.pythonhosted.org/packages/cd/65/f4b091944380d779633d8674e2367ee07ea422a97dd166f2b4b56a447295/valiant-0.2.1-py3-none-any.whl"
+                    },
+                    "url": ""
+                },
+                {
+                    "id": "BASIC004",
+                    "coordinates": {
+                        "name": "valiant",
+                        "version": "0.2.1",
+                        "repository_url": "https://pypi.org/pypi"
+                    },
+                    "level": "warning",
+                    "category": "project",
+                    "title": "An artifact has not been signed",
+                    "message": "A package of type sdist has not been signed",
+                    "data": {
+                        "comment_text": "",
+                        "digests": {
+                            "md5": "6ae57da8cedcbfc3e675cc1dbc3bb540",
+                            "sha256": "7b783dd6a8e9ce55431e1c65f7cee6d484ff3b140e728d093fcee0af575b3eca"
+                        },
+                        "sha256_digest": "7b783dd6a8e9ce55431e1c65f7cee6d484ff3b140e728d093fcee0af575b3eca",
+                        "signed": false,
+                        "signature_url": "https://files.pythonhosted.org/packages/84/4c/5ec954cb207c9ad60f2e8f753c640c53cdf4e390685b2bdc814b25a6fbff/valiant-0.2.1.tar.gz.asc",
+                        "package_type": "sdist",
+                        "python_version": "source",
+                        "requires_python": ">=3.8,<4.0",
+                        "size": 67277,
+                        "upload_time_iso_8601": "2020-04-25T23:58:05.071523+00:00",
+                        "url": "https://files.pythonhosted.org/packages/84/4c/5ec954cb207c9ad60f2e8f753c640c53cdf4e390685b2bdc814b25a6fbff/valiant-0.2.1.tar.gz"
+                    },
+                    "url": ""
+                }
+            ]
+        }
+    }
+}

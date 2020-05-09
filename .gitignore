@@ -58,3 +58,4 @@ requirements.txt
 pytest.out
 junit/
 *.py,cover
+docs/demo/opa/opa
