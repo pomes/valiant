@@ -1,0 +1,605 @@
+{
+    "message": "",
+    "metadata": {
+        "name": "Django",
+        "version": "1.2",
+        "summary": "A high-level Python Web framework that encourages rapid development and clean, pragmatic design.",
+        "license": "UNKNOWN",
+        "classifiers": [
+            "Development Status :: 5 - Production/Stable",
+            "Environment :: Web Environment",
+            "Framework :: Django",
+            "Intended Audience :: Developers",
+            "License :: OSI Approved :: BSD License",
+            "Operating System :: OS Independent",
+            "Programming Language :: Python",
+            "Topic :: Internet :: WWW/HTTP",
+            "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+            "Topic :: Internet :: WWW/HTTP :: WSGI",
+            "Topic :: Software Development :: Libraries :: Application Frameworks",
+            "Topic :: Software Development :: Libraries :: Python Modules"
+        ],
+        "url_project": "http://www.djangoproject.com/",
+        "url_code": "",
+        "url_issue_tracker": "",
+        "url_documentation": "",
+        "artifacts": [
+            {
+                "comment_text": "",
+                "digests": {
+                    "md5": "98fa833fdabcdd78d00245aead66c174",
+                    "sha256": "3d4b18dfa0ef181ef85fea7be98a763906f767bc320694c98280c52c5af0bd83"
+                },
+                "sha256_digest": "3d4b18dfa0ef181ef85fea7be98a763906f767bc320694c98280c52c5af0bd83",
+                "signed": false,
+                "signature_url": "https://files.pythonhosted.org/packages/8e/d7/c31ff2b5564090955c9c67aa41c7d920f31a3fac019205747835b89dc5bd/Django-1.2.tar.gz.asc",
+                "package_type": "sdist",
+                "python_version": "source",
+                "requires_python": null,
+                "size": 6246202,
+                "upload_time_iso_8601": "2010-05-17T20:04:28.174094+00:00",
+                "url": "https://files.pythonhosted.org/packages/8e/d7/c31ff2b5564090955c9c67aa41c7d920f31a3fac019205747835b89dc5bd/Django-1.2.tar.gz"
+            }
+        ]
+    },
+    "reports": {
+        "safety": {
+            "created": "2020-04-26T11:55:09.983034",
+            "provider": {
+                "name": "safety",
+                "vendor": "pyup.io",
+                "display_name": "Safety",
+                "version": "1.8.7",
+                "url": "https://pyup.io/safety/"
+            },
+            "findings": [
+                {
+                    "id": "SAFETY001",
+                    "coordinates": {
+                        "name": "Django",
+                        "version": "1.2",
+                        "repository_url": "https://pypi.org/pypi"
+                    },
+                    "level": "priority",
+                    "category": "security",
+                    "title": "Vulnerability found",
+                    "message": "Django before 1.11.27, 2.x before 2.2.9, and 3.x before 3.0.1 allows account takeover. A suitably crafted email address (that is equal to an existing user's email address after case transformation of Unicode characters) would allow an attacker to be sent a password reset token for the matched user account. (One mitigation in the new releases is to send password reset tokens only to the registered user email address.) See CVE-2019-19844.",
+                    "data": {
+                        "name": "django",
+                        "spec": "<1.11.27",
+                        "version": "1.2",
+                        "advisory": "Django before 1.11.27, 2.x before 2.2.9, and 3.x before 3.0.1 allows account takeover. A suitably crafted email address (that is equal to an existing user's email address after case transformation of Unicode characters) would allow an attacker to be sent a password reset token for the matched user account. (One mitigation in the new releases is to send password reset tokens only to the registered user email address.) See CVE-2019-19844.",
+                        "vuln_id": "37771"
+                    },
+                    "url": "https://github.com/pyupio/safety-db"
+                },
+                {
+                    "id": "SAFETY001",
+                    "coordinates": {
+                        "name": "Django",
+                        "version": "1.2",
+                        "repository_url": "https://pypi.org/pypi"
+                    },
+                    "level": "priority",
+                    "category": "security",
+                    "title": "Vulnerability found",
+                    "message": "Cross-site scripting (XSS) vulnerability in Django 1.2.x before 1.2.2 allows remote attackers to inject arbitrary web script or HTML via a csrfmiddlewaretoken (aka csrf_token) cookie.",
+                    "data": {
+                        "name": "django",
+                        "spec": "<1.2.2",
+                        "version": "1.2",
+                        "advisory": "Cross-site scripting (XSS) vulnerability in Django 1.2.x before 1.2.2 allows remote attackers to inject arbitrary web script or HTML via a csrfmiddlewaretoken (aka csrf_token) cookie.",
+                        "vuln_id": "25701"
+                    },
+                    "url": "https://github.com/pyupio/safety-db"
+                },
+                {
+                    "id": "SAFETY001",
+                    "coordinates": {
+                        "name": "Django",
+                        "version": "1.2",
+                        "repository_url": "https://pypi.org/pypi"
+                    },
+                    "level": "priority",
+                    "category": "security",
+                    "title": "Vulnerability found",
+                    "message": "django.contrib.sessions in Django before 1.2.7 and 1.3.x before 1.3.1, when session data is stored in the cache, uses the root namespace for both session identifiers and application-data keys, which allows remote attackers to modify a session by triggering use of a key that is equal to that session's identifier.",
+                    "data": {
+                        "name": "django",
+                        "spec": "<1.2.7",
+                        "version": "1.2",
+                        "advisory": "django.contrib.sessions in Django before 1.2.7 and 1.3.x before 1.3.1, when session data is stored in the cache, uses the root namespace for both session identifiers and application-data keys, which allows remote attackers to modify a session by triggering use of a key that is equal to that session's identifier.",
+                        "vuln_id": "33063"
+                    },
+                    "url": "https://github.com/pyupio/safety-db"
+                },
+                {
+                    "id": "SAFETY001",
+                    "coordinates": {
+                        "name": "Django",
+                        "version": "1.2",
+                        "repository_url": "https://pypi.org/pypi"
+                    },
+                    "level": "priority",
+                    "category": "security",
+                    "title": "Vulnerability found",
+                    "message": "The verify_exists functionality in the URLField implementation in Django before 1.2.7 and 1.3.x before 1.3.1 relies on Python libraries that attempt access to an arbitrary URL with no timeout, which allows remote attackers to cause a denial of service (resource consumption) via a URL associated with (1) a slow response, (2) a completed TCP connection with no application data sent, or (3) a large amount of application data, a related issue to CVE-2011-1521.",
+                    "data": {
+                        "name": "django",
+                        "spec": "<1.2.7",
+                        "version": "1.2",
+                        "advisory": "The verify_exists functionality in the URLField implementation in Django before 1.2.7 and 1.3.x before 1.3.1 relies on Python libraries that attempt access to an arbitrary URL with no timeout, which allows remote attackers to cause a denial of service (resource consumption) via a URL associated with (1) a slow response, (2) a completed TCP connection with no application data sent, or (3) a large amount of application data, a related issue to CVE-2011-1521.",
+                        "vuln_id": "33064"
+                    },
+                    "url": "https://github.com/pyupio/safety-db"
+                },
+                {
+                    "id": "SAFETY001",
+                    "coordinates": {
+                        "name": "Django",
+                        "version": "1.2",
+                        "repository_url": "https://pypi.org/pypi"
+                    },
+                    "level": "priority",
+                    "category": "security",
+                    "title": "Vulnerability found",
+                    "message": "The verify_exists functionality in the URLField implementation in Django before 1.2.7 and 1.3.x before 1.3.1 originally tests a URL's validity through a HEAD request, but then uses a GET request for the new target URL in the case of a redirect, which might allow remote attackers to trigger arbitrary GET requests with an unintended source IP address via a crafted Location header.",
+                    "data": {
+                        "name": "django",
+                        "spec": "<1.2.7",
+                        "version": "1.2",
+                        "advisory": "The verify_exists functionality in the URLField implementation in Django before 1.2.7 and 1.3.x before 1.3.1 originally tests a URL's validity through a HEAD request, but then uses a GET request for the new target URL in the case of a redirect, which might allow remote attackers to trigger arbitrary GET requests with an unintended source IP address via a crafted Location header.",
+                        "vuln_id": "33065"
+                    },
+                    "url": "https://github.com/pyupio/safety-db"
+                },
+                {
+                    "id": "SAFETY001",
+                    "coordinates": {
+                        "name": "Django",
+                        "version": "1.2",
+                        "repository_url": "https://pypi.org/pypi"
+                    },
+                    "level": "priority",
+                    "category": "security",
+                    "title": "Vulnerability found",
+                    "message": "The CSRF protection mechanism in Django through 1.2.7 and 1.3.x through 1.3.1 does not properly handle web-server configurations supporting arbitrary HTTP Host headers, which allows remote attackers to trigger unauthenticated forged requests via vectors involving a DNS CNAME record and a web page containing JavaScript code.",
+                    "data": {
+                        "name": "django",
+                        "spec": "<1.2.7",
+                        "version": "1.2",
+                        "advisory": "The CSRF protection mechanism in Django through 1.2.7 and 1.3.x through 1.3.1 does not properly handle web-server configurations supporting arbitrary HTTP Host headers, which allows remote attackers to trigger unauthenticated forged requests via vectors involving a DNS CNAME record and a web page containing JavaScript code.",
+                        "vuln_id": "33066"
+                    },
+                    "url": "https://github.com/pyupio/safety-db"
+                },
+                {
+                    "id": "SAFETY001",
+                    "coordinates": {
+                        "name": "Django",
+                        "version": "1.2",
+                        "repository_url": "https://pypi.org/pypi"
+                    },
+                    "level": "priority",
+                    "category": "security",
+                    "title": "Vulnerability found",
+                    "message": "The (1) django.http.HttpResponseRedirect and (2) django.http.HttpResponsePermanentRedirect classes in Django before 1.3.2 and 1.4.x before 1.4.1 do not validate the scheme of a redirect target, which might allow remote attackers to conduct cross-site scripting (XSS) attacks via a data: URL.",
+                    "data": {
+                        "name": "django",
+                        "spec": "<1.3.2",
+                        "version": "1.2",
+                        "advisory": "The (1) django.http.HttpResponseRedirect and (2) django.http.HttpResponsePermanentRedirect classes in Django before 1.3.2 and 1.4.x before 1.4.1 do not validate the scheme of a redirect target, which might allow remote attackers to conduct cross-site scripting (XSS) attacks via a data: URL.",
+                        "vuln_id": "33067"
+                    },
+                    "url": "https://github.com/pyupio/safety-db"
+                },
+                {
+                    "id": "SAFETY001",
+                    "coordinates": {
+                        "name": "Django",
+                        "version": "1.2",
+                        "repository_url": "https://pypi.org/pypi"
+                    },
+                    "level": "priority",
+                    "category": "security",
+                    "title": "Vulnerability found",
+                    "message": "The django.forms.ImageField class in the form system in Django before 1.3.2 and 1.4.x before 1.4.1 completely decompresses image data during image validation, which allows remote attackers to cause a denial of service (memory consumption) by uploading an image file.",
+                    "data": {
+                        "name": "django",
+                        "spec": "<1.3.2",
+                        "version": "1.2",
+                        "advisory": "The django.forms.ImageField class in the form system in Django before 1.3.2 and 1.4.x before 1.4.1 completely decompresses image data during image validation, which allows remote attackers to cause a denial of service (memory consumption) by uploading an image file.",
+                        "vuln_id": "33068"
+                    },
+                    "url": "https://github.com/pyupio/safety-db"
+                },
+                {
+                    "id": "SAFETY001",
+                    "coordinates": {
+                        "name": "Django",
+                        "version": "1.2",
+                        "repository_url": "https://pypi.org/pypi"
+                    },
+                    "level": "priority",
+                    "category": "security",
+                    "title": "Vulnerability found",
+                    "message": "The get_image_dimensions function in the image-handling functionality in Django before 1.3.2 and 1.4.x before 1.4.1 uses a constant chunk size in all attempts to determine dimensions, which allows remote attackers to cause a denial of service (process or thread consumption) via a large TIFF image.",
+                    "data": {
+                        "name": "django",
+                        "spec": "<1.3.2",
+                        "version": "1.2",
+                        "advisory": "The get_image_dimensions function in the image-handling functionality in Django before 1.3.2 and 1.4.x before 1.4.1 uses a constant chunk size in all attempts to determine dimensions, which allows remote attackers to cause a denial of service (process or thread consumption) via a large TIFF image.",
+                        "vuln_id": "33069"
+                    },
+                    "url": "https://github.com/pyupio/safety-db"
+                },
+                {
+                    "id": "SAFETY001",
+                    "coordinates": {
+                        "name": "Django",
+                        "version": "1.2",
+                        "repository_url": "https://pypi.org/pypi"
+                    },
+                    "level": "priority",
+                    "category": "security",
+                    "title": "Vulnerability found",
+                    "message": "The django.http.HttpRequest.get_host function in Django 1.3.x before 1.3.4 and 1.4.x before 1.4.2 allows remote attackers to generate and display arbitrary URLs via crafted username and password Host header values.",
+                    "data": {
+                        "name": "django",
+                        "spec": "<1.3.4",
+                        "version": "1.2",
+                        "advisory": "The django.http.HttpRequest.get_host function in Django 1.3.x before 1.3.4 and 1.4.x before 1.4.2 allows remote attackers to generate and display arbitrary URLs via crafted username and password Host header values.",
+                        "vuln_id": "25709"
+                    },
+                    "url": "https://github.com/pyupio/safety-db"
+                },
+                {
+                    "id": "SAFETY001",
+                    "coordinates": {
+                        "name": "Django",
+                        "version": "1.2",
+                        "repository_url": "https://pypi.org/pypi"
+                    },
+                    "level": "priority",
+                    "category": "security",
+                    "title": "Vulnerability found",
+                    "message": "The django.util.http.is_safe_url function in Django before 1.4.18, 1.6.x before 1.6.10, and 1.7.x before 1.7.3 does not properly handle leading whitespaces, which allows remote attackers to conduct cross-site scripting (XSS) attacks via a crafted URL, related to redirect URLs, as demonstrated by a \"\\njavascript:\" URL.",
+                    "data": {
+                        "name": "django",
+                        "spec": "<1.4.18",
+                        "version": "1.2",
+                        "advisory": "The django.util.http.is_safe_url function in Django before 1.4.18, 1.6.x before 1.6.10, and 1.7.x before 1.7.3 does not properly handle leading whitespaces, which allows remote attackers to conduct cross-site scripting (XSS) attacks via a crafted URL, related to redirect URLs, as demonstrated by a \"\\njavascript:\" URL.",
+                        "vuln_id": "33071"
+                    },
+                    "url": "https://github.com/pyupio/safety-db"
+                },
+                {
+                    "id": "SAFETY001",
+                    "coordinates": {
+                        "name": "Django",
+                        "version": "1.2",
+                        "repository_url": "https://pypi.org/pypi"
+                    },
+                    "level": "priority",
+                    "category": "security",
+                    "title": "Vulnerability found",
+                    "message": "The django.views.static.serve view in Django before 1.4.18, 1.6.x before 1.6.10, and 1.7.x before 1.7.3 reads files an entire line at a time, which allows remote attackers to cause a denial of service (memory consumption) via a long line in a file.",
+                    "data": {
+                        "name": "django",
+                        "spec": "<1.4.18",
+                        "version": "1.2",
+                        "advisory": "The django.views.static.serve view in Django before 1.4.18, 1.6.x before 1.6.10, and 1.7.x before 1.7.3 reads files an entire line at a time, which allows remote attackers to cause a denial of service (memory consumption) via a long line in a file.",
+                        "vuln_id": "33072"
+                    },
+                    "url": "https://github.com/pyupio/safety-db"
+                },
+                {
+                    "id": "SAFETY001",
+                    "coordinates": {
+                        "name": "Django",
+                        "version": "1.2",
+                        "repository_url": "https://pypi.org/pypi"
+                    },
+                    "level": "priority",
+                    "category": "security",
+                    "title": "Vulnerability found",
+                    "message": "Django before 1.4.18, 1.6.x before 1.6.10, and 1.7.x before 1.7.3 allows remote attackers to spoof WSGI headers by using an _ (underscore) character instead of a - (dash) character in an HTTP header, as demonstrated by an X-Auth_User header.",
+                    "data": {
+                        "name": "django",
+                        "spec": "<1.4.18",
+                        "version": "1.2",
+                        "advisory": "Django before 1.4.18, 1.6.x before 1.6.10, and 1.7.x before 1.7.3 allows remote attackers to spoof WSGI headers by using an _ (underscore) character instead of a - (dash) character in an HTTP header, as demonstrated by an X-Auth_User header.",
+                        "vuln_id": "33070"
+                    },
+                    "url": "https://github.com/pyupio/safety-db"
+                },
+                {
+                    "id": "SAFETY001",
+                    "coordinates": {
+                        "name": "Django",
+                        "version": "1.2",
+                        "repository_url": "https://pypi.org/pypi"
+                    },
+                    "level": "priority",
+                    "category": "security",
+                    "title": "Vulnerability found",
+                    "message": "The utils.http.is_safe_url function in Django before 1.4.20, 1.5.x, 1.6.x before 1.6.11, 1.7.x before 1.7.7, and 1.8.x before 1.8c1 does not properly validate URLs, which allows remote attackers to conduct cross-site scripting (XSS) attacks via a control character in a URL, as demonstrated by a \\x08javascript: URL.",
+                    "data": {
+                        "name": "django",
+                        "spec": "<1.4.20",
+                        "version": "1.2",
+                        "advisory": "The utils.http.is_safe_url function in Django before 1.4.20, 1.5.x, 1.6.x before 1.6.11, 1.7.x before 1.7.7, and 1.8.x before 1.8c1 does not properly validate URLs, which allows remote attackers to conduct cross-site scripting (XSS) attacks via a control character in a URL, as demonstrated by a \\x08javascript: URL.",
+                        "vuln_id": "25713"
+                    },
+                    "url": "https://github.com/pyupio/safety-db"
+                },
+                {
+                    "id": "SAFETY001",
+                    "coordinates": {
+                        "name": "Django",
+                        "version": "1.2",
+                        "repository_url": "https://pypi.org/pypi"
+                    },
+                    "level": "priority",
+                    "category": "security",
+                    "title": "Vulnerability found",
+                    "message": "The get_format function in utils/formats.py in Django before 1.7.x before 1.7.11, 1.8.x before 1.8.7, and 1.9.x before 1.9rc2 might allow remote attackers to obtain sensitive application secrets via a settings key in place of a date/time format setting, as demonstrated by SECRET_KEY.",
+                    "data": {
+                        "name": "django",
+                        "spec": "<1.7.11",
+                        "version": "1.2",
+                        "advisory": "The get_format function in utils/formats.py in Django before 1.7.x before 1.7.11, 1.8.x before 1.8.7, and 1.9.x before 1.9rc2 might allow remote attackers to obtain sensitive application secrets via a settings key in place of a date/time format setting, as demonstrated by SECRET_KEY.",
+                        "vuln_id": "25714"
+                    },
+                    "url": "https://github.com/pyupio/safety-db"
+                },
+                {
+                    "id": "SAFETY001",
+                    "coordinates": {
+                        "name": "Django",
+                        "version": "1.2",
+                        "repository_url": "https://pypi.org/pypi"
+                    },
+                    "level": "priority",
+                    "category": "security",
+                    "title": "Vulnerability found",
+                    "message": "Cross-site scripting (XSS) vulnerability in the contents function in admin/helpers.py in Django before 1.7.6 and 1.8 before 1.8b2 allows remote attackers to inject arbitrary web script or HTML via a model attribute in ModelAdmin.readonly_fields, as demonstrated by a @property.",
+                    "data": {
+                        "name": "django",
+                        "spec": "<1.7.6",
+                        "version": "1.2",
+                        "advisory": "Cross-site scripting (XSS) vulnerability in the contents function in admin/helpers.py in Django before 1.7.6 and 1.8 before 1.8b2 allows remote attackers to inject arbitrary web script or HTML via a model attribute in ModelAdmin.readonly_fields, as demonstrated by a @property.",
+                        "vuln_id": "25715"
+                    },
+                    "url": "https://github.com/pyupio/safety-db"
+                },
+                {
+                    "id": "SAFETY001",
+                    "coordinates": {
+                        "name": "Django",
+                        "version": "1.2",
+                        "repository_url": "https://pypi.org/pypi"
+                    },
+                    "level": "priority",
+                    "category": "security",
+                    "title": "Vulnerability found",
+                    "message": "The password hasher in contrib/auth/hashers.py in Django before 1.8.10 and 1.9.x before 1.9.3 allows remote attackers to enumerate users via a timing attack involving login requests.",
+                    "data": {
+                        "name": "django",
+                        "spec": "<1.8.10",
+                        "version": "1.2",
+                        "advisory": "The password hasher in contrib/auth/hashers.py in Django before 1.8.10 and 1.9.x before 1.9.3 allows remote attackers to enumerate users via a timing attack involving login requests.",
+                        "vuln_id": "33074"
+                    },
+                    "url": "https://github.com/pyupio/safety-db"
+                },
+                {
+                    "id": "SAFETY001",
+                    "coordinates": {
+                        "name": "Django",
+                        "version": "1.2",
+                        "repository_url": "https://pypi.org/pypi"
+                    },
+                    "level": "priority",
+                    "category": "security",
+                    "title": "Vulnerability found",
+                    "message": "The utils.http.is_safe_url function in Django before 1.8.10 and 1.9.x before 1.9.3 allows remote attackers to redirect users to arbitrary web sites and conduct phishing attacks or possibly conduct cross-site scripting (XSS) attacks via a URL containing basic authentication, as demonstrated by http://mysite.example.com\\@attacker.com.",
+                    "data": {
+                        "name": "django",
+                        "spec": "<1.8.10",
+                        "version": "1.2",
+                        "advisory": "The utils.http.is_safe_url function in Django before 1.8.10 and 1.9.x before 1.9.3 allows remote attackers to redirect users to arbitrary web sites and conduct phishing attacks or possibly conduct cross-site scripting (XSS) attacks via a URL containing basic authentication, as demonstrated by http://mysite.example.com\\@attacker.com.",
+                        "vuln_id": "33073"
+                    },
+                    "url": "https://github.com/pyupio/safety-db"
+                },
+                {
+                    "id": "SAFETY001",
+                    "coordinates": {
+                        "name": "Django",
+                        "version": "1.2",
+                        "repository_url": "https://pypi.org/pypi"
+                    },
+                    "level": "priority",
+                    "category": "security",
+                    "title": "Vulnerability found",
+                    "message": "The cookie parsing code in Django before 1.8.15 and 1.9.x before 1.9.10, when used on a site with Google Analytics, allows remote attackers to bypass an intended CSRF protection mechanism by setting arbitrary cookies.",
+                    "data": {
+                        "name": "django",
+                        "spec": "<1.8.15",
+                        "version": "1.2",
+                        "advisory": "The cookie parsing code in Django before 1.8.15 and 1.9.x before 1.9.10, when used on a site with Google Analytics, allows remote attackers to bypass an intended CSRF protection mechanism by setting arbitrary cookies.",
+                        "vuln_id": "25718"
+                    },
+                    "url": "https://github.com/pyupio/safety-db"
+                },
+                {
+                    "id": "SAFETY001",
+                    "coordinates": {
+                        "name": "Django",
+                        "version": "1.2",
+                        "repository_url": "https://pypi.org/pypi"
+                    },
+                    "level": "priority",
+                    "category": "security",
+                    "title": "Vulnerability found",
+                    "message": "The administrative interface in django.contrib.admin in Django before 1.1.3, 1.2.x before 1.2.4, and 1.3.x before 1.3 beta 1 does not properly restrict use of the query string to perform certain object filtering, which allows remote authenticated users to obtain sensitive information via a series of requests containing regular expressions, as demonstrated by a created_by__password__regex parameter.",
+                    "data": {
+                        "name": "django",
+                        "spec": ">=1.2,<1.2.4",
+                        "version": "1.2",
+                        "advisory": "The administrative interface in django.contrib.admin in Django before 1.1.3, 1.2.x before 1.2.4, and 1.3.x before 1.3 beta 1 does not properly restrict use of the query string to perform certain object filtering, which allows remote authenticated users to obtain sensitive information via a series of requests containing regular expressions, as demonstrated by a created_by__password__regex parameter.",
+                        "vuln_id": "33058"
+                    },
+                    "url": "https://github.com/pyupio/safety-db"
+                },
+                {
+                    "id": "SAFETY001",
+                    "coordinates": {
+                        "name": "Django",
+                        "version": "1.2",
+                        "repository_url": "https://pypi.org/pypi"
+                    },
+                    "level": "priority",
+                    "category": "security",
+                    "title": "Vulnerability found",
+                    "message": "The password reset functionality in django.contrib.auth in Django before 1.1.3, 1.2.x before 1.2.4, and 1.3.x before 1.3 beta 1 does not validate the length of a string representing a base36 timestamp, which allows remote attackers to cause a denial of service (resource consumption) via a URL that specifies a large base36 integer.",
+                    "data": {
+                        "name": "django",
+                        "spec": ">=1.2,<1.2.4",
+                        "version": "1.2",
+                        "advisory": "The password reset functionality in django.contrib.auth in Django before 1.1.3, 1.2.x before 1.2.4, and 1.3.x before 1.3 beta 1 does not validate the length of a string representing a base36 timestamp, which allows remote attackers to cause a denial of service (resource consumption) via a URL that specifies a large base36 integer.",
+                        "vuln_id": "33059"
+                    },
+                    "url": "https://github.com/pyupio/safety-db"
+                },
+                {
+                    "id": "SAFETY001",
+                    "coordinates": {
+                        "name": "Django",
+                        "version": "1.2",
+                        "repository_url": "https://pypi.org/pypi"
+                    },
+                    "level": "priority",
+                    "category": "security",
+                    "title": "Vulnerability found",
+                    "message": "Django 1.1.x before 1.1.4 and 1.2.x before 1.2.5 does not properly validate HTTP requests that contain an X-Requested-With header, which makes it easier for remote attackers to conduct cross-site request forgery (CSRF) attacks via forged AJAX requests that leverage a \"combination of browser plugins and redirects,\" a related issue to CVE-2011-0447.",
+                    "data": {
+                        "name": "django",
+                        "spec": ">=1.2,<1.2.5",
+                        "version": "1.2",
+                        "advisory": "Django 1.1.x before 1.1.4 and 1.2.x before 1.2.5 does not properly validate HTTP requests that contain an X-Requested-With header, which makes it easier for remote attackers to conduct cross-site request forgery (CSRF) attacks via forged AJAX requests that leverage a \"combination of browser plugins and redirects,\" a related issue to CVE-2011-0447.",
+                        "vuln_id": "33060"
+                    },
+                    "url": "https://github.com/pyupio/safety-db"
+                },
+                {
+                    "id": "SAFETY001",
+                    "coordinates": {
+                        "name": "Django",
+                        "version": "1.2",
+                        "repository_url": "https://pypi.org/pypi"
+                    },
+                    "level": "priority",
+                    "category": "security",
+                    "title": "Vulnerability found",
+                    "message": "Directory traversal vulnerability in Django 1.1.x before 1.1.4 and 1.2.x before 1.2.5 on Windows might allow remote attackers to read or execute files via a / (slash) character in a key in a session cookie, related to session replays.",
+                    "data": {
+                        "name": "django",
+                        "spec": ">=1.2,<1.2.5",
+                        "version": "1.2",
+                        "advisory": "Directory traversal vulnerability in Django 1.1.x before 1.1.4 and 1.2.x before 1.2.5 on Windows might allow remote attackers to read or execute files via a / (slash) character in a key in a session cookie, related to session replays.",
+                        "vuln_id": "33062"
+                    },
+                    "url": "https://github.com/pyupio/safety-db"
+                }
+            ]
+        },
+        "basic": {
+            "created": "2020-04-26T11:55:09.984459",
+            "provider": {
+                "name": "basic",
+                "vendor": "Valiant",
+                "display_name": "Basic",
+                "version": "0.1",
+                "url": ""
+            },
+            "findings": [
+                {
+                    "id": "BASIC003",
+                    "coordinates": {
+                        "name": "Django",
+                        "version": "1.2",
+                        "repository_url": "https://pypi.org/pypi"
+                    },
+                    "level": "warning",
+                    "category": "project",
+                    "title": "No link to codebase",
+                    "message": "The project doesn't provide a link to its codebase.",
+                    "data": {},
+                    "url": ""
+                },
+                {
+                    "id": "BASIC004",
+                    "coordinates": {
+                        "name": "Django",
+                        "version": "1.2",
+                        "repository_url": "https://pypi.org/pypi"
+                    },
+                    "level": "warning",
+                    "category": "project",
+                    "title": "An artifact has not been signed",
+                    "message": "A package of type sdist has not been signed",
+                    "data": {
+                        "comment_text": "",
+                        "digests": {
+                            "md5": "98fa833fdabcdd78d00245aead66c174",
+                            "sha256": "3d4b18dfa0ef181ef85fea7be98a763906f767bc320694c98280c52c5af0bd83"
+                        },
+                        "sha256_digest": "3d4b18dfa0ef181ef85fea7be98a763906f767bc320694c98280c52c5af0bd83",
+                        "signed": false,
+                        "signature_url": "https://files.pythonhosted.org/packages/8e/d7/c31ff2b5564090955c9c67aa41c7d920f31a3fac019205747835b89dc5bd/Django-1.2.tar.gz.asc",
+                        "package_type": "sdist",
+                        "python_version": "source",
+                        "requires_python": null,
+                        "size": 6246202,
+                        "upload_time_iso_8601": "2010-05-17T20:04:28.174094+00:00",
+                        "url": "https://files.pythonhosted.org/packages/8e/d7/c31ff2b5564090955c9c67aa41c7d920f31a3fac019205747835b89dc5bd/Django-1.2.tar.gz"
+                    },
+                    "url": ""
+                }
+            ]
+        },
+        "spdx": {
+            "created": "2020-04-26T11:55:09.985269",
+            "provider": {
+                "name": "spdx",
+                "vendor": "Valiant",
+                "display_name": "SPDX License",
+                "version": "0.1",
+                "url": "https://spdx.org/licenses/"
+            },
+            "findings": [
+                {
+                    "id": "SPDX002",
+                    "coordinates": {
+                        "name": "Django",
+                        "version": "1.2",
+                        "repository_url": "https://pypi.org/pypi"
+                    },
+                    "level": "info",
+                    "category": "license",
+                    "title": "SPDX License not found",
+                    "message": "Could not map licence UNKNOWN to an SPDX license",
+                    "data": {
+                        "original": "License :: UNKNOWN",
+                        "category": "License",
+                        "value": "UNKNOWN",
+                        "subcategories": []
+                    },
+                    "url": "https://spdx.org/licenses/"
+                }
+            ]
+        }
+    }
+}
