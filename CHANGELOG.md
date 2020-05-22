@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.2.2 (2020-05)
+
+Fixed issue with new PyPi metadata fields causing parsing to fail.
+
 ## 0.2.0 (2020-04)
 
 Fixed:

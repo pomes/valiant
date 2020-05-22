@@ -103,6 +103,18 @@ Install the package from the test repository (pref in a container - `docker run 
     valiant config
     valiant report flask 1.1.1
 
+    cat > audit.txt <<EOF
+    click==7.1.1
+    flask==1.1.1
+    itsdangerous==1.1.0
+    jinja2==2.11.1
+    markupsafe==1.1.1
+    werkzeug==1.0.1
+    insecure-package==0.1.0
+    EOF
+
+    valiant audit audit.txt
+
 When everything checks out, push up to the main PyPi repository:
 
     poetry publish -u __token__
