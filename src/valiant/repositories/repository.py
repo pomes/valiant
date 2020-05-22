@@ -49,8 +49,8 @@ class BaseRepository(ABC):
             not in self.__class__.list_supported_repository_types()
         ):
             raise ValueError(
-                f"Unable to handle repositories of type "
-                "repository_configuration.repository_type}."
+                "Unable to handle repositories of type "
+                f"{repository_configuration.repository_type}."
             )
 
         self._config = repository_configuration

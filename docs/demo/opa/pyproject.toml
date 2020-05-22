@@ -11,7 +11,7 @@ flask = "1.1.1"
 insecure-package = "0.1.0"
 
 [tool.poetry.dev-dependencies]
-valiant = "^0.2.1"
+valiant = "^0.2.2"
 
 [build-system]
 requires = ["poetry>=0.12"]

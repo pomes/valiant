@@ -40,7 +40,7 @@ def test_cli_report_short(app: Cli) -> None:
     """Test the static output from the `report` command."""
     command = app.find("report")
     command_tester = CommandTester(command)
-    result = command_tester.execute(f"-s flask 1.1.1")
+    result = command_tester.execute("-s flask 1.1.1")
 
     assert result == 0
 

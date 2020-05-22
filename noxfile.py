@@ -153,7 +153,7 @@ def safety_dev(session: Session) -> None:
 def mypy(session: Session) -> None:
     """Type-check using mypy."""
     args = session.posargs or locations
-    install_with_constraints(session, "mypy")
+    install_with_constraints(session, *["mypy", "marshmallow-dataclass"])
     session.run("mypy", *args)
 
 

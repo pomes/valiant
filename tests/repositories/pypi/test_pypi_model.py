@@ -56,6 +56,23 @@ def test_json_load_basic(
     assert pkg.repository_url == pypi_config.base_url
 
 
+@pytest.mark.datafiles(TEST_FILE_DIR / "fake_package.json")
+def test_json_load_fake(
+    datafiles: py.path, pypi_config: RepositoryConfiguration
+) -> None:
+    """Small baseline test with an unexpected field."""
+    pkg = PyPiPackageMetadata(
+        pypi_config.base_url, load_test_json_data(datafiles, "fake_package.json")
+    )
+    assert pkg.name == "Demo"
+    assert pkg.description == "Basic description"
+    assert pkg.summary == "A short summary."
+    assert pkg.url_documentation == "http://docs.example.com"
+    assert pkg.url_project == "http://project.example.com"
+    assert pkg.url_issue_tracker == "http://bugs.example.com"
+    assert pkg.repository_url == pypi_config.base_url
+
+
 @pytest.mark.datafiles(TEST_FILE_DIR / "basic_package_2.json")
 def test_json_load_basic2(
     datafiles: py.path, pypi_config: RepositoryConfiguration

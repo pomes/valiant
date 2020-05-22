@@ -24,14 +24,14 @@ The data classes defined here aim to map closely to the JSON
 returned by the PyPi API.
 
 See: https://warehouse.readthedocs.io/api-reference/json/
-
-TODO: Consider "yanked" artifacts: https://www.python.org/dev/peps/pep-0592/
 """
-from dataclasses import dataclass
 from datetime import datetime
 from typing import Dict, List, Optional
 
-from desert import desert, marshmallow
+from marshmallow_dataclass import dataclass, class_schema
+import marshmallow
+
+
 from packaging.requirements import Requirement
 from valiant.package import (
     ArtifactMetadata,
@@ -87,6 +87,12 @@ class Info:
     summary: str
     version: str
     yanked: Optional[bool]
+    # yanked_reason: Optional[str]
+
+    class Meta:
+        """Marshmallow meta class."""
+
+        unknown = marshmallow.EXCLUDE
 
 
 @dataclass
@@ -111,6 +117,12 @@ class Release:
     upload_time_iso_8601: datetime
     url: str
     yanked: Optional[bool]
+    yanked_reason: Optional[str]
+
+    class Meta:
+        """Marshmallow meta class."""
+
+        unknown = marshmallow.EXCLUDE
 
 
 @dataclass
@@ -131,6 +143,12 @@ class ArtifactUrl:
     upload_time_iso_8601: datetime
     url: str
     yanked: Optional[bool]
+    yanked_reason: Optional[str]
+
+    class Meta:
+        """Marshmallow meta class."""
+
+        unknown = marshmallow.EXCLUDE
 
 
 @dataclass
@@ -163,7 +181,7 @@ class PyPiPackageMetadata(PackageMetadata):
         self._artifacts: List[ArtifactMetadata] = []
 
         try:
-            schema = desert.schema_class(PyPiPackage)()
+            schema = class_schema(PyPiPackage)()
             self._pkg = schema.load(package_data)
         except marshmallow.exceptions.ValidationError as ve:
             raise ValidationError(f"Could not validate the JSON data: {ve}") from ve

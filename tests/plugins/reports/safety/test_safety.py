@@ -49,7 +49,7 @@ def test_report_provider_details() -> None:
     rpd = SafetyReportPlugin.report_provider_details()
     assert rpd.name == "safety"
     assert rpd.display_name == "Safety"
-    assert rpd.version == "1.8.7"
+    assert rpd.version == "1.9.0"
 
 
 def test_safety_parameters(monkeypatch: Any) -> None:
