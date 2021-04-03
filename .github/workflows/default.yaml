@@ -23,7 +23,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install nox>=2020.12.31
           pip install poetry>=1.1.5
-          poetry install
 
       - name: safety
         run: nox -rs safety_dev
