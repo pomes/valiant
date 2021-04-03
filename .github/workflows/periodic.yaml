@@ -31,7 +31,7 @@ jobs:
       - name: Load test data
         working-directory: ./tests/repositories/pypi/package-data
         run: |
-          tests/repositories/pypi/package-data/load-test-data.sh
+          ./load-test-data.sh
 
       - name: tests
         run: nox -rs tests-3.9
