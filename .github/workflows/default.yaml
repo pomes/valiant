@@ -29,14 +29,16 @@ jobs:
         run: nox -rs safety
 
       - name: lint
-        run: nox -rs lint
+        run: nox -rs lint-${{ matrix.python-version }}
 
       - name: mypy
-        run: nox -rs mypy
+        run: nox -rs mypy-${{ matrix.python-version }}
+        with:
+          python-version: "3.8"
 
       - name: Pytest
         run: |
-          nox -rs tests -- \
+          nox -rs tests-${{ matrix.python-version }} -- \
             --junitxml=junit/test-results-${{ matrix.python-version }}.xml \
             --cov --cov-report xml \
             --cov-report html \

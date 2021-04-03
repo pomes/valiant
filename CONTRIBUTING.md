@@ -51,7 +51,7 @@ To run tests:
 
     nox -s tests
 
-To lint (against Python 3.8):
+To lint:
 
     nox -rs lint
 

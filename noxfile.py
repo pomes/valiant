@@ -69,7 +69,7 @@ def install_with_constraints(session: Session, *args: str, **kwargs: Any) -> Non
         session.install(f"--constraint={requirements.name}", *args, **kwargs)
 
 
-@nox.session(python=supported_py_versions)
+@nox.session(python=general_py_version)
 def lint(session: Session) -> None:
     """Lint using flake8."""
     args = session.posargs or locations
@@ -149,7 +149,7 @@ def safety_dev(session: Session) -> None:
         session.run("safety", "check", f"--file={requirements.name}", "--full-report")
 
 
-@nox.session(python=supported_py_versions)
+@nox.session(python="3.8")
 def mypy(session: Session) -> None:
     """Type-check using mypy."""
     args = session.posargs or locations
@@ -157,7 +157,7 @@ def mypy(session: Session) -> None:
     session.run("mypy", *args)
 
 
-@nox.session(python=supported_py_versions)
+@nox.session(python="3.7")
 def pytype(session: Session) -> None:
     """Type-check using pytype.
 

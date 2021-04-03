@@ -15,11 +15,10 @@ repos:
         exclude: ^tests/repositories/pypi/.*-data/.*.json$
       - id: check-yaml
       - id: check-ast
-
-  - repo: local
-    hooks:
-    - id: flake8
-      name: flake8
-      entry: poetry run flake8
-      language: system
-      types: [python]
+  #- repo: local
+  #  hooks:
+  #    - id: lint
+  #      name: lint
+  #      entry: nox -s lint
+  #      language: system
+  #      types: [python]
