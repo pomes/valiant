@@ -38,7 +38,7 @@ jobs:
         run: |
           nox -rs tests -- \
             --junitxml=junit/test-results-${{ matrix.python-version }}.xml \
-            --cov=com --cov-report xml \
+            --cov --cov-report xml \
             --cov-report html \
             --cov-report term
 
