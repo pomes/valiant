@@ -24,15 +24,22 @@ jobs:
           pip install nox>=2020.12.31
           pip install poetry>=1.1.5
           poetry install
-      - name: Base nox actions
-        run: nox -rs lint safety mypy
+
+      - name: safety
+        run: nox -rs safety
+
+      - name: lint
+        run: nox -rs lint
+
+      - name: mypy
+        run: nox -rs mypy
 
       - name: Pytest
         run: |
           nox -rs tests -- \
             --junitxml=junit/test-results-${{ matrix.python-version }}.xml \
-            --cov --cov-report xml:build/reports/coverage/${{ matrix.python-version }}.xml \
-            --cov-report html:build/reports/coverage/html/${{ matrix.python-version }} \
+            --cov=com --cov-report xml \
+            --cov-report html \
             --cov-report term
 
       - name: Upload pytest test results
@@ -51,8 +58,3 @@ jobs:
 
       - name: Build the distribution
         run: poetry build
-    #- name: Archive build artifacts
-    #  uses: actions/upload-artifact@v1
-    #  with:
-    #    name: dist
-    #    path: dist
