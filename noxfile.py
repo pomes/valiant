@@ -36,6 +36,8 @@ package = "valiant"
 nox.options.sessions = "safety", "lint", "mypy", "tests"
 locations = "src", "tests", "noxfile.py"
 
+source_location = ["src"]
+
 supported_py_versions = ["3.8", "3.9"]
 general_py_version = "3.9"
 
@@ -152,20 +154,18 @@ def safety_dev(session: Session) -> None:
 @nox.session(python="3.8")
 def mypy(session: Session) -> None:
     """Type-check using mypy."""
-    args = session.posargs or locations
+    args = session.posargs or source_location
     install_with_constraints(session, *["mypy", "marshmallow-dataclass"])
     session.run("mypy", *args)
 
 
-@nox.session(python="3.7")
+@nox.session(python="3.8")
 def pytype(session: Session) -> None:
     """Type-check using pytype.
 
-    This likely won't work until PyType supports Python >= 3.7
-      - Roadmap on https://google.github.io/pytype/
-      - https://github.com/google/pytype/issues/440
+    This will likely throw up errors - I'm still testing.
     """
-    args = session.posargs or ["--disable=import-error", *locations]
+    args = session.posargs or ["--disable=import-error", *source_location]
     install_with_constraints(session, "pytype")
     session.run("pytype", *args)
 
