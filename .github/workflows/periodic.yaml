@@ -1,5 +1,6 @@
 name: Periodic test workflow
 on:
+  workflow_dispatch:
   schedule:
     - cron: "0 1 * * *"
 
@@ -32,5 +33,5 @@ jobs:
         run: |
           tests/repositories/pypi/package-data/load-test-data.sh
 
-      - name: safety
+      - name: tests
         run: nox -rs tests-3.9
