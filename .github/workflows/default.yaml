@@ -33,8 +33,6 @@ jobs:
 
       - name: mypy
         run: nox -rs mypy-${{ matrix.python-version }}
-        with:
-          python-version: "3.8"
 
       - name: Pytest
         run: |
