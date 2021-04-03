@@ -29,10 +29,10 @@ jobs:
         run: nox -rs safety
 
       - name: lint
-        run: nox -rs lint-${{ matrix.python-version }}
+        run: nox -rs lint
 
       - name: mypy
-        run: nox -rs mypy-${{ matrix.python-version }}
+        run: nox -rs mypy
 
       - name: Pytest
         run: |
