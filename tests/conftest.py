@@ -22,7 +22,6 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import os
-import tempfile
 
 from pathlib import Path
 from typing import Generator
@@ -30,6 +29,7 @@ from typing import Generator
 import pytest
 
 from _pytest.config import Config
+from _pytest.fixtures import FixtureRequest
 
 from . import MonkeyPatch
 
@@ -41,7 +41,7 @@ def pytest_configure(config: Config) -> None:  # noqa: D103
 @pytest.fixture
 def valiant_version() -> str:
     """The expected app version."""
-    return "0.2.2"  # noqa:DAR201
+    return "0.2.3"  # noqa:DAR201
 
 
 @pytest.fixture
@@ -66,6 +66,23 @@ def valiant_license() -> str:
 def valiant_url() -> str:
     """The expected app url."""
     return "https://github.com/pomes/valiant"  # noqa:DAR201
+
+
+@pytest.fixture(scope="function")
+def create_and_cwd_test_directory(request: FixtureRequest, tmp_path: Path) -> Generator:
+    """Sets the CWD to a new temp dir.
+
+    #noqa: DAR301
+
+    See: https://docs.pytest.org/en/latest/fixture.html \
+            #using-fixtures-from-classes-modules-or-projects
+    """
+    old_cwd = os.getcwd()
+    test_dir = tmp_path / request.function.__name__
+    test_dir.mkdir()
+    os.chdir(test_dir)
+    yield
+    os.chdir(old_cwd)
 
 
 # See:
@@ -127,41 +144,3 @@ def override_appdirs(monkeypatch: MonkeyPatch, tmp_path: Path):  # noqa: ANN001,
         "site_config_dir",
         lambda appname, appauthor, version, multipath: tmp_path / "site_config_dir",
     )
-
-
-@pytest.fixture(scope="function")
-def clean_up_tmp_folder():  # noqa:ANN201
-    """Provides a tidyup for tests that use /tmp/valiant_test.
-
-    This is primarily used for tests involving config files so
-    that a known path can be used.
-
-    Yields:
-        Nothing
-    """
-    from pathlib import Path  # noqa:DAR301
-    import shutil
-
-    p = Path("/tmp/valiant_test")
-    yield
-    if p.exists():
-        shutil.rmtree(p)
-
-
-@pytest.fixture
-def cleandir() -> Generator:
-    """Sets the CWD to a temp dir.
-
-    #noqa: DAR301
-
-    See: https://docs.pytest.org/en/latest/fixture.html \
-            #using-fixtures-from-classes-modules-or-projects
-    """
-    import shutil
-
-    old_cwd = os.getcwd()
-    newpath = tempfile.mkdtemp()
-    os.chdir(newpath)
-    yield
-    os.chdir(old_cwd)
-    shutil.rmtree(newpath)

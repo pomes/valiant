@@ -132,7 +132,7 @@ class ArtifactMetadata(Dictionizer):
     def url(self) -> str:  # pragma: no cover
         """The download URL for the artifact."""
 
-    def to_dict(self) -> Dict:  # noqa:DAR102
+    def to_dict(self) -> Dict:  # noqa: D102
         return {
             "comment_text": self.comment_text,
             "digests": self.digests,
@@ -151,7 +151,7 @@ class ArtifactMetadata(Dictionizer):
 class ArtifactMetadataImpl(ArtifactMetadata):
     """Basic implementation of ArtifactMetadata."""
 
-    def __init__(
+    def __init__(  # noqa: D107
         self,
         comment_text: str,
         digests: Dict[str, str],
@@ -164,7 +164,7 @@ class ArtifactMetadataImpl(ArtifactMetadata):
         size: int,
         upload_time_iso_8601: datetime,
         url: str,
-    ):  # noqa: D107
+    ):
         self._comment_text = comment_text
         self._digests = digests
         self._sha256_digest = sha256_digest

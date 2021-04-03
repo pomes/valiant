@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "valiant"
-version = "0.2.2"
+version = "0.2.3"
 description = "Audit tool to help investigate Python dependencies"
 authors = ["Duncan Dickinson <dedickinson@users.noreply.github.com>"]
 maintainers = ["Duncan Dickinson <dedickinson@users.noreply.github.com>"]
@@ -60,7 +60,7 @@ marshmallow-dataclass = "^7.5.2"
 [tool.poetry.dev-dependencies]
 pytest = "^4.6"
 black = "^19.10b0"
-nox = "^2019.11.9"
+nox = "^2020.12.31"
 isort = "^4.3.21"
 coverage = {extras = ["toml"], version = "^5.0.3"}
 flake8 = "^3.7.9"
@@ -139,5 +139,5 @@ output = "build/reports/coverage/coverage.json"
 line-length = 88
 
 [build-system]
-requires = ["poetry>=0.12"]
+requires = ["poetry>=1.1.5"]
 build-backend = "poetry.masonry.api"

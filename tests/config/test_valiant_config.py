@@ -31,7 +31,6 @@ from valiant.repositories.pypi import PyPiRepository
 from .util import FIXTURE_DIR
 
 
-@pytest.mark.usefixtures("clean_up_tmp_folder", "cleandir")
 def test_valiant_default_config_builder(
     tmp_path: Path,
     pypi_repo: PyPiRepository,
@@ -43,7 +42,9 @@ def test_valiant_default_config_builder(
     from valiant.config.util import create_valiant_builder
     from .util import get_config_instance
 
-    vb = create_valiant_builder()
+    vb = create_valiant_builder(
+        include_pyproject=False, include_user_config=False, include_site_config=False
+    )
     c = get_config_instance(vb)
 
     assert c.configuration_dir == tmp_path / "user_config_dir"
@@ -81,92 +82,70 @@ def test_valiant_default_config_builder(
     )
 
 
-@pytest.mark.usefixtures("clean_up_tmp_folder", "cleandir")
 @pytest.mark.datafiles(
     os.path.join(FIXTURE_DIR, "site_config_dir"), keep_top_dir=True,
 )
-def test_valiant_site_config_builder(
-    tmp_path: Path,
-    pypi_repo: PyPiRepository,
-    valiant_app_name: str,
-    valiant_version: str,
-    datafiles: py.path,
-) -> None:
+def test_valiant_site_config_builder(datafiles: py.path,) -> None:
     """Tests the config builder with a site config file overlay."""
     from valiant.config.util import create_valiant_builder
     from .util import get_config_instance
 
-    vb = create_valiant_builder()
+    vb = create_valiant_builder(include_pyproject=False)
     c = get_config_instance(vb)
     datafiles.listdir()
-    assert c.configuration_dir == Path("/tmp/valiant_test/opt/etc")
-    assert c.cache_dir == Path("/tmp/valiant_test/opt/var/cache")
-    assert c.log_dir == Path("/tmp/valiant_test/opt/var/log")
+    assert c.configuration_dir == Path("/tmp/valiant_test/opt/etc")  # noqa: S108
+    assert c.cache_dir == Path("/tmp/valiant_test/opt/var/cache")  # noqa: S108
+    assert c.log_dir == Path("/tmp/valiant_test/opt/var/log")  # noqa: S108
     assert c.default_reports == set(["basic"])
     assert c.local_plugin_paths == []
     assert c.local_report_plugins == {}
 
 
-@pytest.mark.usefixtures("clean_up_tmp_folder", "cleandir")
 @pytest.mark.datafiles(
     os.path.join(FIXTURE_DIR, "user_config_dir"), keep_top_dir=True,
 )
-def test_valiant_user_config_builder(
-    tmp_path: Path,
-    pypi_repo: PyPiRepository,
-    valiant_app_name: str,
-    valiant_version: str,
-    datafiles: py.path,
-) -> None:
+def test_valiant_user_config_builder(datafiles: py.path,) -> None:
     """Tests the config builder with a user config file overlay."""
     from valiant.config.util import create_valiant_builder
     from .util import get_config_instance
 
-    vb = create_valiant_builder()
+    vb = create_valiant_builder(include_pyproject=False)
     c = get_config_instance(vb)
 
-    assert c.configuration_dir == Path("/tmp/valiant_test/usr/local/etc")
-    assert c.cache_dir == Path("/tmp/valiant_test/usr/local/var/cache")
-    assert c.log_dir == Path("/tmp/valiant_test/usr/local/var/log")
+    assert c.configuration_dir == Path("/tmp/valiant_test/usr/local/etc")  # noqa: S108
+    assert c.cache_dir == Path("/tmp/valiant_test/usr/local/var/cache")  # noqa: S108
+    assert c.log_dir == Path("/tmp/valiant_test/usr/local/var/log")  # noqa: S108
     assert c.default_reports == set(["safety", "spdx"])
     assert c.local_plugin_paths == ["/usr/local/lib"]
     assert c.local_report_plugins == {"report1": "mypkg.Reporter:Report1"}
 
 
-@pytest.mark.usefixtures("clean_up_tmp_folder", "cleandir")
 @pytest.mark.datafiles(
     os.path.join(FIXTURE_DIR, "user_config_dir"),
     os.path.join(FIXTURE_DIR, "site_config_dir"),
     keep_top_dir=True,
 )
-def test_valiant_user_and_site_config_builder(
-    tmp_path: Path,
-    pypi_repo: PyPiRepository,
-    valiant_app_name: str,
-    valiant_version: str,
-    datafiles: py.path,
-) -> None:
+def test_valiant_user_and_site_config_builder(datafiles: py.path,) -> None:
     """Tests the config builder with site and user config file overlays."""
     from valiant.config.util import create_valiant_builder
     from .util import get_config_instance
 
-    vb = create_valiant_builder()
+    vb = create_valiant_builder(include_pyproject=False)
     c = get_config_instance(vb)
 
-    assert c.configuration_dir == Path("/tmp/valiant_test/usr/local/etc")
-    assert c.cache_dir == Path("/tmp/valiant_test/usr/local/var/cache")
-    assert c.log_dir == Path("/tmp/valiant_test/usr/local/var/log")
+    assert c.configuration_dir == Path("/tmp/valiant_test/usr/local/etc")  # noqa: S108
+    assert c.cache_dir == Path("/tmp/valiant_test/usr/local/var/cache")  # noqa: S108
+    assert c.log_dir == Path("/tmp/valiant_test/usr/local/var/log")  # noqa: S108
     assert c.default_reports == set(["safety", "spdx"])
     assert c.local_plugin_paths == ["/usr/local/lib"]
     assert c.local_report_plugins == {"report1": "mypkg.Reporter:Report1"}
 
 
-@pytest.mark.usefixtures("clean_up_tmp_folder", "cleandir")
 @pytest.mark.datafiles(
     os.path.join(FIXTURE_DIR, "pyproject.toml"), keep_top_dir=True,
 )
+@pytest.mark.usefixtures("create_and_cwd_test_directory")
 def test_valiant_pyproject_config_builder(
-    tmp_path: Path,
     pypi_repo: PyPiRepository,
     valiant_app_name: str,
     valiant_version: str,
@@ -178,30 +157,30 @@ def test_valiant_pyproject_config_builder(
     from .util import get_config_instance
 
     # Copy over pyproject.toml
-    assert os.listdir(os.getcwd()) == []
-    shutil.copy(os.path.join(datafiles, "pyproject.toml"), os.getcwd())
-    assert os.listdir(os.getcwd()) == ["pyproject.toml"]
+    cwd = Path.cwd()
+    assert os.listdir(cwd) == []
+    shutil.copy(src=Path(datafiles, "pyproject.toml"), dst=cwd)
+    assert os.listdir(cwd) == ["pyproject.toml"]
 
     vb = create_valiant_builder()
     c = get_config_instance(vb)
 
-    assert c.configuration_dir == Path("/tmp/valiant_test/project/etc")
-    assert c.cache_dir == Path("/tmp/valiant_test/project/var/cache")
-    assert c.log_dir == Path("/tmp/valiant_test/project/var/log")
+    assert c.configuration_dir == Path("/tmp/valiant_test/project/etc")  # noqa: S108
+    assert c.cache_dir == Path("/tmp/valiant_test/project/var/cache")  # noqa: S108
+    assert c.log_dir == Path("/tmp/valiant_test/project/var/log")  # noqa: S108
     assert c.default_reports == set(["safety"])
     assert c.local_plugin_paths == ["/usr/local/lib", "./project_lib"]
     assert c.local_report_plugins == {"project_report": "myprojectpkg.Reporter:Report1"}
 
 
-@pytest.mark.usefixtures("clean_up_tmp_folder", "cleandir")
 @pytest.mark.datafiles(
     os.path.join(FIXTURE_DIR, "pyproject.toml"),
     os.path.join(FIXTURE_DIR, "user_config_dir"),
     os.path.join(FIXTURE_DIR, "site_config_dir"),
     keep_top_dir=True,
 )
+@pytest.mark.usefixtures("create_and_cwd_test_directory")
 def test_valiant_all_config_builder(
-    tmp_path: Path,
     pypi_repo: PyPiRepository,
     valiant_app_name: str,
     valiant_version: str,
@@ -220,9 +199,9 @@ def test_valiant_all_config_builder(
     vb = create_valiant_builder()
     c = get_config_instance(vb)
 
-    assert c.configuration_dir == Path("/tmp/valiant_test/project/etc")
-    assert c.cache_dir == Path("/tmp/valiant_test/project/var/cache")
-    assert c.log_dir == Path("/tmp/valiant_test/project/var/log")
+    assert c.configuration_dir == Path("/tmp/valiant_test/project/etc")  # noqa: S108
+    assert c.cache_dir == Path("/tmp/valiant_test/project/var/cache")  # noqa: S108
+    assert c.log_dir == Path("/tmp/valiant_test/project/var/log")  # noqa: S108
     assert c.default_reports == set(["safety"])
     assert c.local_plugin_paths == ["/usr/local/lib", "./project_lib"]
     assert c.local_report_plugins == {"project_report": "myprojectpkg.Reporter:Report1"}

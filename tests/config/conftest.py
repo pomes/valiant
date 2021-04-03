@@ -50,14 +50,14 @@ def appdirs_created(appdirs: AppDirs) -> AppDirs:
 
 
 @pytest.fixture(scope="function")
-def copy_test_files():  # noqa:ANN201
+def copy_test_files(tmp_path: Path):  # noqa:ANN201
     """Helper to copy files to a specific location."""
     import os  # noqa:DAR301
     import shutil
 
     base = os.path.join(os.path.dirname(os.path.realpath(__file__)), "data",)
     files = ["logging.conf"]
-    test_dir = Path("/tmp/valiant_test_data")
+    test_dir = Path(tmp_path, "valiant_test_data")
     test_dir.mkdir(exist_ok=True)
 
     for f in files:

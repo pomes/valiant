@@ -49,7 +49,7 @@ def test_report_provider_details() -> None:
     rpd = SafetyReportPlugin.report_provider_details()
     assert rpd.name == "safety"
     assert rpd.display_name == "Safety"
-    assert rpd.version == "1.9.0"
+    assert rpd.version == "1.10.3"
 
 
 def test_safety_parameters(monkeypatch: Any) -> None:
@@ -105,6 +105,8 @@ def test_safety_generate_report(monkeypatch: Any) -> None:
                 version="vversion",
                 advisory="vadvisory",
                 vuln_id="12345",
+                cvssv2="",
+                cvssv3="",
             )
         ]
 

@@ -27,9 +27,9 @@ MonkeyPatch = Any
 class MockResponse:
     """Basic mock for requests.get response."""
 
-    def __init__(
+    def __init__(  # noqa: D107
         self, status_code: int, json_data: Any, from_cache: bool = True
-    ):  # noqa: D107
+    ):
         self.status_code = status_code
         self.json_data = json_data
         self._from_cache = from_cache

@@ -44,10 +44,10 @@ def test_missing_required_overlay_file(config_default_builder: ConfigBuilder) ->
         config_default_builder.build()
 
 
-@pytest.mark.usefixtures("clean_up_tmp_folder")
+# @pytest.mark.usefixtures("clean_up_tmp_folder")
 @pytest.mark.datafiles(os.path.join(FIXTURE_DIR, "basic.toml"))
 def test_explicit_file_overlay(
-    config_default_builder: ConfigBuilder, datafiles: py.path,
+    tmp_path: Path, config_default_builder: ConfigBuilder, datafiles: py.path,
 ) -> None:
     """Provides an explicit TOML source to overlay the default config."""
     from valiant.config.source import TomlSource
@@ -58,15 +58,16 @@ def test_explicit_file_overlay(
 
     c = get_config_instance(config_default_builder)
 
-    assert c.configuration_dir == Path("/tmp/valiant_test/etc")
-    assert c.cache_dir == Path("/tmp/valiant_test/var/cache")
-    assert c.log_dir == Path("/tmp/valiant_test/var/log")
+    assert c.configuration_dir == Path("/tmp/valiant_test/etc")  # noqa: S108
+    assert c.cache_dir == Path("/tmp/valiant_test/var/cache")  # noqa: S108
+    assert c.log_dir == Path("/tmp/valiant_test/var/log")  # noqa: S108
     assert c.default_reports == set(["basic", "spdx"])
 
 
-@pytest.mark.usefixtures("clean_up_tmp_folder")
+# @pytest.mark.usefixtures("clean_up_tmp_folder")
 @pytest.mark.datafiles(os.path.join(FIXTURE_DIR, "config_output.toml"))
 def test_explicit_file_overlay_from_valiant_config(
+    tmp_path: Path,
     config_default_builder: ConfigBuilder,
     pypi_repo: PyPiRepository,
     valiant_app_name: str,
@@ -85,9 +86,9 @@ def test_explicit_file_overlay_from_valiant_config(
 
     c = get_config_instance(config_default_builder)
 
-    assert c.configuration_dir == Path("/tmp/valiant_test/etc")
-    assert c.cache_dir == Path("/tmp/valiant_test/var/cache")
-    assert c.log_dir == Path("/tmp/valiant_test/var/log")
+    assert c.configuration_dir == Path("/tmp/valiant_test/etc")  # noqa: S108
+    assert c.cache_dir == Path("/tmp/valiant_test/var/cache")  # noqa: S108
+    assert c.log_dir == Path("/tmp/valiant_test/var/log")  # noqa: S108
     assert c.default_reports == set(["basic", "spdx", "safety"])
 
     # Repository config
@@ -140,10 +141,13 @@ def test_basic_overlay_mapping(
     assert c.logging_configuration_file == Path(FIXTURE_DIR, "logging.conf")
 
 
-@pytest.mark.usefixtures("clean_up_tmp_folder")
+# @pytest.mark.usefixtures("clean_up_tmp_folder")
 @pytest.mark.datafiles(os.path.join(FIXTURE_DIR, "basic_logfile.toml"),)
 def test_basic_overlay_file(
-    config_default_builder: ConfigBuilder, datafiles: py.path, copy_test_files: Any,
+    tmp_path: Path,
+    config_default_builder: ConfigBuilder,
+    datafiles: py.path,
+    copy_test_files: Any,
 ) -> None:
     """Manually adds a config dict with a logging_configuration_file."""
     from valiant.config.source import TomlSource
@@ -154,4 +158,6 @@ def test_basic_overlay_file(
         )
     )
     c = get_config_instance(config_default_builder)
-    assert c.logging_configuration_file == Path("/tmp/valiant_test_data/logging.conf")
+    assert c.logging_configuration_file == Path(
+        "/tmp/valiant_test_data/logging.conf"  # noqa: S108
+    )

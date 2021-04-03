@@ -49,7 +49,8 @@ class VulnerabilityDictionizer(Dictionizer):
         """Constructor."""  # noqa:DAR101
         self._vulnerability = vulnerability
 
-    def to_dict(self) -> Dict:  # noqa:DAR201
+    def to_dict(self) -> Dict:
+        """Convert the instance to a dictionary format."""  # noqa : DAR201
         return self._vulnerability._asdict()
 
 

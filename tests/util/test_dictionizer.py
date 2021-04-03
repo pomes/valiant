@@ -23,8 +23,8 @@ from typing import Dict
 from valiant.util import Dictionizer
 
 
-class TestClass(Dictionizer):  # noqa:DAR101
-    def to_dict(self) -> Dict:  # noqa:DAR101
+class TestClass(Dictionizer):  # noqa:D101
+    def to_dict(self) -> Dict:  # noqa:D102
         return {
             "name": "fred",
             "pets": ["matlida", "riff"],

@@ -14,11 +14,11 @@ Hint: Read the Poetry docs first as they guide you through a sound setup.
 
 Running `pyenv local` should list out at least a 3.8 release - my example is:
 
-    3.8.2
+    3.8.8 3.9.2
 
 Configure your local python env with:
 
-    pyenv local 3.8.2
+    pyenv local 3.8.8 3.9.2
 
 Once you have the codebase you can install the required packages:
 
@@ -40,6 +40,8 @@ I'm trying to follow the [Google Python Style Guide](https://google.github.io/st
 ### Running tests
 
 Look at [`noxfile.py`](noxfile.py) for the main test automation suite.
+
+Note: don't run `nox` in a poetry shell.
 
 Get a list of sessions/tasks:
 

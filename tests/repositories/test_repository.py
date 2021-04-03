@@ -55,7 +55,7 @@ def test_repo_config_basic_port() -> None:
 
 def test_repo_config_userpass() -> None:
     """Test using repo with username/password."""
-    password = "pa55word"  # noqa: S106
+    password = "pa55word"  # noqa: S105
     repo = RepositoryConfiguration(
         name="pypi",
         base_url="https://private.repo.org/pypi",
@@ -67,7 +67,7 @@ def test_repo_config_userpass() -> None:
 
 def test_repo_config_userpass_port() -> None:
     """Test using repo with username/password."""
-    password = "pa55word"  # noqa: S106
+    password = "pa55word"  # noqa: S105
     repo = RepositoryConfiguration(
         name="pypi",
         base_url="https://private.repo.org:8080/pypi",
@@ -81,7 +81,7 @@ def test_repo_config_userpass_port() -> None:
 
 def test_repo_config_token() -> None:
     """Test using repo with token."""
-    token = "clksd88sadh4HhJ"  # noqa: S106
+    token = "clksd88sadh4HhJ"  # noqa: S105
     repo = RepositoryConfiguration(
         name="pypi", base_url="https://private.repo.org/pypi", token=token,
     )
@@ -90,7 +90,7 @@ def test_repo_config_token() -> None:
 
 def test_repo_config_token_port() -> None:
     """Test using repo with token."""
-    token = "clksd88sadh4HhJ"  # noqa: S106
+    token = "clksd88sadh4HhJ"  # noqa: S105
     repo = RepositoryConfiguration(
         name="pypi",
         base_url="https://private.repo.org:8080/pypi",

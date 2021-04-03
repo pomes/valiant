@@ -33,11 +33,11 @@ from nox.sessions import Session
 
 
 package = "valiant"
-nox.options.sessions = "lint", "safety", "mypy", "tests"
+nox.options.sessions = "safety", "lint", "mypy", "tests"
 locations = "src", "tests", "noxfile.py"
 
-supported_py_versions = ["3.8"]
-general_py_version = "3.8"
+supported_py_versions = ["3.8", "3.9"]
+general_py_version = "3.9"
 
 
 def install_with_constraints(session: Session, *args: str, **kwargs: Any) -> None:
@@ -60,10 +60,12 @@ def install_with_constraints(session: Session, *args: str, **kwargs: Any) -> Non
             "poetry",
             "export",
             "--dev",
+            "--without-hashes",
             "--format=requirements.txt",
             f"--output={requirements.name}",
             external=True,
         )
+        # print(requirements.read())
         session.install(f"--constraint={requirements.name}", *args, **kwargs)
 
 
@@ -124,7 +126,6 @@ def safety(session: Session) -> None:
             "poetry",
             "export",
             "--format=requirements.txt",
-            "--without-hashes",
             f"--output={requirements.name}",
             external=True,
         )
@@ -135,12 +136,11 @@ def safety(session: Session) -> None:
 @nox.session(python=general_py_version)
 def safety_dev(session: Session) -> None:
     """Scan PROD+DEV dependencies for insecure packages."""
-    with tempfile.NamedTemporaryFile() as requirements:
+    with tempfile.NamedTemporaryFile(delete=False) as requirements:
         session.run(
             "poetry",
             "export",
             "--format=requirements.txt",
-            "--without-hashes",
             "--dev",
             f"--output={requirements.name}",
             external=True,
@@ -184,6 +184,7 @@ def tests(session: Session) -> None:
         "pytest-cov",
         "pytest-mock",
         "pytest-datafiles",
+        "cleo",
     ]
 
     session.run("poetry", "install", "--no-dev", external=True)
