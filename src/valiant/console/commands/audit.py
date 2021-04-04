@@ -34,7 +34,7 @@ from .report_helper import (
 
 
 class AuditCommand(BaseCommand):
-    """Prepares an audit on a set of requirements (not yet implemented).
+    """Prepares an audit on a set of requirements.
 
     audit
         {requirements-file : The file containing a requirements list}
