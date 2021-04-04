@@ -21,9 +21,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 from .package_command import PackageCommand, Payload
 from .report_helper import (
-    create_short_report,
-    create_metadata_report,
     create_finding_report,
+    create_metadata_report,
+    create_short_report,
 )
 
 

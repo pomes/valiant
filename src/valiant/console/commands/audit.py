@@ -27,8 +27,8 @@ from valiant.reports import Finding, ReportSet
 from .base_command import BaseCommand
 from .package_command import Payload
 from .report_helper import (
-    create_metadata_report,
     create_finding_report,
+    create_metadata_report,
     create_short_report,
 )
 

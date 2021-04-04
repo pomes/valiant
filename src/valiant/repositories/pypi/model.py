@@ -28,10 +28,9 @@ See: https://warehouse.readthedocs.io/api-reference/json/
 from datetime import datetime
 from typing import Dict, List, Optional
 
-from marshmallow_dataclass import dataclass, class_schema
 import marshmallow
 
-
+from marshmallow_dataclass import class_schema, dataclass
 from packaging.requirements import Requirement
 from valiant.package import (
     ArtifactMetadata,

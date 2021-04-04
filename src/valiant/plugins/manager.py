@@ -33,6 +33,7 @@ from valiant.log import get_logger
 
 from .plugin import PluginWrapper
 
+
 log = get_logger()
 
 

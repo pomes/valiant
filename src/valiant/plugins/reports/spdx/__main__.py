@@ -24,6 +24,7 @@ import pickle  # noqa: S403
 
 from .license import SPDX_LICENSE_DATA_FILE_URL, SpdxLicenses
 
+
 """Builds a pickle file from the SPDX License json data.
 
 This function generates the `spdx-licenses.pickle` file found in this package.

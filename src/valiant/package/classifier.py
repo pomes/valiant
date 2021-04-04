@@ -24,6 +24,7 @@ from typing import Dict, List
 
 from valiant.util import Dictionizer
 
+
 SEPARATOR = " :: "
 
 CLASSIFIER_CATEGORY_LICENSE = "License"

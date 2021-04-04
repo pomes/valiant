@@ -33,7 +33,9 @@ from valiant.repositories import (
     RepositoryConfiguration,
     RepositoryException,
 )
+
 from .model import PyPiPackageMetadata
+
 
 log = get_logger()
 

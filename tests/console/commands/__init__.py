@@ -23,6 +23,7 @@ import os
 
 import py
 
+
 _dir = os.path.dirname(os.path.realpath(__file__))
 
 TEST_FILE_DIR = py.path.local(_dir) / "data"

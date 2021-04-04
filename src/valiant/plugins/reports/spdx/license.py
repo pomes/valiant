@@ -25,10 +25,12 @@ from datetime import date
 from typing import Any, Dict, List, Optional, cast
 
 import requests
+
 from desert import desert
 from marshmallow import fields
 from marshmallow.exceptions import ValidationError as MarshmallowValidationError
 from valiant.util import Dictionizer
+
 
 """The canonical SPDX license data in JSON format."""
 SPDX_LICENSE_DATA_FILE_URL = (

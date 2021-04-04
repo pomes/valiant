@@ -20,8 +20,10 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import sys
-from valiant.exceptions import ValiantException
+
 from importlib.metadata import EntryPoint
+
+from valiant.exceptions import ValiantException
 
 
 class FailedToLoadPlugin(ValiantException):  # noqa: D101

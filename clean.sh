@@ -1,11 +1,11 @@
 #!/bin/bash
 
-rm -rf .nox
-rm -rf .pytest_cache
-rm -rf build
-rm -rf .mypy_cache
-rm -rf .pytype
-rm -rf junit
+rm -rf .nox/
+rm -rf .pytest_cache/
+rm -rf build/
+rm -rf .mypy_cache/
+rm -rf .pytype/
+rm -rf junit/
 
 find -name "__pycache__" -type d -exec rm -r {} \;
 find -name ".pytest_cache" -type d -exec rm -r {} \;

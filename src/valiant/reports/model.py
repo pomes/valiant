@@ -21,7 +21,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 from dataclasses import dataclass
 from datetime import datetime
-from typing import cast, Dict, Iterable, List, Mapping, Optional, Tuple, Union
+from typing import Dict, Iterable, List, Mapping, Optional, Tuple, Union, cast
 
 from valiant.package import PackageCoordinates
 from valiant.util import Dictionizer, NoValue

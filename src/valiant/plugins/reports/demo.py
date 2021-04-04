@@ -31,6 +31,7 @@ from valiant.plugins.reports import (
     get_logger,
 )
 
+
 log = get_logger()
 
 

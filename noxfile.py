@@ -25,7 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import tempfile
 
-from typing import Any
+from typing import Callable, List, Optional
 
 import nox
 
@@ -42,7 +42,12 @@ supported_py_versions = ["3.8", "3.9"]
 general_py_version = "3.9"
 
 
-def install_with_constraints(session: Session, *args: str, **kwargs: Any) -> None:
+def install_with_constraints(
+    session: Session,
+    packages: List[str],
+    include_dev: bool = True,
+    callback: Optional[Callable] = None,
+) -> None:
     """Install packages constrained by Poetry's lock file.
 
     This function is a wrapper for nox.sessions.Session.install. It
@@ -54,21 +59,30 @@ def install_with_constraints(session: Session, *args: str, **kwargs: Any) -> Non
 
     Arguments:
         session: The Session object.
-        args: Command-line arguments for pip.
-        kwargs: Additional keyword arguments for Session.install.
+        packages: List of packages to install.
+        include_dev: Export the dev dependencies from poetry.
+        callback: A function to call with the session and requirements
     """
     with tempfile.NamedTemporaryFile() as requirements:
-        session.run(
+        run_args = [
             "poetry",
             "export",
-            "--dev",
             "--without-hashes",
             "--format=requirements.txt",
             f"--output={requirements.name}",
-            external=True,
+        ]
+
+        if include_dev:
+            run_args.append("--dev")
+
+        session.run(
+            *run_args, external=True,
         )
-        # print(requirements.read())
-        session.install(f"--constraint={requirements.name}", *args, **kwargs)
+
+        session.install(f"--constraint={requirements.name}", *packages)
+
+        if callback:
+            callback(session, requirements.name)
 
 
 @nox.session(python=general_py_version)
@@ -85,7 +99,7 @@ def lint(session: Session) -> None:
         "flake8-copyright",
         "darglint",
     ]
-    install_with_constraints(session, *packages)
+    install_with_constraints(session, packages=packages)
     session.run("flake8", *args)
 
 
@@ -100,7 +114,8 @@ def tidy(session: Session) -> None:
 def black(session: Session) -> None:
     """Run black code formatter."""
     args = session.posargs or locations
-    install_with_constraints(session, "black")
+
+    install_with_constraints(session, packages=["black"])
     session.run("black", *args)
 
 
@@ -108,7 +123,7 @@ def black(session: Session) -> None:
 def tidy_imports(session: Session) -> None:
     """Lint inplace using flake8-isort."""
     args = session.posargs or locations
-    install_with_constraints(session, "isort", "autoflake")
+    install_with_constraints(session, packages=["isort", "autoflake"])
     session.run(
         "autoflake",
         "--remove-all-unused-imports",
@@ -120,42 +135,39 @@ def tidy_imports(session: Session) -> None:
     session.run("isort", "--recursive", "--apply", *args)
 
 
+def install_dependencies(session: Session, requirements_file: str) -> None:
+    """Installs dependencies from a requirements file."""
+    session.install(f"--requirement={requirements_file}")
+
+
+def safety_check(session: Session, requirements_file: str) -> None:
+    """Run the safety application."""
+    session.run("safety", "check", f"--file={requirements_file}", "--full-report")
+
+
 @nox.session(python=general_py_version)
 def safety(session: Session) -> None:
     """Scan PROD dependencies for insecure packages."""
-    with tempfile.NamedTemporaryFile() as requirements:
-        session.run(
-            "poetry",
-            "export",
-            "--format=requirements.txt",
-            f"--output={requirements.name}",
-            external=True,
-        )
-        install_with_constraints(session, "safety")
-        session.run("safety", "check", f"--file={requirements.name}", "--full-report")
+    packages = ["safety"]
+    install_with_constraints(
+        session, include_dev=False, callback=safety_check, packages=packages
+    )
 
 
 @nox.session(python=general_py_version)
 def safety_dev(session: Session) -> None:
     """Scan PROD+DEV dependencies for insecure packages."""
-    with tempfile.NamedTemporaryFile(delete=False) as requirements:
-        session.run(
-            "poetry",
-            "export",
-            "--format=requirements.txt",
-            "--dev",
-            f"--output={requirements.name}",
-            external=True,
-        )
-        install_with_constraints(session, "safety")
-        session.run("safety", "check", f"--file={requirements.name}", "--full-report")
+    packages = ["safety"]
+    install_with_constraints(
+        session, include_dev=True, callback=safety_check, packages=packages
+    )
 
 
 @nox.session(python="3.8")
 def mypy(session: Session) -> None:
     """Type-check using mypy."""
     args = session.posargs or source_location
-    install_with_constraints(session, *["mypy", "marshmallow-dataclass"])
+    install_with_constraints(session, packages=["mypy", "marshmallow-dataclass"])
     session.run("mypy", *args)
 
 
@@ -166,7 +178,7 @@ def pytype(session: Session) -> None:
     This will likely throw up errors - I'm still testing.
     """
     args = session.posargs or ["--disable=import-error", *source_location]
-    install_with_constraints(session, "pytype")
+    install_with_constraints(session, packages=["pytype"])
     session.run("pytype", *args)
 
 
@@ -184,12 +196,11 @@ def tests(session: Session) -> None:
         "pytest-cov",
         "pytest-mock",
         "pytest-datafiles",
-        "cleo",
+        "./",
     ]
 
-    session.run("poetry", "install", "--no-dev", external=True)
     install_with_constraints(
-        session, *packages,
+        session, packages=packages, include_dev=False, callback=install_dependencies
     )
     session.run("pytest", *args)
 
@@ -198,9 +209,11 @@ def tests(session: Session) -> None:
 def typeguard(session: Session) -> None:
     """Runtime type checking using Typeguard."""
     args = session.posargs or ["-m", "not e2e"]
-    packages = ["pytest", "pytest-mock", "pytest-datafiles", "typeguard"]
-    session.run("poetry", "install", "--no-dev", external=True)
-    install_with_constraints(session, *packages)
+    packages = ["pytest", "pytest-mock", "pytest-datafiles", "typeguard", "./"]
+
+    install_with_constraints(
+        session, packages=packages, include_dev=False, callback=install_dependencies
+    )
     session.run("pytest", f"--typeguard-packages={package}", *args)
 
 
@@ -209,8 +222,9 @@ def xdoctest(session: Session) -> None:
     """Run examples with xdoctest."""
     args = session.posargs or ["all"]
     packages = ["xdoctest"]
-    session.run("poetry", "install", "--no-dev", external=True)
-    install_with_constraints(session, *packages)
+    install_with_constraints(
+        session, packages=packages, include_dev=False, callback=install_dependencies
+    )
     session.run("python", "-m", "xdoctest", package, *args)
 
 

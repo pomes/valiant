@@ -25,12 +25,7 @@ from pathlib import Path
 from valiant.log import get_logger
 from valiant.package import PackageCoordinates, PackageMetadata
 from valiant.plugins.reports import BaseReportPlugin
-from valiant.reports import (
-    Finding,
-    FindingCategory,
-    FindingLevel,
-    Report,
-)
+from valiant.reports import Finding, FindingCategory, FindingLevel, Report
 from valiant.util import Dictionizer
 
 

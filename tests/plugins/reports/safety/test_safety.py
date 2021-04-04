@@ -22,11 +22,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from dataclasses import dataclass
 from typing import Any
 
-
 from safety.safety import Vulnerability
 from valiant.package import PackageCoordinates
-from valiant.reports import FindingCategory, FindingLevel
 from valiant.plugins.reports.safety import SafetyReportPlugin
+from valiant.reports import FindingCategory, FindingLevel
 
 
 @dataclass
