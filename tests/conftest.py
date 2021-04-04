@@ -41,7 +41,7 @@ def pytest_configure(config: Config) -> None:  # noqa: D103
 @pytest.fixture
 def valiant_version() -> str:
     """The expected app version."""
-    return "0.2.3"  # noqa:DAR201
+    return "0.2.4"  # noqa:DAR201
 
 
 @pytest.fixture

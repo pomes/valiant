@@ -101,24 +101,30 @@ Build and deploy:
 Check that it all went ok: https://test.pypi.org/project/valiant/
 
 Install the package from the test repository -
-preferably in a virtualenv or container - `docker run --rm -it docker.io/python:3.9 /bin/bash`):
+preferably in a virtualenv (`pyenv virtualenv 3.9.2 valiant-release && pyenv activate valiant-release`)
+or container (`docker run --rm -it docker.io/python:3.9 /bin/bash`):
 
-    pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple valiant==$VALIANT_VERSION
-    valiant about
-    valiant config
-    valiant report flask 1.1.1
+```bash
+pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple valiant==$VALIANT_VERSION
+valiant about
+valiant config
+valiant report flask 1.1.1
 
-    cat > audit.txt <<EOF
-    click==7.1.1
-    flask==1.1.1
-    itsdangerous==1.1.0
-    jinja2==2.11.1
-    markupsafe==1.1.1
-    werkzeug==1.0.1
-    insecure-package==0.1.0
-    EOF
 
-    valiant audit audit.txt
+cat > audit.txt <<EOF
+click==7.1.1
+flask==1.1.1
+itsdangerous==1.1.0
+jinja2==2.11.1
+markupsafe==1.1.1
+werkzeug==1.0.1
+insecure-package==0.1.0
+EOF
+
+valiant audit audit.txt
+```
+
+Note: Tidy up the pyenv virtualenv with `pyenv deactivate && pyenv virtualenv-delete valiant-release`
 
 When everything checks out, push up to the main PyPi repository:
 

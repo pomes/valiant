@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "valiant"
-version = "0.2.3"
+version = "0.2.4"
 description = "Audit tool to help investigate Python dependencies"
 authors = ["Duncan Dickinson <dedickinson@users.noreply.github.com>"]
 maintainers = ["Duncan Dickinson <dedickinson@users.noreply.github.com>"]

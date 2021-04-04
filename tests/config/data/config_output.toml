@@ -8,7 +8,7 @@ default_repository = "pypi"
 default_reports = [ "safety", "spdx", "basic",]
 
 [tool.valiant.requests_cache]
-file = "$cache_dir/valiant-0.2.3-requests-cache"
+file = "$cache_dir/valiant-0.2.4-requests-cache"
 backend = "sqlite"
 expire_after = 86400
 
