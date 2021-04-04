@@ -63,7 +63,7 @@ def install_with_constraints(
         include_dev: Export the dev dependencies from poetry.
         callback: A function to call with the session and requirements
     """
-    with tempfile.NamedTemporaryFile() as requirements:
+    with tempfile.NamedTemporaryFile(suffix=".txt") as requirements:
         run_args = [
             "poetry",
             "export",
@@ -221,11 +221,30 @@ def typeguard(session: Session) -> None:
 def xdoctest(session: Session) -> None:
     """Run examples with xdoctest."""
     args = session.posargs or ["all"]
-    packages = ["xdoctest"]
+    packages = ["xdoctest", "pygments", "./"]
     install_with_constraints(
         session, packages=packages, include_dev=False, callback=install_dependencies
     )
     session.run("python", "-m", "xdoctest", package, *args)
+
+
+def generate_bom(session: Session, requirements_file: str) -> None:
+    """Generate a Software Bill of Materials."""
+    from pathlib import Path
+
+    Path("./build").mkdir(exist_ok=True)
+    session.run(
+        "cyclonedx-py", "-j", "-i", f"{requirements_file}", "-o", "build/bom.json"
+    )
+
+
+@nox.session(python=general_py_version)
+def bom(session: Session) -> None:
+    """Generate a Software Bill of Materials."""
+    packages = ["cyclonedx-bom"]
+    install_with_constraints(
+        session, packages=packages, include_dev=False, callback=generate_bom
+    )
 
 
 @nox.session(python=general_py_version)

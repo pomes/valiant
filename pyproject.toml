@@ -81,6 +81,7 @@ requests-mock = "^1.7.0"
 spdx-tools = "^0.6.1"
 pygments = "^2.6.1"
 flake8-copyright = "^0.2.2"
+cyclonedx-bom = "^0.4.3"
 
 [tool.poetry.scripts]
 valiant = "valiant.console:main"

@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.2.3 (2021-04)
+
+General housekeeping
+
+- Configured tests to use Python 3.8 and 3.9
+- Improved GitHub Actions
+- Tidied up tests
+- Updated dependencies
+
 ## 0.2.2 (2020-05)
 
 Fixed issue with new PyPi metadata fields causing parsing to fail.

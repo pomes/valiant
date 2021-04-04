@@ -84,11 +84,11 @@ python-versions = "*"
 
 [[package]]
 name = "chardet"
-version = "4.0.0"
+version = "3.0.4"
 description = "Universal encoding detector for Python 2 and 3"
 category = "main"
 optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+python-versions = "*"
 
 [[package]]
 name = "cleo"
@@ -144,6 +144,22 @@ toml = {version = "*", optional = true, markers = "extra == \"toml\""}
 toml = ["toml"]
 
 [[package]]
+name = "cyclonedx-bom"
+version = "0.4.3"
+description = "CycloneDX software bill-of-material (SBOM) generation utility"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+jsonschema = "3.2.0"
+packageurl-python = "0.9.3"
+packaging = "20.7"
+requests = "2.25.0"
+requirements-parser = "0.2.0"
+xmlschema = "1.2.5"
+
+[[package]]
 name = "darglint"
 version = "1.7.0"
 description = "A utility for ensuring Google-style docstrings stay up to date with the source code."
@@ -191,6 +207,17 @@ toml = "*"
 
 [package.extras]
 pipenv = ["pipenv"]
+
+[[package]]
+name = "elementpath"
+version = "2.2.1"
+description = "XPath 1.0/2.0 parsers and selectors for ElementTree and lxml"
+category = "dev"
+optional = false
+python-versions = ">=3.6"
+
+[package.extras]
+dev = ["tox", "coverage", "lxml", "xmlschema (>=1.2.3,<1.3.0)", "sphinx"]
 
 [[package]]
 name = "flake8"
@@ -355,6 +382,23 @@ requirements = ["pipreqs", "pip-api"]
 xdg_home = ["appdirs (>=1.4.0)"]
 
 [[package]]
+name = "jsonschema"
+version = "3.2.0"
+description = "An implementation of JSON Schema validation for Python"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+attrs = ">=17.4.0"
+pyrsistent = ">=0.14.0"
+six = ">=1.11.0"
+
+[package.extras]
+format = ["idna", "jsonpointer (>1.13)", "rfc3987", "strict-rfc3339", "webcolors"]
+format_nongpl = ["idna", "jsonpointer (>1.13)", "webcolors", "rfc3986-validator (>0.1.0)", "rfc3339-validator"]
+
+[[package]]
 name = "marshmallow"
 version = "3.11.1"
 description = "A lightweight library for converting complex datatypes to and from native Python datatypes."
@@ -461,8 +505,16 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "packageurl-python"
+version = "0.9.3"
+description = "A \"purl\" aka. Package URL parser and builder"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "packaging"
-version = "20.9"
+version = "20.7"
 description = "Core utilities for Python packages"
 category = "main"
 optional = false
@@ -572,6 +624,14 @@ description = "Python parsing module"
 category = "main"
 optional = false
 python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
+
+[[package]]
+name = "pyrsistent"
+version = "0.17.3"
+description = "Persistent/Functional/Immutable data structures"
+category = "dev"
+optional = false
+python-versions = ">=3.5"
 
 [[package]]
 name = "pytest"
@@ -690,7 +750,7 @@ python-versions = "*"
 
 [[package]]
 name = "requests"
-version = "2.25.1"
+version = "2.25.0"
 description = "Python HTTP for Humans."
 category = "main"
 optional = false
@@ -698,7 +758,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [package.dependencies]
 certifi = ">=2017.4.17"
-chardet = ">=3.0.2,<5"
+chardet = ">=3.0.2,<4"
 idna = ">=2.5,<3"
 urllib3 = ">=1.21.1,<1.27"
 
@@ -732,6 +792,14 @@ six = "*"
 [package.extras]
 fixture = ["fixtures"]
 test = ["fixtures", "mock", "purl", "pytest", "sphinx", "testrepository (>=0.0.18)", "testtools"]
+
+[[package]]
+name = "requirements-parser"
+version = "0.2.0"
+description = "Parses Pip requirement files"
+category = "dev"
+optional = false
+python-versions = "*"
 
 [[package]]
 name = "safety"
@@ -904,6 +972,17 @@ optional = ["pygments", "colorama"]
 tests = ["pytest", "pytest-cov", "codecov"]
 
 [[package]]
+name = "xmlschema"
+version = "1.2.5"
+description = "An XML Schema validator and decoder"
+category = "dev"
+optional = false
+python-versions = ">=3.5"
+
+[package.dependencies]
+elementpath = ">=2.0.2,<3.0.0"
+
+[[package]]
 name = "xmltodict"
 version = "0.12.0"
 description = "Makes working with XML feel like you are working with JSON"
@@ -914,7 +993,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<3.10"
-content-hash = "94bb6263523e7d38aeb707d2b11c4db783f7f56a6ebfefeb665e3b2022ff7440"
+content-hash = "4c07b10cfd59cdfa67b5cb9b73e7a83b03db9057d8eaddb72eb928838fad0fe6"
 
 [metadata.files]
 appdirs = [
@@ -945,8 +1024,8 @@ certifi = [
     {file = "certifi-2020.12.5.tar.gz", hash = "sha256:1a4995114262bffbc2413b159f2a1a480c969de6e6eb13ee966d470af86af59c"},
 ]
 chardet = [
-    {file = "chardet-4.0.0-py2.py3-none-any.whl", hash = "sha256:f864054d66fd9118f2e67044ac8981a54775ec5b67aed0441892edb553d21da5"},
-    {file = "chardet-4.0.0.tar.gz", hash = "sha256:0d6f53a15db4120f2b08c94f11e7d93d2c911ee118b6b30a04ec3ee8310179fa"},
+    {file = "chardet-3.0.4-py2.py3-none-any.whl", hash = "sha256:fc323ffcaeaed0e0a02bf4d117757b98aed530d9ed4531e3e15460124c106691"},
+    {file = "chardet-3.0.4.tar.gz", hash = "sha256:84ab92ed1c4d4f16916e05906b6b75a6c0fb5db821cc65e70cbd64a3e2a5eaae"},
 ]
 cleo = [
     {file = "cleo-0.7.6-py2.py3-none-any.whl", hash = "sha256:9443d67e5b2da79b32d820ae41758dd6a25618345cb10b9a022a695e26b291b9"},
@@ -1018,6 +1097,10 @@ coverage = [
     {file = "coverage-5.5-pp37-none-any.whl", hash = "sha256:2a3859cb82dcbda1cfd3e6f71c27081d18aa251d20a17d87d26d4cd216fb0af4"},
     {file = "coverage-5.5.tar.gz", hash = "sha256:ebe78fe9a0e874362175b02371bdfbee64d8edc42a044253ddf4ee7d3c15212c"},
 ]
+cyclonedx-bom = [
+    {file = "cyclonedx-bom-0.4.3.tar.gz", hash = "sha256:dc92d8f4ad888d97c1a1764071f7b71c2f23b27112c6ed9040894e0f0bac812e"},
+    {file = "cyclonedx_bom-0.4.3-py2.py3-none-any.whl", hash = "sha256:2d0c7998c14a218a52399d955bd0c4a0dfe49befb76a065d03da7b44f4ba3998"},
+]
 darglint = [
     {file = "darglint-1.7.0-py3-none-any.whl", hash = "sha256:3bf16e78e2909ecdb737afd45fcd6a3f8993b092c2ba2b7cd7b179cceee87a43"},
     {file = "darglint-1.7.0.tar.gz", hash = "sha256:e49b36ac9b4272a9a988b508d23e9f31c29f80a5fc030f1023b46740b5deab31"},
@@ -1033,6 +1116,10 @@ desert = [
 dparse = [
     {file = "dparse-0.5.1-py3-none-any.whl", hash = "sha256:e953a25e44ebb60a5c6efc2add4420c177f1d8404509da88da9729202f306994"},
     {file = "dparse-0.5.1.tar.gz", hash = "sha256:a1b5f169102e1c894f9a7d5ccf6f9402a836a5d24be80a986c7ce9eaed78f367"},
+]
+elementpath = [
+    {file = "elementpath-2.2.1-py3-none-any.whl", hash = "sha256:5a00899c22623e0a1c1cd0f05d27cc73b77287a6d645fb6c2ee725d87b29806f"},
+    {file = "elementpath-2.2.1.tar.gz", hash = "sha256:c7b996c5624926f329f4379fbcffd5787629e08b2f8d7159d23525e9243ba637"},
 ]
 flake8 = [
     {file = "flake8-3.9.0-py2.py3-none-any.whl", hash = "sha256:12d05ab02614b6aee8df7c36b97d1a3b2372761222b19b58621355e82acddcff"},
@@ -1087,6 +1174,10 @@ isodate = [
 isort = [
     {file = "isort-4.3.21-py2.py3-none-any.whl", hash = "sha256:6e811fcb295968434526407adb8796944f1988c5b65e8139058f2014cbe100fd"},
     {file = "isort-4.3.21.tar.gz", hash = "sha256:54da7e92468955c4fceacd0c86bd0ec997b0e1ee80d97f67c35a78b719dccab1"},
+]
+jsonschema = [
+    {file = "jsonschema-3.2.0-py2.py3-none-any.whl", hash = "sha256:4e5b3cf8216f577bee9ce139cbe72eca3ea4f292ec60928ff24758ce626cd163"},
+    {file = "jsonschema-3.2.0.tar.gz", hash = "sha256:c8a85b28d377cc7737e46e2d9f2b4f44ee3c0e1deac6bf46ddefc7187d30797a"},
 ]
 marshmallow = [
     {file = "marshmallow-3.11.1-py2.py3-none-any.whl", hash = "sha256:0dd42891a5ef288217ed6410917f3c6048f585f8692075a0052c24f9bfff9dfd"},
@@ -1148,9 +1239,13 @@ ninja = [
     {file = "ninja-1.10.0.post2-py3-none-win_amd64.whl", hash = "sha256:c6059bd04ad235e2326b39bc71bb7989de8d565084b5f269557704747b2910fa"},
     {file = "ninja-1.10.0.post2.tar.gz", hash = "sha256:621fd73513a9bef0cb82e8c531a29ef96580b4d6e797f833cce167054ad812f8"},
 ]
+packageurl-python = [
+    {file = "packageurl-python-0.9.3.tar.gz", hash = "sha256:c54add03a464d4779ee50350231aabb971751bbf52389acbcd0149e2ea7122aa"},
+    {file = "packageurl_python-0.9.3-py2.py3-none-any.whl", hash = "sha256:0682b2eddab16151da5bd4ef38081e9b27f8eb33cd29baf41f4996d4e88e6e70"},
+]
 packaging = [
-    {file = "packaging-20.9-py2.py3-none-any.whl", hash = "sha256:67714da7f7bc052e064859c05c595155bd1ee9f69f76557e21f051443c20947a"},
-    {file = "packaging-20.9.tar.gz", hash = "sha256:5b327ac1320dc863dca72f4514ecc086f31186744b84a230374cc1fd776feae5"},
+    {file = "packaging-20.7-py2.py3-none-any.whl", hash = "sha256:eb41423378682dadb7166144a4926e443093863024de508ca5c9737d6bc08376"},
+    {file = "packaging-20.7.tar.gz", hash = "sha256:05af3bb85d320377db281cf254ab050e1a7ebcbf5410685a9a407e18a1f81236"},
 ]
 pastel = [
     {file = "pastel-0.2.1-py2.py3-none-any.whl", hash = "sha256:4349225fcdf6c2bb34d483e523475de5bb04a5c10ef711263452cb37d7dd4364"},
@@ -1199,6 +1294,9 @@ pylev = [
 pyparsing = [
     {file = "pyparsing-2.4.7-py2.py3-none-any.whl", hash = "sha256:ef9d7589ef3c200abe66653d3f1ab1033c3c419ae9b9bdb1240a85b024efc88b"},
     {file = "pyparsing-2.4.7.tar.gz", hash = "sha256:c203ec8783bf771a155b207279b9bccb8dea02d8f0c9e5f8ead507bc3246ecc1"},
+]
+pyrsistent = [
+    {file = "pyrsistent-0.17.3.tar.gz", hash = "sha256:2e636185d9eb976a18a8a8e96efce62f2905fea90041958d8cc2a189756ebf3e"},
 ]
 pytest = [
     {file = "pytest-4.6.11-py2.py3-none-any.whl", hash = "sha256:a00a7d79cbbdfa9d21e7d0298392a8dd4123316bfac545075e6f8f24c94d8c97"},
@@ -1298,8 +1396,8 @@ regex = [
     {file = "regex-2021.3.17.tar.gz", hash = "sha256:4b8a1fb724904139149a43e172850f35aa6ea97fb0545244dc0b805e0154ed68"},
 ]
 requests = [
-    {file = "requests-2.25.1-py2.py3-none-any.whl", hash = "sha256:c210084e36a42ae6b9219e00e48287def368a26d03a048ddad7bfee44f75871e"},
-    {file = "requests-2.25.1.tar.gz", hash = "sha256:27973dd4a904a4f13b263a19c866c13b92a39ed1c964655f025f3f8d3d75b804"},
+    {file = "requests-2.25.0-py2.py3-none-any.whl", hash = "sha256:e786fa28d8c9154e6a4de5d46a1d921b8749f8b74e28bde23768e5e16eece998"},
+    {file = "requests-2.25.0.tar.gz", hash = "sha256:7f1a0b932f4a60a1a65caa4263921bb7d9ee911957e0ae4a23a6dd08185ad5f8"},
 ]
 requests-cache = [
     {file = "requests-cache-0.5.2.tar.gz", hash = "sha256:813023269686045f8e01e2289cc1e7e9ae5ab22ddd1e2849a9093ab3ab7270eb"},
@@ -1308,6 +1406,10 @@ requests-cache = [
 requests-mock = [
     {file = "requests-mock-1.8.0.tar.gz", hash = "sha256:e68f46844e4cee9d447150343c9ae875f99fa8037c6dcf5f15bf1fe9ab43d226"},
     {file = "requests_mock-1.8.0-py2.py3-none-any.whl", hash = "sha256:11215c6f4df72702aa357f205cf1e537cffd7392b3e787b58239bde5fb3db53b"},
+]
+requirements-parser = [
+    {file = "requirements-parser-0.2.0.tar.gz", hash = "sha256:5963ee895c2d05ae9f58d3fc641082fb38021618979d6a152b6b1398bd7d4ed4"},
+    {file = "requirements_parser-0.2.0-py2-none-any.whl", hash = "sha256:76650b4a9d98fc65edf008a7920c076bb2a76c08eaae230ce4cfc6f51ea6a773"},
 ]
 safety = [
     {file = "safety-1.10.3-py2.py3-none-any.whl", hash = "sha256:5f802ad5df5614f9622d8d71fedec2757099705c2356f862847c58c6dfe13e84"},
@@ -1402,6 +1504,10 @@ wcwidth = [
 xdoctest = [
     {file = "xdoctest-0.11.0-py2.py3-none-any.whl", hash = "sha256:292d8c0e8de9bcab6ce3fa5009da445278ce343c744aa2ae260710f924c5242e"},
     {file = "xdoctest-0.11.0.tar.gz", hash = "sha256:71951c60bb8b15fdf3c368c5636a6bbbd658ef5c2e5949e784adf5e1a1275fbd"},
+]
+xmlschema = [
+    {file = "xmlschema-1.2.5-py3-none-any.whl", hash = "sha256:7c528e0ec3eac97276491e7657d843f6090cbc2ea9216eb4398553623859a23f"},
+    {file = "xmlschema-1.2.5.tar.gz", hash = "sha256:1c4515dd16b5b556dac27cae70bdb3c863e1448e9d58896326ff468ff55e4246"},
 ]
 xmltodict = [
     {file = "xmltodict-0.12.0-py2.py3-none-any.whl", hash = "sha256:8bbcb45cc982f48b2ca8fe7e7827c5d792f217ecf1792626f808bf41c3b86051"},

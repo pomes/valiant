@@ -25,17 +25,26 @@ jobs:
           pip install poetry>=1.1.5
 
       - name: safety
-        run: nox -rs safety_dev
+        run: nox -s safety_dev
+
+      - name: bom
+        run: nox -s bom
+
+      - name: Upload SBOM
+        uses: actions/upload-artifact@master
+        with:
+          name: bom.json
+          path: build/bom.json
 
       - name: lint
-        run: nox -rs lint
+        run: nox -s lint
 
       - name: mypy
-        run: nox -rs mypy
+        run: nox -s mypy
 
       - name: Pytest
         run: |
-          nox -rs tests-${{ matrix.python-version }} -- \
+          nox -s tests-${{ matrix.python-version }} -- \
             --junitxml=junit/test-results-${{ matrix.python-version }}.xml \
             --cov --cov-report xml \
             --cov-report html \

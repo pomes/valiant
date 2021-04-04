@@ -41,7 +41,7 @@ I'm trying to follow the [Google Python Style Guide](https://google.github.io/st
 
 Look at [`noxfile.py`](noxfile.py) for the main test automation suite.
 
-Note: don't run `nox` in a poetry shell.
+Note: don't run `nox` in a poetry shell - install `nox` separately and run it without poetry.
 
 Get a list of sessions/tasks:
 
