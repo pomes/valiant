@@ -257,7 +257,7 @@ def coverage_report(session: Session) -> None:
     html: nox -rs coverage -- html
     """
     args = session.posargs or ["xml"]
-    install_with_constraints(session, "coverage[toml]")
+    install_with_constraints(session, ["coverage[toml]"])
     session.run("coverage", *args, "--fail-under=90")
 
 
