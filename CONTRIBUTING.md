@@ -75,14 +75,16 @@ In the example below I redirect stderr so that errors are also displayed nicely:
 
 When the code is ready to release, tag it off in git using the version number:
 
+    export VALIANT_VERSION=<SET VERSION #>
+
     # Tag:
-    git tag -s 0.2.0 -m "Valiant release 0.2.0"
+    git tag -s $VALIANT_VERSION -m "Valiant release $VALIANT_VERSION"
 
     # Verify:
-    git tag -v 0.2.0
+    git tag -v $VALIANT_VERSION
 
     # Push:
-    git push origin 0.2.0
+    git push origin $VALIANT_VERSION
 
 Deploy to the PyPi Test repo first. You'll need
 [an account and key](https://packaging.python.org/tutorials/packaging-projects/#uploading-the-distribution-archives).
@@ -98,9 +100,10 @@ Build and deploy:
 
 Check that it all went ok: https://test.pypi.org/project/valiant/
 
-Install the package from the test repository (pref in a container - `docker run --rm -it docker.io/python:3.8 /bin/bash`):
+Install the package from the test repository -
+preferably in a virtualenv or container - `docker run --rm -it docker.io/python:3.9 /bin/bash`):
 
-    pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple valiant==VERSION
+    pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple valiant==$VALIANT_VERSION
     valiant about
     valiant config
     valiant report flask 1.1.1
