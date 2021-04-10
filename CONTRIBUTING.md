@@ -1,6 +1,6 @@
 # Contributing
 
-Apologies but I'm yet to flesh this out.
+Apologies but I'm yet to flesh this out fully.
 
 ## Developing
 

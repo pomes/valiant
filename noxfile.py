@@ -228,6 +228,25 @@ def xdoctest(session: Session) -> None:
     session.run("python", "-m", "xdoctest", package, *args)
 
 
+@nox.session(python=general_py_version)
+def audit(session: Session) -> None:
+    """Run a Valiant audit on Valiant."""
+
+    def generate_audit(session: Session, requirements_file: str) -> None:
+        """Generate a Valiant audit."""
+        from pathlib import Path
+
+        Path("./build").mkdir(exist_ok=True)
+        session.run(
+            "valiant", "audit", "-o", "json", f"{requirements_file}",
+        )
+
+    packages = ["./"]
+    install_with_constraints(
+        session, packages=packages, include_dev=False, callback=generate_audit
+    )
+
+
 def generate_bom(session: Session, requirements_file: str) -> None:
     """Generate a Software Bill of Materials."""
     from pathlib import Path

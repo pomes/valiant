@@ -1,0 +1,29 @@
+appdirs==1.4.4
+attrs==20.3.0; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.6"
+certifi==2020.12.5; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
+chardet==3.0.4; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
+cleo==0.7.6; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.4.0")
+click==7.1.2; python_version >= "3.5" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.5"
+clikit==0.4.3; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0"
+desert==2020.11.18; python_version >= "3.6"
+dparse==0.5.1; python_version >= "3.5"
+idna==2.10; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
+marshmallow-dataclass==7.6.0; python_version >= "3.6"
+marshmallow==3.11.1; python_version >= "3.5"
+mypy-extensions==0.4.3; python_version >= "3.6"
+packaging==20.7; python_version >= "3.5" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.5"
+parsley==1.3
+pastel==0.2.1; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0"
+pylev==1.3.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0"
+pyparsing==2.4.7; python_version >= "3.5" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.5"
+pyyaml==5.4.1; python_version >= "3.5" and python_full_version < "3.0.0" or python_full_version >= "3.6.0" and python_version >= "3.5"
+requests-cache==0.5.2
+requests==2.25.0; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.5.0")
+safety==1.10.3; python_version >= "3.5"
+structlog==20.2.0; python_version >= "3.6"
+texttable==1.6.3
+toml==0.10.2; python_version >= "3.5" and python_full_version < "3.0.0" or python_full_version >= "3.3.0" and python_version >= "3.5"
+typing-extensions==3.7.4.3; python_version >= "3.6"
+typing-inspect==0.6.0; python_version >= "3.6"
+urllib3==1.26.4; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version < "4"
+wcwidth==0.1.9

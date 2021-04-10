@@ -22,6 +22,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from enum import Enum
 
 from .dictionizer import Dictionizer
+from .requirements import (
+    RequirementEntry,
+    parse_requirements_file,
+    parse_requirements_entry,
+)
 
 
 class NoValue(Enum):

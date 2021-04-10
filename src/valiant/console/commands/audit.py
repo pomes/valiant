@@ -23,6 +23,7 @@ from pathlib import Path
 from typing import List, NamedTuple, Optional
 
 from valiant.reports import Finding, ReportSet
+from valiant.util import RequirementEntry, parse_requirements_file
 
 from .base_command import BaseCommand
 from .package_command import Payload
@@ -57,28 +58,21 @@ class AuditCommand(BaseCommand):
         requirements = Path(self.argument("requirements-file"))
         report_list: List[str] = []
         format = self.option("out")
-        package_list: List[AuditCommand._RequirementsEntry] = []
+        package_list: List[RequirementEntry] = []
         payloads: List[Payload] = []
 
         if self.argument("reports"):
             report_list = self.argument("reports").split(",")
 
         try:
-            if not requirements.is_file():
-                raise ValueError(
-                    f"The requirements file ({requirements}) doesn't exist."
-                )
-
-            with open(requirements, "r") as reqs:
-                for line in reqs:
-                    package, version = line.strip().split("==")
-                    package_list.append(
-                        AuditCommand._RequirementsEntry(package, version)
-                    )
+            package_list = parse_requirements_file(requirements)
 
             for req in package_list:
+                if len(req.versions) < 1 and req.versions[0][0] != "==":
+                    raise ValueError(f"A pinned version is required for {req.package}.")
+
                 package_metadata = self.valiant.get_package_metadata(
-                    package_name=req.package, package_version=req.version,
+                    package_name=req.package, package_version=req.versions[0][1],
                 )
                 reports = self.valiant.get_package_reports(
                     package_metadata, reports=set(report_list)

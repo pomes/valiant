@@ -68,7 +68,7 @@ class Info:
     description: str
     description_content_type: Optional[str]
     docs_url: Optional[str]
-    download_url: str
+    download_url: Optional[str]
     downloads: Downloads
     home_page: str
     keywords: Optional[str]
