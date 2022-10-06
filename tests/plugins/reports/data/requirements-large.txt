@@ -8,7 +8,7 @@ clikit==0.4.3
 dataclasses==0.6
 desert==2020.1.6
 distlib==0.3.0
-dparse==0.5.0
+dparse==0.5.2
 filelock==3.0.12
 idna==2.9
 marshmallow==3.5.1
